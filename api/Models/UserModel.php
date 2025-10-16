@@ -1,5 +1,5 @@
 <?php
-class TechModel {
+class UserModel {
 
     public $enlace;
 
@@ -9,18 +9,18 @@ class TechModel {
     }
 
     public function GetAllTechnicians() {
-
-        $Role = "technical";
-
-        $vSql = "SELECT * FROM users WHERE roles = '$Role';";
-
+        $Role = "Technician";
+        $vSql = "SELECT * FROM users WHERE roleID = 1;";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
-
         return $vResultado;
     }
 
+    public function GetDetailById($id) {
+        $vSql = "";
 
-    public function GetDetailById($id) { }
+        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+        return $vResultado;
+     }
 
     public function GetUserName($id){}
     public function GetMail($id){}

@@ -19,13 +19,13 @@ require_once "controllers/core/Response.php";
 require_once "middleware/AuthMiddleware.php";
 
 /***--- Agregar todos los modelos*/
-require_once "models/TechModel.php";
+require_once "models/UserModel.php";
 require_once "models/CategoriesModel.php";
 require_once "models/SLAModel.php";
 require_once "models/SpecialitiesModel.php";
 
 /***--- Agregar todos los controladores*/
-require_once "controllers/TechController.php";
+require_once "controllers/UserController.php";
 require_once "controllers/CategoriesController.php";
 require_once "controllers/SLAController.php";
 require_once "controllers/SpecialitiesController.php";
