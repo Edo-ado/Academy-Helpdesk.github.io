@@ -1,26 +1,26 @@
 <?php
-class TechModel{
+class TechModel {
 
- public $enlace;
+    public $enlace;
+
     public function __construct()
     {
         $this->enlace = new MySqlConnect();
     }
 
-
-    //http://localhost:80/Academy-Helpdesk.github.io/api/technicians/getAllTechnicians/1
-
-    public function GetAllTechnicians(){
+    public function GetAllTechnicians() {
 
         $Role = "technical";
 
-        $vSql = "SELECT * FROM users WHERE roles = $Role;"
+        $vSql = "SELECT * FROM users WHERE roles = '$Role';";
 
+        $vResultado = $this->enlace->ExecuteSQL($vSql);
 
-            $vResultado = $this->enlace->ExecuteSQL($vSql);
-
-            return $vResultado;
+        return $vResultado;
     }
+
+
+    public function GetDetailById($id) { }
 
     public function GetUserName($id){}
     public function GetMail($id){}
@@ -29,13 +29,4 @@ class TechModel{
     public function GetInstitution($id){}
     public function GetWorkCharge($id){}
     public function GetInsuranceType($id){}
-
-
-
-
-
-
-
-
-
 }
