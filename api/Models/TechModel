@@ -7,7 +7,10 @@ class TechModel{
         $this->enlace = new MySqlConnect();
     }
 
-    public function GetAllTecnicos(){
+
+    //http://localhost:80/Academy-Helpdesk.github.io/api/technicians/getAllTechnicians/1
+
+    public function GetAllTechnicians(){
 
         $Role = "technical";
 

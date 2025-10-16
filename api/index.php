@@ -19,11 +19,8 @@ require_once "controllers/core/Response.php";
 require_once "middleware/AuthMiddleware.php";
 
 /***--- Agregar todos los modelos*/
-require_once "models/DirectorModel.php";
-require_once "models/ActorModel.php";
-require_once "models/GenreModel.php";
-require_once "models/MovieModel.php";
-require_once "models/ImageModel.php";
+require_once "models/TechModel.php";
+require_once "models/CategoriesModel.php";
 
 /***--- Agregar todos los controladores*/
 require_once "controllers/MovieController.php";
