@@ -263,3 +263,37 @@ INSERT INTO Specialities (CategoryId, Speciality, Active) VALUES
 (4, 'Cleaning Supervisor', TRUE),
 (4, 'Electric Technician', TRUE),
 (4, 'Safety Officer', TRUE);
+
+
+INSERT INTO Roles (Name, Description )
+VALUES ('Technician', 'Manage technical tickets.');
+
+INSERT INTO Roles (Name, Description )
+VALUES ('Student', 'User who can create tickets.');
+
+INSERT INTO Roles (Name, Description )
+VALUES ('Administrator', 'Assign tickets to the technician.');
+
+
+INSERT INTO Institutions (Name, Location)
+VALUES 
+('Liceo San José de Alajuela', 'Alajuela, Costa Rica'),
+('Colegio Técnico Profesional de Heredia', 'Heredia, Costa Rica'),
+('Instituto Educativo Santa María', 'San José, Costa Rica');
+
+INSERT INTO Insurances (Name, Description)
+VALUES
+('INS', 'National Insurance Institute'),
+('Medismart', 'Private medical insurance'),
+('No insurance', 'User without medical coverage');
+
+INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge)
+VALUES
+(1, 'tech_maria', 'maria.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Network Technician'),
+(2, 'tech_pedro', 'pedro.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Software Support'),
+(3, 'student_jose', 'jose.student@liceoalajuela.cr', 'hashed_password_123', 2, NOW(), 1, TRUE, NULL);
+
+
+INSERT INTO Technician_Specialities (UserId, SpecialityId)
+VALUES
+(1, 7)
