@@ -14,8 +14,8 @@ class UserController
     }
 
     //GET TECHNICIANS
-    //http://localhost/Academy-Helpdesk.github.io/api/UserController/getTechnician/
-    public function getTechnician()
+    //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetAllTechnicians/
+    public function GetAllTechnicians()
     {
       try {
             $response = new Response();
@@ -28,13 +28,13 @@ class UserController
     }
 
     //GET TECHNICIAN DETAIL BY ID
-    //http://localhost/Academy-Helpdesk.github.io/api/UserController/getDetailById/1
-    public function getDetailById($id)
+    //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetDetailByIdAll/1
+    public function GetDetailByIdAll($id)
     {
       try {
             $response = new Response();
             $Tecnico = new UserModel();
-            $result = $Tecnico->GetDetailById($id);
+            $result = $Tecnico->GetDetailByIdAll($id);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);

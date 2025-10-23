@@ -10,31 +10,49 @@ class UserModel {
 
     public function GetAllTechnicians() {
         $Role = "Technician";
-        $vSql = "SELECT * FROM users WHERE roleID = 1;";
+         $vSql = "SELECT 
+    u.UserName AS Nombre,
+    u.Email,
+    r.Name AS Rol
+    FROM 
+    users u
+    INNER JOIN 
+    roles r ON u.RoleId = r.Id
+ 
+";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
 
-    public function GetDetailByIdList($id) {
-        $vSql = "Select Username";
 
-        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
-        return $vResultado;
-     }
+   public function GetDetailByIdAll($id) {
+    $vSql = "SELECT 
+        u.Id,
+        i.Name as InsuranceId,
+        u.UserName,
+        u.Email,
+        u.Password,
+        u.Last_Login,
+        u.InstitutionId,
+        u.PositionId,
+        u.State,
+        u.Work_Charge,
+        u.Active,
+        r.Name AS Rol,
+        r.Description AS Rol_Descripcion
+    FROM 
+        users u
+    INNER JOIN 
+        roles r ON u.RoleId = r.Id
+    INNER JOIN
+        insurances i ON u.InsuranceId = i.Id
+    WHERE 
+        u.Id = $id";
+    
+    $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+    return $vResultado;
+}
 
-      public function GetDetailByIdAll($id) {
-        $vSql = "";
-
-        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
-        return $vResultado;
-     }
 
 
-    public function GetUserName($id){}
-    public function GetMail($id){}
-    public function State($id){}
-    public function GetAllSpecialitysbyId($id){}
-    public function GetInstitution($id){}
-    public function GetWorkCharge($id){}
-    public function GetInsuranceType($id){}
 }
