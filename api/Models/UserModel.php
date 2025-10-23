@@ -15,12 +15,20 @@ class UserModel {
         return $vResultado;
     }
 
-    public function GetDetailById($id) {
+    public function GetDetailByIdList($id) {
+        $vSql = "Select Username";
+
+        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+        return $vResultado;
+     }
+
+      public function GetDetailByIdAll($id) {
         $vSql = "";
 
         $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
         return $vResultado;
      }
+
 
     public function GetUserName($id){}
     public function GetMail($id){}
