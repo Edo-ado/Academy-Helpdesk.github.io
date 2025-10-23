@@ -180,13 +180,13 @@ CREATE TABLE AutoTriage (
     FOREIGN KEY (IdCategories) REFERENCES Categories(Id)
 );
 
-
-
-INSERT INTO Insurances (Name, Description, Active)
-VALUES
-('Guest', 'User in training who uses the system for academic support', TRUE),
-('Technician', 'User responsible for resolving incidents or support tickets', TRUE),
-('Administrator', 'User with full privileges to manage the system', TRUE);
+CREATE TABLE UserTickets (
+    UserId   INT NOT NULL,
+    TicketId INT NOT NULL,
+    PRIMARY KEY (UserId, TicketId),
+    FOREIGN KEY (UserId) REFERENCES Users(Id),
+    FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
+);
 
 INSERT INTO SLA (MinTimeHours, MaxTimeHours, Active)
 VALUES
