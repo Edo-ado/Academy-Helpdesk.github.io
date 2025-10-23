@@ -17,8 +17,7 @@ class UserModel {
     FROM 
     users u
     INNER JOIN 
-    roles r ON u.RoleId = r.Id
- 
+    roles r ON u.RoleId = 1;
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
