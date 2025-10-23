@@ -3,8 +3,8 @@ class SpecialitiesController
 {
 
     //GETALL
-    //http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesController
-    public function index()
+    //http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesController/GetAll
+    public function GetAll()
     {
         try {
             $response = new Response();
@@ -17,8 +17,8 @@ class SpecialitiesController
     }
 
     //GetByID
-    //http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesController/get/1
-    public function get($param)
+    //http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesController/getById/1
+    public function getById($param)
     {
         try {
             $response = new Response();

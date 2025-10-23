@@ -15,12 +15,12 @@ class UserController
 
     //GET TECHNICIANS
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetAllTechnicians/
-    public function GetAllTechnicians()
+    public function GetAllTechnicians($param)
     {
       try {
             $response = new Response();
             $Tecnico = new UserModel();
-            $result = $Tecnico->GetAllTechnicians();
+            $result = $Tecnico->GetAllTechnicians($param);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);

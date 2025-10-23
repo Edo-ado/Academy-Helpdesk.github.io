@@ -8,7 +8,7 @@ class UserModel {
         $this->enlace = new MySqlConnect();
     }
 
-    public function GetAllTechnicians() {
+    public function GetAllTechnicians($id) {
         $Role = "Technician";
          $vSql = "SELECT 
     u.UserName AS Nombre,
@@ -18,6 +18,8 @@ class UserModel {
     users u
     INNER JOIN 
     roles r ON u.RoleId = r.Id
+
+where RoleId =$id
  
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
