@@ -1,3 +1,5 @@
+Drop database if exists DBAcademyHelpDesk;
+
 Create DATABASE DBAcademyHelpDesk;
 USE DBAcademyHelpDesk;
 
