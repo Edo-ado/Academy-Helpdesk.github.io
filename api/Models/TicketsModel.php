@@ -14,7 +14,8 @@ class TicketsMode{
         FROM tickets T 
         INNER JOIN 
         categories C ON T.CategoryId = C.Id";
-
+            $vResultado = $this->enlace->ExecuteSQL($msg);
+        return $vResultado;
 
     }
 
