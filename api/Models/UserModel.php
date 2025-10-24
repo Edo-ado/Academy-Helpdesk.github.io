@@ -17,14 +17,9 @@ class UserModel {
     FROM 
     users u
     INNER JOIN 
-<<<<<<< HEAD
     roles r ON u.RoleId = r.Id
-
 where RoleId =$id
- 
-=======
-    roles r ON u.RoleId = 1;
->>>>>>> 5d351ca4d2585cc00deb1e667c54aa355df9afcb
+  
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;

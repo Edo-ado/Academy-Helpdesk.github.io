@@ -15,6 +15,7 @@ require_once "controllers/core/Logger.php";
 require_once "controllers/core/MySqlConnect.php";
 require_once "controllers/core/Request.php";
 require_once "controllers/core/Response.php";
+
 //Middleware
 require_once "middleware/AuthMiddleware.php";
 
@@ -23,12 +24,14 @@ require_once "models/UserModel.php";
 require_once "models/CategoriesModel.php";
 require_once "models/SLAModel.php";
 require_once "models/SpecialitiesModel.php";
+require_once "controllers/TicketsModel.php";
 
 /***--- Agregar todos los controladores*/
 require_once "controllers/UserController.php";
 require_once "controllers/CategoriesController.php";
 require_once "controllers/SLAController.php";
 require_once "controllers/SpecialitiesController.php";
+require_once "controllers/TicketsController.php";
 
 
 //Enrutador

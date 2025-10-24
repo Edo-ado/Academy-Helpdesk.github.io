@@ -30,6 +30,20 @@ class SpecialitiesController
         }
     }
 
+    //GetAllticketsMin
+    //http://localhost/Academy-Helpdesk.github.io/api/GetAllticketsMin/get/1
+     public function GetAllticketsMin()
+    {
+        try {
+            $response = new Response();
+            $Specialities = new SpecialitiesModel();
+            $result = $Specialities->AllticketsMin();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
     
 
 
