@@ -1,50 +1,65 @@
 <?php
-class SpecialitiesController
+class TicketsController
 {
 
     //GETALL
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController
-    public function index()
+ public function index()
     {
         try {
             $response = new Response();
-            $Specialities = new SpecialitiesModel();
-            $result = $Specialities->GetAllSpecialities();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->all();
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
         }
     }
 
-    //GetByID
-    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/get/1
-    public function get($param)
-    {
-        try {
-            $response = new Response();
-            $Specialities = new SpecialitiesModel();
-            $result = $Specialities->GetSpecialityByCategoryID($param);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-    }
 
     //GetAllticketsMin
-    //http://localhost/Academy-Helpdesk.github.io/api/GetAllticketsMin/get/1
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetAllticketsMin
      public function GetAllticketsMin()
     {
         try {
             $response = new Response();
-            $Specialities = new SpecialitiesModel();
-            $result = $Specialities->AllticketsMin();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->AllticketsMin();
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
         }
     }
 
-    
 
+    //TicketAssignedToTEC
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketAssignedToTEC
+     public function TicketAssignedToTEC($param)
+    {
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->TicketAssignedToTEC($param);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
+    //TicketsPerUser
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketsPerUser
+
+     public function TicketsPerUser($param)
+    {
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->TicketsPerUser($param);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
 
 }

@@ -1,6 +1,5 @@
-Drop database if exists DBAcademyHelpDesk;
-
-Create DATABASE DBAcademyHelpDesk;
+DROP DATABASE IF EXISTS DBAcademyHelpDesk;
+CREATE DATABASE DBAcademyHelpDesk;
 USE DBAcademyHelpDesk;
 
 CREATE TABLE Roles (
@@ -83,7 +82,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Tickets (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    UserId INT,
+    TechnicianId INT,
     CategoryId INT,
     Title VARCHAR(100),
     Description VARCHAR(255),
@@ -97,7 +96,7 @@ CREATE TABLE Tickets (
     Response_Compliance BOOLEAN,
     Resolution_Compliance BOOLEAN,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (UserId) REFERENCES Users(Id),
+    FOREIGN KEY (TechnicianId) REFERENCES Users(Id),
     FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
 );
 
@@ -181,27 +180,24 @@ CREATE TABLE AutoTriage (
 );
 
 CREATE TABLE UserTickets (
-    UserId   INT NOT NULL,
+    UserId INT NOT NULL,
     TicketId INT NOT NULL,
     PRIMARY KEY (UserId, TicketId),
     FOREIGN KEY (UserId) REFERENCES Users(Id),
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
 );
 
-INSERT INTO SLA (MinTimeHours, MaxTimeHours, Active)
-VALUES
-(4, 48, TRUE),   
-(8, 72, TRUE),   
-(2, 24, TRUE),  
-(6, 72, TRUE);  
+INSERT INTO SLA (MinTimeHours, MaxTimeHours, Active) VALUES
+(4, 48, TRUE),
+(8, 72, TRUE),
+(2, 24, TRUE),
+(6, 72, TRUE);
 
-INSERT INTO Categories (Name, SLAId, Active)
-VALUES
+INSERT INTO Categories (Name, SLAId, Active) VALUES
 ('Academic Services', 1, TRUE),
 ('Student and Administrative Services', 2, TRUE),
 ('Technology', 3, TRUE),
 ('Physical Infrastructure and Maintenance', 4, TRUE);
-
 
 INSERT INTO Tags (CategoryId, Tag, Active) VALUES
 (1, 'Schedules', TRUE),
@@ -210,27 +206,18 @@ INSERT INTO Tags (CategoryId, Tag, Active) VALUES
 (1, 'Records', TRUE),
 (1, 'Evaluations', TRUE),
 (1, 'Grades', TRUE),
-(1, 'Certifications', TRUE);
-
-
-INSERT INTO Tags (CategoryId, Tag, Active) VALUES
+(1, 'Certifications', TRUE),
 (2, 'Library', TRUE),
 (2, 'Transportation', TRUE),
 (2, 'Extracurricular Activities', TRUE),
 (2, 'Student Orientation', TRUE),
 (2, 'Administrative Procedures', TRUE),
-(2, 'Payments', TRUE);
-
-
-INSERT INTO Tags (CategoryId, Tag, Active) VALUES
+(2, 'Payments', TRUE),
 (3, 'Hardware', TRUE),
 (3, 'Software', TRUE),
 (3, 'Connectivity', TRUE),
 (3, 'Computer Labs', TRUE),
-(3, 'Virtual Campus', TRUE);
-
-
-INSERT INTO Tags (CategoryId, Tag, Active) VALUES
+(3, 'Virtual Campus', TRUE),
 (4, 'Classrooms', TRUE),
 (4, 'Furniture', TRUE),
 (4, 'Lighting', TRUE),
@@ -239,63 +226,80 @@ INSERT INTO Tags (CategoryId, Tag, Active) VALUES
 (4, 'Accessibility', TRUE),
 (4, 'Sports Areas', TRUE);
 
-
 INSERT INTO Specialities (CategoryId, Speciality, Active) VALUES
 (1, 'Academic Registrar', TRUE),
 (1, 'Program Coordinator', TRUE),
-(1, 'Academic Secretary', TRUE);
-
-
-INSERT INTO Specialities (CategoryId, Speciality, Active) VALUES
+(1, 'Academic Secretary', TRUE),
 (2, 'Accountant', TRUE),
 (2, 'Student Coordinator', TRUE),
 (2, 'Librarian', TRUE),
 (2, 'Service Administrator', TRUE),
-(2, 'Student Advisor', TRUE);
-
-
-INSERT INTO Specialities (CategoryId, Speciality, Active) VALUES
+(2, 'Student Advisor', TRUE),
 (3, 'IT Support', TRUE),
 (3, 'Systems Technician', TRUE),
-(3, 'Network Administrator', TRUE);
-
-
-INSERT INTO Specialities (CategoryId, Speciality, Active) VALUES
+(3, 'Network Administrator', TRUE),
 (4, 'Maintenance Technician', TRUE),
 (4, 'Cleaning Supervisor', TRUE),
 (4, 'Electric Technician', TRUE),
 (4, 'Safety Officer', TRUE);
 
+INSERT INTO Roles (Name, Description) VALUES
+('Technician', 'Manage technical tickets.'),
+('Student', 'User who can create tickets.'),
+('Administrator', 'Assign tickets to the technician.');
 
-INSERT INTO Roles (Name, Description )
-VALUES ('Technician', 'Manage technical tickets.');
-
-INSERT INTO Roles (Name, Description )
-VALUES ('Student', 'User who can create tickets.');
-
-INSERT INTO Roles (Name, Description )
-VALUES ('Administrator', 'Assign tickets to the technician.');
-
-
-INSERT INTO Institutions (Name, Location)
-VALUES 
+INSERT INTO Institutions (Name, Location) VALUES
 ('Liceo San José de Alajuela', 'Alajuela, Costa Rica'),
 ('Colegio Técnico Profesional de Heredia', 'Heredia, Costa Rica'),
 ('Instituto Educativo Santa María', 'San José, Costa Rica');
 
-INSERT INTO Insurances (Name, Description)
-VALUES
+INSERT INTO Insurances (Name, Description) VALUES
 ('INS', 'National Insurance Institute'),
 ('Medismart', 'Private medical insurance'),
 ('No insurance', 'User without medical coverage');
 
-INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge)
-VALUES
+INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge) VALUES
 (1, 'tech_maria', 'maria.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Network Technician'),
 (2, 'tech_pedro', 'pedro.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Software Support'),
-(3, 'student_jose', 'jose.student@liceoalajuela.cr', 'hashed_password_123', 2, NOW(), 1, TRUE, NULL);
+(3, 'student_jose', 'jose.student@liceoalajuela.cr', 'hashed_password_123', 2, NOW(), 1, TRUE, NULL),
+(1, 'tech_ana', 'ana.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Hardware Specialist'),
+(2, 'tech_carlos', 'carlos.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'System Administrator'),
+(3, 'tech_luisa', 'luisa.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Network Support'),
+(3, 'student_mario', 'mario.student@liceoalajuela.cr', 'hashed_password_321', 2, NOW(), 1, TRUE, NULL),
+(2, 'student_ana', 'ana.student@heredia.cr', 'hashed_password_456', 2, NOW(), 2, TRUE, NULL),
+(1, 'student_luis', 'luis.student@santamaria.cr', 'hashed_password_789', 2, NOW(), 3, TRUE, NULL);
 
+INSERT INTO Technician_Specialities (UserId, SpecialityId) VALUES
+(4, 10),
+(5, 11),
+(6, 12);
 
-INSERT INTO Technician_Specialities (UserId, SpecialityId)
-VALUES
-(1, 7)
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, State) VALUES
+(4, 3, 'Problema con la computadora del laboratorio', 'La computadora no arranca después de una actualización.', 3, 'Asignado'),
+(5, 1, 'Error en la matrícula en línea', 'No puedo acceder al sistema de matrícula.', 2, 'Asignado'),
+(6, 2, 'Duda sobre pago de transporte', 'No aparece el monto a pagar del bus estudiantil.', 1, 'Asignado');
+
+INSERT INTO UserTickets (UserId, TicketId) VALUES
+(7, 1),
+(8, 2),
+(9, 3);
+
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(1, 'Creado', 'Asignado', 4, NOW()),
+(2, 'Creado', 'Asignado', 5, NOW()),
+(3, 'Creado', 'Asignado', 6, NOW());
+
+INSERT INTO Archivador (HistoryTicketId, TicketId, UploadDate) VALUES
+(1, 1, NOW()),
+(2, 2, NOW()),
+(3, 3, NOW());
+
+INSERT INTO Assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method) VALUES
+(1, 4, NOW(), 'Asignado automáticamente por categoría Tecnología.', 'Automático'),
+(2, 5, NOW(), 'Asignado por administrador debido a experiencia en sistemas.', 'Manual'),
+(3, 6, NOW(), 'Asignación automática según carga de trabajo.', 'Automático');
+
+INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
+(1, 7, 5, 'Excelente atención del técnico Ana.', NOW()),
+(2, 8, 4, 'Buena respuesta, aunque tardó un poco.', NOW()),
+(3, 9, 3, 'El problema se resolvió, pero sin mucha explicación.', NOW());

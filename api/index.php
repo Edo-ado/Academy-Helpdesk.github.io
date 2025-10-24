@@ -24,7 +24,7 @@ require_once "models/UserModel.php";
 require_once "models/CategoriesModel.php";
 require_once "models/SLAModel.php";
 require_once "models/SpecialitiesModel.php";
-require_once "controllers/TicketsModel.php";
+require_once "models/TicketsModel.php";
 
 /***--- Agregar todos los controladores*/
 require_once "controllers/UserController.php";

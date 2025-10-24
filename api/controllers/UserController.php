@@ -17,7 +17,7 @@ class UserController
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetAllTechnicians/
     public function GetAllTechnicians($param)
     {
-      try {
+        try {
             $response = new Response();
             $Tecnico = new UserModel();
             $result = $Tecnico->GetAllTechnicians($param);
@@ -31,7 +31,7 @@ class UserController
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetDetailByIdAll/1
     public function GetDetailByIdAll($id)
     {
-      try {
+        try {
             $response = new Response();
             $Tecnico = new UserModel();
             $result = $Tecnico->GetDetailByIdAll($id);
@@ -43,7 +43,7 @@ class UserController
 
 
 
-    
+
 }
 
 
