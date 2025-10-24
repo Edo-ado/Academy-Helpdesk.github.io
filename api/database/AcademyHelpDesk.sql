@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS DBAcademyHelpDesk;
 CREATE DATABASE DBAcademyHelpDesk;
 USE DBAcademyHelpDesk;
 
+-- TABLAS
 CREATE TABLE Roles (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(50) UNIQUE,
@@ -187,6 +188,7 @@ CREATE TABLE UserTickets (
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
 );
 
+-- INSERTS INICIALES
 INSERT INTO SLA (MinTimeHours, MaxTimeHours, Active) VALUES
 (4, 48, TRUE),
 (8, 72, TRUE),
@@ -274,6 +276,7 @@ INSERT INTO Technician_Specialities (UserId, SpecialityId) VALUES
 (5, 11),
 (6, 12);
 
+-- INSERTS DE TICKETS INICIALES
 INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, State) VALUES
 (4, 3, 'Problema con la computadora del laboratorio', 'La computadora no arranca después de una actualización.', 3, 'Asignado'),
 (5, 1, 'Error en la matrícula en línea', 'No puedo acceder al sistema de matrícula.', 2, 'Asignado'),
@@ -303,3 +306,70 @@ INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
 (1, 7, 5, 'Excelente atención del técnico Ana.', NOW()),
 (2, 8, 4, 'Buena respuesta, aunque tardó un poco.', NOW()),
 (3, 9, 3, 'El problema se resolvió, pero sin mucha explicación.', NOW());
+
+-- TICKETS ADICIONALES PARA TODOS LOS TECNICOS Y ESTUDIANTES
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, State) VALUES
+(1, 3, 'Falla en red del laboratorio', 'La red no conecta a internet.', 3, 'Asignado'),
+(1, 3, 'Problema con impresora de red', 'La impresora del laboratorio no imprime.', 2, 'Asignado'),
+(2, 3, 'Error en software de matrícula', 'El sistema muestra errores al registrar materias.', 2, 'Asignado'),
+(2, 3, 'Actualización de software incompleta', 'Falla durante la instalación de software educativo.', 3, 'Asignado'),
+(4, 1, 'Solicitud de certificado académico', 'Usuario no puede descargar su certificado.', 1, 'Asignado'),
+(4, 1, 'Corrección de notas', 'Notas incorrectas en el sistema académico.', 2, 'Asignado'),
+(5, 2, 'Duda sobre pagos administrativos', 'Usuario no sabe el monto a pagar.', 1, 'Asignado'),
+(5, 2, 'Actualización de datos estudiantiles', 'Cambios no se reflejan en la plataforma.', 2, 'Asignado'),
+(6, 3, 'Problema en aula virtual', 'No puede acceder al aula virtual.', 2, 'Asignado'),
+(6, 3, 'Falla en conectividad de laboratorio', 'El laboratorio pierde conexión intermitente.', 3, 'Asignado');
+
+INSERT INTO UserTickets (UserId, TicketId) VALUES
+(3, 4), (3, 5),
+(7, 6), (7, 7),
+(8, 8), (8, 9),
+(9, 10), (9, 11);
+
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(4, 'Creado', 'Asignado', 1, NOW()),
+(5, 'Creado', 'Asignado', 1, NOW()),
+(6, 'Creado', 'Asignado', 2, NOW()),
+(7, 'Creado', 'Asignado', 2, NOW()),
+(8, 'Creado', 'Asignado', 4, NOW()),
+(9, 'Creado', 'Asignado', 4, NOW()),
+(10, 'Creado', 'Asignado', 5, NOW()),
+(11, 'Creado', 'Asignado', 5, NOW()),
+(12, 'Creado', 'Asignado', 6, NOW()),
+(13, 'Creado', 'Asignado', 6, NOW());
+
+INSERT INTO Archivador (HistoryTicketId, TicketId, UploadDate) VALUES
+(4, 4, NOW()),
+(5, 5, NOW()),
+(6, 6, NOW()),
+(7, 7, NOW()),
+(8, 8, NOW()),
+(9, 9, NOW()),
+(10, 10, NOW()),
+(11, 11, NOW()),
+(12, 12, NOW()),
+(13, 13, NOW());
+
+INSERT INTO Assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method) VALUES
+(4, 1, NOW(), 'Asignación automática.', 'Automático'),
+(5, 1, NOW(), 'Asignación automática.', 'Automático'),
+(6, 2, NOW(), 'Asignación automática.', 'Automático'),
+(7, 2, NOW(), 'Asignación automática.', 'Automático'),
+(8, 4, NOW(), 'Asignación automática.', 'Automático'),
+(9, 4, NOW(), 'Asignación automática.', 'Automático'),
+(10, 5, NOW(), 'Asignación automática.', 'Automático'),
+(11, 5, NOW(), 'Asignación automática.', 'Automático'),
+(12, 6, NOW(), 'Asignación automática.', 'Automático'),
+(13, 6, NOW(), 'Asignación automática.', 'Automático');
+
+INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
+(4, 3, 4, 'Buena atención.', NOW()),
+(5, 3, 5, 'Excelente respuesta.', NOW()),
+(6, 7, 4, 'Resuelto correctamente.', NOW()),
+(7, 7, 3, 'Tardó un poco en responder.', NOW()),
+(8, 8, 5, 'Muy profesional.', NOW()),
+(9, 8, 4, 'Buen soporte técnico.', NOW()),
+(10, 9, 3, 'Pudo mejorar la comunicación.', NOW()),
+(11, 9, 4, 'Problema resuelto.', NOW()),
+(12, 8, 5, 'Excelente atención.', NOW()),
+(13, 8, 4, 'Resuelto a tiempo.',NOW());
