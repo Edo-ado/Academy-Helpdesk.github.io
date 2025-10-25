@@ -6,6 +6,7 @@ import { Layout } from './components/Layout/Layout'
 import { Home } from './components/Home/Home'
 import { RouterProvider } from 'react-router'
 import { PageNotFound } from './components/Home/PageNotFound'
+
 //Crear las rutas
 const rutas=createBrowserRouter([
   {
