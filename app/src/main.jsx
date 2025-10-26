@@ -16,6 +16,7 @@ const rutas=createBrowserRouter([
       {index:true, element:<Home />},
       //Ruta comodín (404)
       { path:'*', element: <PageNotFound />}
+
     ]
   }
 ])

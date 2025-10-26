@@ -1,4 +1,5 @@
 import { Header } from './Header';
+import { Footer } from './Footer';
 
 
 
@@ -9,7 +10,9 @@ export const Layout = ({ children }) => {
       <main className="flex-1 container mx-auto p-4">
         {children}
         
+
       </main>
+      <Footer />
     
     </div>
   );
