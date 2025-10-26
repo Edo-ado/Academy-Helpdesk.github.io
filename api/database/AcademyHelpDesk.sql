@@ -193,7 +193,7 @@ CREATE TABLE UserTickets (
 
 DELIMITER $$
 
-CREATE TRIGGER trg_random_user_id_usercode
+CREATE TRIGGER randomCode
 BEFORE INSERT ON Users
 FOR EACH ROW
 BEGIN
