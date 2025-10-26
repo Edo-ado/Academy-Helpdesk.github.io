@@ -73,12 +73,14 @@ CREATE TABLE Users (
     InstitutionId INT NULL,
     PositionId INT NULL,
     State BOOLEAN,
+    UserCode Char(8) UNIQUE,
     Work_Charge VARCHAR(100) NULL,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (InsuranceId) REFERENCES Insurances(Id),
     FOREIGN KEY (RoleId) REFERENCES Roles(Id),
     FOREIGN KEY (InstitutionId) REFERENCES Institutions(Id),
     FOREIGN KEY (PositionId) REFERENCES Positions(Id)
+    
 );
 
 CREATE TABLE Tickets (
@@ -187,6 +189,28 @@ CREATE TABLE UserTickets (
     FOREIGN KEY (UserId) REFERENCES Users(Id),
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
 );
+
+
+DELIMITER $$
+
+CREATE TRIGGER trg_random_user_id_usercode
+BEFORE INSERT ON Users
+FOR EACH ROW
+BEGIN
+    DECLARE randomCode CHAR(8);
+  
+    REPEAT
+        SET randomCode = LPAD(FLOOR(RAND() * 100000000), 8, '0');
+    UNTIL NOT EXISTS (SELECT 1 FROM Users WHERE UserCode = randomCode)
+    END REPEAT;
+
+    SET NEW.UserCode = randomCode;
+END$$
+
+DELIMITER ;
+
+
+
 
 -- INSERTS INICIALES
 INSERT INTO SLA (MinTimeHours, MaxTimeHours, Active) VALUES
@@ -373,3 +397,5 @@ INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
 (11, 9, 4, 'Problema resuelto.', NOW()),
 (12, 8, 5, 'Excelente atención.', NOW()),
 (13, 8, 4, 'Resuelto a tiempo.',NOW());
+
+

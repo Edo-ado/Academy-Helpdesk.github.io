@@ -13,13 +13,10 @@ class UserModel {
          $vSql = "SELECT 
     u.UserName AS Nombre,
     u.Email,
-    r.Name AS Rol
+    u.UserCode
     FROM 
     users u
-    INNER JOIN 
-    roles r ON u.RoleId = r.Id
-where RoleId =$id
-  
+    
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
