@@ -1,19 +1,14 @@
-import { Header } from './Header';
-import { Footer } from './Footer';
+import React from "react";
+import { Sidebar } from './SideBar'; 
+import { Outlet } from "react-router-dom";
 
-
-
-export const Layout = ({ children }) => {
+export const Layout = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 container mx-auto p-4">
-        {children}
-        
-
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar  /> 
+      <main className="flex-1 overflow-auto "> 
+       <Outlet />
       </main>
-      <Footer />
-    
     </div>
   );
-};
+}
