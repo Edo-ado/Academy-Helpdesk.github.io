@@ -8,7 +8,7 @@ class UserModel {
         $this->enlace = new MySqlConnect();
     }
 
-    public function GetAllTechnicians($id) {
+    public function GetAllTechnicians() {
         $Role = "Technician";
          $vSql = "SELECT 
     u.UserName AS Nombre,
@@ -16,6 +16,8 @@ class UserModel {
     u.UserCode
     FROM 
     users u
+
+    where u.RoleId =1;
     
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);

@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Layout } from './components/Layout/Layout'
 import { Home } from './components/Home/Home'
 import { PageNotFound } from './components/Home/PageNotFound'
-
+import { TechnicianList } from './components/Pages/Technicians' // <-- corregir nombre según export
 
 // Crear las rutas
 const rutas = createBrowserRouter([
@@ -16,10 +16,7 @@ const rutas = createBrowserRouter([
       { index: true, element: <Home /> },
 
      //Rutas de pagina
-     
-
-
-
+     { path: '/technicians', element: <TechnicianList /> }, // <-- corregir uso aquí
 
      //Error page
       { path: '*', element: <PageNotFound /> },

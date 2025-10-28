@@ -1,26 +1,15 @@
 <?php
 class UserController
 {
-    public function index()
-    {
-        try {
-            $response = new Response();
-            $Tecnico = new UserModel();
-            $result = $Tecnico->all();
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-    }
-
+  
     //GET TECHNICIANS
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetAllTechnicians/
-    public function GetAllTechnicians($param)
+    public function GetAllTechnicians()
     {
         try {
             $response = new Response();
             $Tecnico = new UserModel();
-            $result = $Tecnico->GetAllTechnicians($param);
+            $result = $Tecnico->GetAllTechnicians();
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
