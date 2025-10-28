@@ -13,7 +13,8 @@ class UserModel {
          $vSql = "SELECT 
     u.UserName AS Nombre,
     u.Email,
-    u.UserCode
+    u.UserName,
+    u.Id
     FROM 
     users u
 
