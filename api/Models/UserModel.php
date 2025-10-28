@@ -11,10 +11,11 @@ class UserModel {
     public function GetAllTechnicians() {
         $Role = "Technician";
          $vSql = "SELECT 
-    u.UserName AS Nombre,
+   
     u.Email,
     u.UserName,
-    u.Id
+    u.Id,
+    u.Usercode
     FROM 
     users u
 

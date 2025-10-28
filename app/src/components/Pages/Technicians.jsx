@@ -17,9 +17,10 @@ useEffect(() => {
  
         const mappedData = Array.isArray(response.data.data)
           ? response.data.data.map((t) => ({
-              id: t.Id,   //id ;3
-              name: t.Nombre,   
+              id: t.Id,  
+              name: t.UserName,   
               email: t.Email,   
+              UserCode: t.Usercode,
             }))
           : [];
 
@@ -46,7 +47,7 @@ useEffect(() => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
+      <div className="flex justify-center items-center min-h-screen bg-[#ff6e6e]">
         <p className="text-red-500 text-lg">{error}</p>
       </div>
     );
@@ -63,6 +64,11 @@ useEffect(() => {
 return (
   <div className="bg-[#dff1ff] min-h-screen p-8">
     <div className="max-w-7xl mx-auto">
+      <h1 class="text-4xl font-extrabold text-center text-blue-600 tracking-wide drop-shadow-lg mt-6 mb-8">
+  Lista de Técnicos
+</h1>
+
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {technicians.map((tech) => (
           <div
@@ -79,7 +85,7 @@ return (
                 <p className="text-gray-600 text-sm">
                   Número de Identificación:
                 </p>
-                <p className="text-black font-bold text-lg">{tech.id}</p>
+                <p className="text-black font-bold text-lg">{tech.UserCode}</p>
               </div>
 
               <div>
