@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TechniciansLists from "../../Services/TechniciansLists";
+import { Header } from "../Layout/Header";  
 
 export function TechnicianList() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ useEffect(() => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
+        
         <p className="text-gray-700 text-lg">Cargando técnicos...</p>
       </div>
     );
@@ -62,13 +64,16 @@ useEffect(() => {
   }
 
 return (
+  
+  
   <div className="bg-[#dff1ff] min-h-screen p-8">
+    
     <div className="max-w-7xl mx-auto">
       <h1 class="text-4xl font-extrabold text-center text-blue-600 tracking-wide drop-shadow-lg mt-6 mb-8">
   Lista de Técnicos
 </h1>
 
-      
+     
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {technicians.map((tech) => (
           <div
