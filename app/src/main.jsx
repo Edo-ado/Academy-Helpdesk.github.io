@@ -5,7 +5,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Layout } from './components/Layout/Layout'
 import { Home } from './components/Home/Home'
 import { PageNotFound } from './components/Home/PageNotFound'
-import { TechnicianList } from './components/Pages/Technicians' // <-- corregir nombre según export
+import { TechnicianList } from './components/Pages/Technicians'
+import { DetailTechnician } from './components/Pages/DetailTechnician'
 
 // Crear las rutas
 const rutas = createBrowserRouter([
@@ -16,11 +17,12 @@ const rutas = createBrowserRouter([
       { index: true, element: <Home /> },
 
      //Rutas de pagina
-     { path: '/technicians', element: <TechnicianList /> }, // <-- corregir uso aquí
+     { path: '/technicians', element: <TechnicianList /> },
+     { path: '/technician/:id', element: <DetailTechnician /> }, 
 
      //Error page
       { path: '*', element: <PageNotFound /> },
-      // Rutas adicionales...
+    
       
     ],
   },

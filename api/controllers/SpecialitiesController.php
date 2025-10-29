@@ -30,7 +30,18 @@ class SpecialitiesController
         }
     }
 
-    
-
+    //GetSpecialitiesByUserID
+    //http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesController/GetSpecialitiesInformationByUserID/1
+    public function GetSpecialitiesInformationByUserID($param)
+    {
+        try {
+            $response = new Response();
+            $Specialities = new SpecialitiesModel();
+            $result = $Specialities->GetSpecialitiesInformationByUserID($param);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
 
 }

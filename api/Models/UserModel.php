@@ -41,7 +41,8 @@ class UserModel {
         u.Work_Charge,
         u.Active,
         r.Name AS Rol,
-        r.Description AS Rol_Descripcion
+        r.Description AS Rol_Descripcion,
+        u.Usercode
     FROM 
         users u
     INNER JOIN 
