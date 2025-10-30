@@ -34,13 +34,21 @@ export function DetailTechnician() {
         setTechnician(techData);
 
         const specResponse = await TechniciansLists.GetSpecialitiesInformationByUserID(id);
-        console.log("Especialidades:", specResponse.data);
         setSpecialities(specResponse.data.data || []);
 
-        // Obtener tickets asignados
-        const ticketsResponse = await TicketLists.getTicketsAssignedToTechnician(id);
-        console.log("Tickets asignados:", ticketsResponse.data);
-        setTickets(ticketsResponse.data.data || []);
+        try {
+          const ticketsResponse = await TicketLists.getTicketsAssignedToTechnician(id);
+          setTickets(ticketsResponse.data.data || []);
+        } catch (ticketError) {
+         
+          if (ticketError.response && ticketError.response.status === 404) {
+
+            setTickets([]);
+          } else {
+        
+            throw ticketError;
+          }
+        }
 
       } catch (err) {
         console.error("Error:", err);
@@ -53,7 +61,7 @@ export function DetailTechnician() {
     fetchTechnicianDetail();
   }, [id]);
 
-  // Calcular estadísticas de carga de trabajo
+  
   const workloadStats = useMemo(() => {
     if (!tickets || tickets.length === 0) {
       return { total: 0, low: 0, medium: 0, high: 0 };
