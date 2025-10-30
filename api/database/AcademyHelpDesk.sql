@@ -437,3 +437,13 @@ Insert into Technician_Specialities (UserId, SpecialityId) values
 (19, 12)
 ;
 
+ALTER TABLE `dbacademyhelpdesk`.`sla` 
+ADD COLUMN `MaxTimeResolution` INT(11) NULL DEFAULT NULL AFTER `Active`;
+
+ALTER TABLE `dbacademyhelpdesk`.`sla` 
+DROP COLUMN `MinTimeHours`;
+
+UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '4', `MaxTimeResolution` = '48' WHERE (`Id` = '1');
+UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '6', `MaxTimeResolution` = '72' WHERE (`Id` = '2');
+UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '1', `MaxTimeResolution` = '24' WHERE (`Id` = '3');
+
