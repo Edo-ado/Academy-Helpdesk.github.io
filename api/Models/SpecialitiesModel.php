@@ -24,18 +24,21 @@ class SpecialitiesModel  {
 
  public function GetSpecialitiesInformationByUserID($id) {
     $vSql = "SELECT 
-                s.Id,
-                s.Speciality AS Name,
-                s.CategoryId,
+            s.Id,
+            s.Speciality AS Name,
+             s.CategoryId,
                 c.Name AS CategoryName,
                 ts.Active
-             FROM technician_specialities ts
-             INNER JOIN specialities s ON ts.SpecialityId = s.Id
+        FROM technician_specialities ts
+       INNER JOIN specialities s ON ts.SpecialityId = s.Id
              INNER JOIN categories c ON s.CategoryId = c.Id
              WHERE ts.UserId = $id";
+
     $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+
     return $vResultado;
-}
+    
+   }
 
 
 

@@ -399,3 +399,32 @@ INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
 (13, 8, 4, 'Resuelto a tiempo.',NOW());
 
 
+
+
+ALTER TABLE Categories
+ADD COLUMN Descripcion VARCHAR(255) DEFAULT 'Sin descripción';
+
+UPDATE Categories
+SET Descripcion = 'Services related to teaching, courses, and academic support for students.'
+WHERE Id = 1;
+
+UPDATE Categories
+SET Descripcion = 'Support for student needs, administrative requests, and institutional services.'
+WHERE Id = 2;
+
+UPDATE Categories
+SET Descripcion = 'Technology support including systems, software, and technical assistance.'
+WHERE Id = 3;
+
+UPDATE Categories
+SET Descripcion = 'Maintenance and management of physical spaces, equipment, and infrastructure.'
+WHERE Id = 4;
+
+INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge) VALUES
+(2, 'coordinator_ashley', 'ashley.coordinator@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Program Coordinator'),
+(2, 'secretary_fabian', 'fabian.secr@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Academic Secretary'),
+(1, 'advisor_math', 'mathew.ads@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Student Advisor'),
+(2, 'tech_pepito', 'pedro.techelectrical@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Electrical Technician'),
+(3, 'cleaning_caleb', 'caleb.clean@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Cleaning Supervisor');
+
+

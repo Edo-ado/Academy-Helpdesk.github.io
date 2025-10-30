@@ -40,7 +40,7 @@ INNER JOIN UserTickets ut ON t.Id = ut.TicketId
 INNER JOIN Users u ON ut.UserId = u.Id          
 INNER JOIN Users tech ON t.TechnicianId = tech.Id
 INNER JOIN Categories c ON t.CategoryId = c.Id
-WHERE t.TechnicianId = 2;  ";
+WHERE t.TechnicianId = $id;  ";
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
     }

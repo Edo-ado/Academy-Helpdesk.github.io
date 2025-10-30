@@ -10,16 +10,16 @@ class UserModel {
 
     public function GetAllTechnicians() {
         $Role = "Technician";
-         $vSql = "SELECT 
-   
-    u.Email,
-    u.UserName,
-    u.Id,
-    u.Usercode
-    FROM 
-    users u
+            $vSql = "SELECT 
+    
+        u.Email,
+        u.UserName,
+        u.Id,
+        u.Usercode
+        FROM 
+        users u
 
-    where u.RoleId =1;
+        where u.RoleId =1 and u.Active=1;
     
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
@@ -55,7 +55,5 @@ class UserModel {
     $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
     return $vResultado;
 }
-
-
 
 }

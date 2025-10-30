@@ -33,7 +33,7 @@ class TicketsController
 
 
     //TicketAssignedToTEC
-    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketAssignedToTEC
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketAssignedToTEC/1
      public function TicketAssignedToTEC($param)
     {
         try {
@@ -48,7 +48,7 @@ class TicketsController
 
 
     //TicketsPerUser
-    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketsPerUser
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketsPerUser/1
 
      public function TicketsPerUser($param)
     {
