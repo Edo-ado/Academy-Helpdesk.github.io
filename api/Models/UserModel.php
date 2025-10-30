@@ -1,5 +1,6 @@
 <?php
-class UserModel {
+class UserModel
+{
 
     public $enlace;
 
@@ -8,9 +9,10 @@ class UserModel {
         $this->enlace = new MySqlConnect();
     }
 
-    public function GetAllTechnicians() {
+    public function GetAllTechnicians()
+    {
         $Role = "Technician";
-            $vSql = "SELECT 
+        $vSql = "SELECT 
     
         u.Email,
         u.UserName,
@@ -25,10 +27,34 @@ class UserModel {
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
+    public function GetAllUsers()
+    {
+
+        $vSql = "SELECT 
+    
+        u.Email,
+        u.UserName,
+        u.Id,
+        u.Usercode,
+        r.Name AS Rol
+        FROM 
+        users u
 
 
-   public function GetDetailByIdAll($id) {
-    $vSql = "SELECT 
+        INNER JOIN 
+        roles r On u.RoleId = r.Id
+
+        where
+        u.Active = 1
+    
+";
+        $vResultado = $this->enlace->ExecuteSQL($vSql);
+        return $vResultado;
+    }
+
+    public function GetDetailByIdAll($id)
+    {
+        $vSql = "SELECT 
         u.Id,
         i.Name as InsuranceId,
         u.UserName,
@@ -51,9 +77,9 @@ class UserModel {
         insurances i ON u.InsuranceId = i.Id
     WHERE 
         u.Id = $id";
-    
-    $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
-    return $vResultado;
-}
+
+        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+        return $vResultado;
+    }
 
 }
