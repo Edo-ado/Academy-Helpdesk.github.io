@@ -73,7 +73,7 @@ WHERE t.TechnicianId = $id;  ";
 
     public function TicketsPerUser($id)
     {
-        $msg = "SELECT 
+       $msg = "SELECT 
     t.Id AS TicketId,
     t.Title,
     t.Description,
@@ -87,9 +87,10 @@ WHERE t.TechnicianId = $id;  ";
 FROM UserTickets ut
 INNER JOIN Tickets t ON ut.TicketId = t.Id
 INNER JOIN Users u ON ut.UserId = u.Id         
-INNER JOIN Users tech ON t.TechnicianId = tech.Id 
+LEFT JOIN Users tech ON t.TechnicianId = tech.Id 
 INNER JOIN Categories c ON t.CategoryId = c.Id
-WHERE ut.UserId = $id;  ";
+WHERE ut.UserId = $id
+ORDER BY t.Id DESC;";
 
 
         $vResultado = $this->enlace->ExecuteSQL($msg);

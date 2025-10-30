@@ -15,19 +15,24 @@ export function DetailTicket() {
         const response = await TicketLists.GetTicketById(id);
         console.log("Detalle del ticket:", response.data);
         
+        // Validar que existan datos
+        if (!response.data || !response.data.data || response.data.data.length === 0) {
+          throw new Error("No se encontraron datos del ticket");
+        }
+        
         const t = response.data.data[0];
         
         const mappedTicket = {
-          ticketId: t.TicketId,
-          title: t.Title,
-          description: t.Description,
-          priority: t.Priority,
-          state: t.State,
-          startDate: t.Ticket_Start_Date,
-          endDate: t.Ticket_End_Date,
-          category: t.Category,
-          technician: t.Tecnico,
-          client: t.Cliente
+          ticketId: t.TicketId || "N/A",
+          title: t.Title || "Sin título",
+          description: t.Description || "Sin descripción",
+          priority: t.Priority || 1,
+          state: t.State || "Pendiente",
+          startDate: t.Ticket_Start_Date || null,
+          endDate: t.Ticket_End_Date || null,
+          category: t.Category || "Sin categoría",
+          technician: t.Tecnico || "Sin asignar",
+          client: t.Cliente || "Desconocido"
         };
         
         console.log("Mapped ticket:", mappedTicket);
@@ -40,7 +45,12 @@ export function DetailTicket() {
       }
     };
 
-    fetchTicketDetail();
+    if (id) {
+      fetchTicketDetail();
+    } else {
+      setError("ID de ticket no válido");
+      setLoading(false);
+    }
   }, [id]);
 
   const getPriorityConfig = (priority) => {
@@ -82,56 +92,99 @@ export function DetailTicket() {
   };
 
   const getStateConfig = (state) => {
-    const stateNum = parseInt(state, 10);
-    switch (stateNum) {
-      case 1:
-        return { 
-          label: "Abierto", 
-          color: "bg-blue-100 text-blue-800",
-          icon: "⏳"
-        };
-      case 2:
-        return { 
-          label: "En Proceso", 
-          color: "bg-yellow-100 text-yellow-800",
-          icon: "🔄"
-        };
-      case 3:
-        return { 
-          label: "Resuelto", 
-          color: "bg-green-100 text-green-800",
-          icon: "✓"
-        };
-      case 4:
-        return { 
-          label: "Cerrado", 
-          color: "bg-gray-100 text-gray-800",
-          icon: "✕"
-        };
-      default:
-        return { 
-          label: "Desconocido", 
-          color: "bg-gray-100 text-gray-800",
-          icon: "?"
-        };
+    // Manejar tanto números como strings
+    const stateStr = String(state).toLowerCase();
+    
+    if (stateStr === "pendiente" || stateStr === "1") {
+      return { 
+        label: "Pendiente", 
+        color: "bg-gray-100 text-gray-800",
+        icon: "⏳"
+      };
     }
+    if (stateStr === "asignado" || stateStr === "2") {
+      return { 
+        label: "Asignado", 
+        color: "bg-blue-100 text-blue-800",
+        icon: "👤"
+      };
+    }
+    if (stateStr === "en proceso" || stateStr === "3") {
+      return { 
+        label: "En Proceso", 
+        color: "bg-yellow-100 text-yellow-800",
+        icon: "🔄"
+      };
+    }
+    if (stateStr === "resuelto" || stateStr === "4") {
+      return { 
+        label: "Resuelto", 
+        color: "bg-green-100 text-green-800",
+        icon: "✓"
+      };
+    }
+    if (stateStr === "cerrado" || stateStr === "5") {
+      return { 
+        label: "Cerrado", 
+        color: "bg-purple-100 text-purple-800",
+        icon: "✕"
+      };
+    }
+    
+    return { 
+      label: state || "Desconocido", 
+      color: "bg-gray-100 text-gray-800",
+      icon: "?"
+    };
   };
 
   const formatDate = (dateString) => {
     if (!dateString) return "No especificada";
-    return new Date(dateString).toLocaleString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    
+    try {
+      const date = new Date(dateString);
+      // Verificar si la fecha es válida
+      if (isNaN(date.getTime())) return "Fecha inválida";
+      
+      return date.toLocaleString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error("Error formateando fecha:", error);
+      return "Fecha inválida";
+    }
+  };
+
+  const calculateDuration = (startDate, endDate) => {
+    if (!startDate || !endDate) return null;
+    
+    try {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
+      
+      const diffTime = Math.abs(end - start);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      return diffDays;
+    } catch (error) {
+      console.error("Error calculando duración:", error);
+      return null;
+    }
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">Cargando detalles del ticket...</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-700 text-lg">Cargando detalles del ticket...</p>
+        </div>
       </div>
     );
   }
@@ -139,11 +192,12 @@ export function DetailTicket() {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <div className="text-center">
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg">
+          <span className="text-6xl mb-4 block">⚠️</span>
           <p className="text-red-500 text-lg mb-4">{error}</p>
           <button
             onClick={() => navigate("/tickets")}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
           >
             Volver a la lista
           </button>
@@ -155,22 +209,32 @@ export function DetailTicket() {
   if (!ticket) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">No se encontró el ticket</p>
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg">
+          <span className="text-6xl mb-4 block">🔍</span>
+          <p className="text-gray-700 text-lg mb-4">No se encontró el ticket</p>
+          <button
+            onClick={() => navigate("/tickets")}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Volver a la lista
+          </button>
+        </div>
       </div>
     );
   }
 
   const priorityConfig = getPriorityConfig(ticket.priority);
   const stateConfig = getStateConfig(ticket.state);
+  const duration = calculateDuration(ticket.startDate, ticket.endDate);
 
   return (
     <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate("/tickets")}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition font-semibold"
         >
-          <span>←</span>
+          <span className="text-xl">←</span>
           <span>Volver a la lista</span>
         </button>
 
@@ -184,7 +248,7 @@ export function DetailTicket() {
               {ticket.title}
             </h1>
             <p className="text-gray-600 text-sm mb-3">Ticket #{ticket.ticketId}</p>
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center gap-3 flex-wrap">
               <span className={`inline-block ${priorityConfig.color} text-white px-4 py-1 rounded-full text-sm font-semibold`}>
                 🔥 Prioridad: {priorityConfig.label}
               </span>
@@ -198,7 +262,7 @@ export function DetailTicket() {
           <div className="mb-6 bg-gray-50 p-6 rounded-lg">
             <h3 className="font-semibold text-gray-700 mb-3 text-lg">📋 Descripción</h3>
             <p className="text-gray-900 leading-relaxed whitespace-pre-wrap">
-              {ticket.description || "Sin descripción"}
+              {ticket.description}
             </p>
           </div>
 
@@ -225,7 +289,13 @@ export function DetailTicket() {
                 <span className="text-blue-600 text-xl">👨‍💼</span>
                 <p className="font-semibold text-gray-700">Técnico Asignado</p>
               </div>
-              <p className="text-gray-900 font-medium">{ticket.technician}</p>
+              <p className="text-gray-900 font-medium">
+                {ticket.technician === "Sin asignar" ? (
+                  <span className="text-gray-500 italic">{ticket.technician}</span>
+                ) : (
+                  ticket.technician
+                )}
+              </p>
             </div>
 
             <div className={`${priorityConfig.bgLight} p-4 rounded-lg border-l-4 ${priorityConfig.borderColor}`}>
@@ -244,7 +314,7 @@ export function DetailTicket() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-600">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-green-500 text-2xl">📅</span>
-            <h2 className="text-2xl font-bold text-gray-900">Fechas</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Línea de Tiempo</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -255,19 +325,19 @@ export function DetailTicket() {
               </p>
             </div>
 
-            <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-600">
+            <div className={`${ticket.endDate ? 'bg-purple-50 border-purple-600' : 'bg-gray-50 border-gray-300'} p-6 rounded-lg border-l-4`}>
               <p className="font-semibold text-gray-700 mb-2">🏁 Fecha de Finalización</p>
-              <p className="text-gray-900 font-medium">
+              <p className={`font-medium ${ticket.endDate ? 'text-gray-900' : 'text-gray-500 italic'}`}>
                 {formatDate(ticket.endDate)}
               </p>
             </div>
           </div>
 
-          {ticket.startDate && ticket.endDate && (
-            <div className="mt-6 bg-gray-50 p-4 rounded-lg text-center">
-              <p className="text-gray-600 text-sm mb-1">Duración estimada</p>
+          {duration !== null && (
+            <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg text-center border-2 border-blue-200">
+              <p className="text-gray-600 text-sm mb-1">⏱️ Duración Total</p>
               <p className="text-gray-900 font-bold text-lg">
-                {Math.ceil((new Date(ticket.endDate) - new Date(ticket.startDate)) / (1000 * 60 * 60 * 24))} días
+                {duration} {duration === 1 ? 'día' : 'días'}
               </p>
             </div>
           )}
