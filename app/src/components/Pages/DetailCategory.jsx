@@ -26,9 +26,9 @@ export function DetailCategory() {
 
     const fetchCategoryDetail = async () => {
       try {
-        console.log("Cargando categoría con ID:", id);
+      
         const response = await CategoriesList.GetCategoryDetailsByID(id);
-        console.log("Detalle de categoría:", response.data);
+      
         
         const catData = response.data.data[0];
         setCategory(catData);
@@ -75,12 +75,12 @@ export function DetailCategory() {
     );
   }
 
-  // Convertir strings separados por comas en arrays
+  //onvertir strings separados por comas en arrays
   const specialities = category.Especielities ? category.Especielities.split(', ') : [];
   const tags = category.tags ? category.tags.split(', ') : [];
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
+    <div className="bg-[#dff1ff] min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate("/categories")}
@@ -101,20 +101,20 @@ export function DetailCategory() {
             </h1>
           </div>
 
-          {/* SLA - Tiempo de respuesta */}
+          {/* SLA - Tiempos de Atención */}
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg mb-6 border-l-4 border-blue-600">
             <div className="flex items-center gap-2 mb-3">
               <FontAwesomeIcon icon={faClock} className="text-blue-600 text-xl" />
-              <h2 className="text-xl font-bold text-gray-900">Tiempo de Respuesta (SLA)</h2>
+              <h2 className="text-xl font-bold text-gray-900">Tiempos de Atención (SLA)</h2>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Tiempo Mínimo</p>
-                <p className="text-2xl font-bold text-blue-600">{category.TiempoMinimo}h</p>
+                <p className="text-sm text-gray-600 mb-1">Tiempo Máximo de Respuesta</p>
+                <p className="text-2xl font-bold text-blue-600">{category.TiempoMaximoRespuesta}h</p>
               </div>
               <div className="bg-white p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Tiempo Máximo</p>
-                <p className="text-2xl font-bold text-orange-600">{category.TiempoMaximo}h</p>
+                <p className="text-sm text-gray-600 mb-1">Tiempo Máximo de Resolución</p>
+                <p className="text-2xl font-bold text-orange-600">{category.TiempoMaximoResolucion}h</p>
               </div>
             </div>
           </div>
