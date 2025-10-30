@@ -64,27 +64,28 @@ class TicketsController
 
 
     //WeeklyPartialTicketsFilter
-//http://localhost/Academy-Helpdesk.github.io/api/TicketsController/WeeklyPartialTicketsFilter/1/2025-10-30/2025-11-10
+//http://localhost/Academy-Helpdesk.github.io/api/TicketsController/WeeklyPartialTicketsFilter/1/2025-10-30/
 
-    public function WeeklyPartialTicketsFilter($id, $first_day, $last_day)
+    public function WeeklyPartialTicketsFilter($id, $first_day)
     {
 
         try {
             $response = new Response();
             $Tickets = new TicketsModel();
-            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day, $last_day);
+            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
         }
 
     }
-
-    public function WeeklyPartialUserTicketsFilter($id, $first_day, $last_day){
+//WeeklyPartialTicketsFilter
+//http://localhost/Academy-Helpdesk.github.io/api/TicketsController/WeeklyPartialTicketsFilter/1/2025-10-30/
+    public function WeeklyPartialUserTicketsFilter($id, $first_day, ){
         try {
             $response = new Response();
             $Tickets = new TicketsModel();
-            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day, $last_day);
+            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);

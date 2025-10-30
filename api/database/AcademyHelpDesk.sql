@@ -26,9 +26,9 @@ CREATE TABLE Positions (
 
 CREATE TABLE SLA (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    MinTimeHours INT,
     MaxTimeHours INT,
-    Active BOOLEAN NOT NULL DEFAULT TRUE
+    Active BOOLEAN NOT NULL DEFAULT TRUE,
+    MaxTimeResolution INT NULL DEFAULT NULL
 );
 
 CREATE TABLE Institutions (
@@ -42,6 +42,7 @@ CREATE TABLE Categories (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(100),
     SLAId INT,
+    Descripcion VARCHAR(255) DEFAULT 'Sin descripción',
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (SLAId) REFERENCES SLA(Id)
 );
@@ -80,7 +81,6 @@ CREATE TABLE Users (
     FOREIGN KEY (RoleId) REFERENCES Roles(Id),
     FOREIGN KEY (InstitutionId) REFERENCES Institutions(Id),
     FOREIGN KEY (PositionId) REFERENCES Positions(Id)
-    
 );
 
 CREATE TABLE Tickets (
@@ -90,8 +90,8 @@ CREATE TABLE Tickets (
     Title VARCHAR(100),
     Description VARCHAR(255),
     Priority INT,
-    Ticket_Start_Date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Ticket_End_Date DATETIME,
+    Ticket_Start_Date date DEFAULT CURRENT_TIMESTAMP,
+    Ticket_End_Date date,
     State VARCHAR(50),
     Resolution_Time BIGINT,
     Ticket_Response_SLA DATETIME,
@@ -190,7 +190,6 @@ CREATE TABLE UserTickets (
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
 );
 
-
 DELIMITER $$
 
 CREATE TRIGGER trg_random_user_id_usercode
@@ -209,21 +208,18 @@ END$$
 
 DELIMITER ;
 
-
-
-
 -- INSERTS INICIALES
-INSERT INTO SLA (MinTimeHours, MaxTimeHours, Active) VALUES
+INSERT INTO SLA (MaxTimeHours, MaxTimeResolution, Active) VALUES
 (4, 48, TRUE),
-(8, 72, TRUE),
-(2, 24, TRUE),
+(6, 72, TRUE),
+(1, 24, TRUE),
 (6, 72, TRUE);
 
-INSERT INTO Categories (Name, SLAId, Active) VALUES
-('Academic Services', 1, TRUE),
-('Student and Administrative Services', 2, TRUE),
-('Technology', 3, TRUE),
-('Physical Infrastructure and Maintenance', 4, TRUE);
+INSERT INTO Categories (Name, SLAId, Descripcion, Active) VALUES
+('Academic Services', 1, 'Services related to teaching, courses, and academic support for students.', TRUE),
+('Student and Administrative Services', 2, 'Support for student needs, administrative requests, and institutional services.', TRUE),
+('Technology', 3, 'Technology support including systems, software, and technical assistance.', TRUE),
+('Physical Infrastructure and Maintenance', 4, 'Maintenance and management of physical spaces, equipment, and infrastructure.', TRUE);
 
 INSERT INTO Tags (CategoryId, Tag, Active) VALUES
 (1, 'Schedules', TRUE),
@@ -277,174 +273,295 @@ INSERT INTO Roles (Name, Description) VALUES
 INSERT INTO Institutions (Name, Location) VALUES
 ('Liceo San José de Alajuela', 'Alajuela, Costa Rica'),
 ('Colegio Técnico Profesional de Heredia', 'Heredia, Costa Rica'),
-('Instituto Educativo Santa María', 'San José, Costa Rica');
+('Instituto Educativo Santa María', 'San José, Costa Rica'),
+('Colegio Técnico de Cartago', 'Cartago, Costa Rica');
 
 INSERT INTO Insurances (Name, Description) VALUES
 ('INS', 'National Insurance Institute'),
 ('Medismart', 'Private medical insurance'),
 ('No insurance', 'User without medical coverage');
 
+-- USUARIOS: Técnicos, Estudiantes
 INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge) VALUES
+-- Técnicos originales (RoleId = 1)
 (1, 'tech_maria', 'maria.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Network Technician'),
 (2, 'tech_pedro', 'pedro.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Software Support'),
-(3, 'student_jose', 'jose.student@liceoalajuela.cr', 'hashed_password_123', 2, NOW(), 1, TRUE, NULL),
 (1, 'tech_ana', 'ana.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Hardware Specialist'),
 (2, 'tech_carlos', 'carlos.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'System Administrator'),
 (3, 'tech_luisa', 'luisa.tech@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Network Support'),
+-- Estudiantes (RoleId = 2)
+(3, 'student_jose', 'jose.student@liceoalajuela.cr', 'hashed_password_123', 2, NOW(), 1, TRUE, NULL),
 (3, 'student_mario', 'mario.student@liceoalajuela.cr', 'hashed_password_321', 2, NOW(), 1, TRUE, NULL),
 (2, 'student_ana', 'ana.student@heredia.cr', 'hashed_password_456', 2, NOW(), 2, TRUE, NULL),
-(1, 'student_luis', 'luis.student@santamaria.cr', 'hashed_password_789', 2, NOW(), 3, TRUE, NULL);
-
-INSERT INTO Technician_Specialities (UserId, SpecialityId) VALUES
-(4, 10),
-(5, 11),
-(6, 12);
-
--- INSERTS DE TICKETS INICIALES
-INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, State) VALUES
-(4, 3, 'Problema con la computadora del laboratorio', 'La computadora no arranca después de una actualización.', 3, 'Asignado'),
-(5, 1, 'Error en la matrícula en línea', 'No puedo acceder al sistema de matrícula.', 2, 'Asignado'),
-(6, 2, 'Duda sobre pago de transporte', 'No aparece el monto a pagar del bus estudiantil.', 1, 'Asignado');
-
-INSERT INTO UserTickets (UserId, TicketId) VALUES
-(7, 1),
-(8, 2),
-(9, 3);
-
-INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
-(1, 'Creado', 'Asignado', 4, NOW()),
-(2, 'Creado', 'Asignado', 5, NOW()),
-(3, 'Creado', 'Asignado', 6, NOW());
-
-INSERT INTO Archivador (HistoryTicketId, TicketId, UploadDate) VALUES
-(1, 1, NOW()),
-(2, 2, NOW()),
-(3, 3, NOW());
-
-INSERT INTO Assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method) VALUES
-(1, 4, NOW(), 'Asignado automáticamente por categoría Tecnología.', 'Automático'),
-(2, 5, NOW(), 'Asignado por administrador debido a experiencia en sistemas.', 'Manual'),
-(3, 6, NOW(), 'Asignación automática según carga de trabajo.', 'Automático');
-
-INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
-(1, 7, 5, 'Excelente atención del técnico Ana.', NOW()),
-(2, 8, 4, 'Buena respuesta, aunque tardó un poco.', NOW()),
-(3, 9, 3, 'El problema se resolvió, pero sin mucha explicación.', NOW());
-
--- TICKETS ADICIONALES PARA TODOS LOS TECNICOS Y ESTUDIANTES
-INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, State) VALUES
-(1, 3, 'Falla en red del laboratorio', 'La red no conecta a internet.', 3, 'Asignado'),
-(1, 3, 'Problema con impresora de red', 'La impresora del laboratorio no imprime.', 2, 'Asignado'),
-(2, 3, 'Error en software de matrícula', 'El sistema muestra errores al registrar materias.', 2, 'Asignado'),
-(2, 3, 'Actualización de software incompleta', 'Falla durante la instalación de software educativo.', 3, 'Asignado'),
-(4, 1, 'Solicitud de certificado académico', 'Usuario no puede descargar su certificado.', 1, 'Asignado'),
-(4, 1, 'Corrección de notas', 'Notas incorrectas en el sistema académico.', 2, 'Asignado'),
-(5, 2, 'Duda sobre pagos administrativos', 'Usuario no sabe el monto a pagar.', 1, 'Asignado'),
-(5, 2, 'Actualización de datos estudiantiles', 'Cambios no se reflejan en la plataforma.', 2, 'Asignado'),
-(6, 3, 'Problema en aula virtual', 'No puede acceder al aula virtual.', 2, 'Asignado'),
-(6, 3, 'Falla en conectividad de laboratorio', 'El laboratorio pierde conexión intermitente.', 3, 'Asignado');
-
-INSERT INTO UserTickets (UserId, TicketId) VALUES
-(3, 4), (3, 5),
-(7, 6), (7, 7),
-(8, 8), (8, 9),
-(9, 10), (9, 11);
-
-INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
-(4, 'Creado', 'Asignado', 1, NOW()),
-(5, 'Creado', 'Asignado', 1, NOW()),
-(6, 'Creado', 'Asignado', 2, NOW()),
-(7, 'Creado', 'Asignado', 2, NOW()),
-(8, 'Creado', 'Asignado', 4, NOW()),
-(9, 'Creado', 'Asignado', 4, NOW()),
-(10, 'Creado', 'Asignado', 5, NOW()),
-(11, 'Creado', 'Asignado', 5, NOW()),
-(12, 'Creado', 'Asignado', 6, NOW()),
-(13, 'Creado', 'Asignado', 6, NOW());
-
-INSERT INTO Archivador (HistoryTicketId, TicketId, UploadDate) VALUES
-(4, 4, NOW()),
-(5, 5, NOW()),
-(6, 6, NOW()),
-(7, 7, NOW()),
-(8, 8, NOW()),
-(9, 9, NOW()),
-(10, 10, NOW()),
-(11, 11, NOW()),
-(12, 12, NOW()),
-(13, 13, NOW());
-
-INSERT INTO Assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method) VALUES
-(4, 1, NOW(), 'Asignación automática.', 'Automático'),
-(5, 1, NOW(), 'Asignación automática.', 'Automático'),
-(6, 2, NOW(), 'Asignación automática.', 'Automático'),
-(7, 2, NOW(), 'Asignación automática.', 'Automático'),
-(8, 4, NOW(), 'Asignación automática.', 'Automático'),
-(9, 4, NOW(), 'Asignación automática.', 'Automático'),
-(10, 5, NOW(), 'Asignación automática.', 'Automático'),
-(11, 5, NOW(), 'Asignación automática.', 'Automático'),
-(12, 6, NOW(), 'Asignación automática.', 'Automático'),
-(13, 6, NOW(), 'Asignación automática.', 'Automático');
-
-INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
-(4, 3, 4, 'Buena atención.', NOW()),
-(5, 3, 5, 'Excelente respuesta.', NOW()),
-(6, 7, 4, 'Resuelto correctamente.', NOW()),
-(7, 7, 3, 'Tardó un poco en responder.', NOW()),
-(8, 8, 5, 'Muy profesional.', NOW()),
-(9, 8, 4, 'Buen soporte técnico.', NOW()),
-(10, 9, 3, 'Pudo mejorar la comunicación.', NOW()),
-(11, 9, 4, 'Problema resuelto.', NOW()),
-(12, 8, 5, 'Excelente atención.', NOW()),
-(13, 8, 4, 'Resuelto a tiempo.',NOW());
-
-
-
-
-ALTER TABLE Categories
-ADD COLUMN Descripcion VARCHAR(255) DEFAULT 'Sin descripción';
-
-UPDATE Categories
-SET Descripcion = 'Services related to teaching, courses, and academic support for students.'
-WHERE Id = 1;
-
-UPDATE Categories
-SET Descripcion = 'Support for student needs, administrative requests, and institutional services.'
-WHERE Id = 2;
-
-UPDATE Categories
-SET Descripcion = 'Technology support including systems, software, and technical assistance.'
-WHERE Id = 3;
-
-UPDATE Categories
-SET Descripcion = 'Maintenance and management of physical spaces, equipment, and infrastructure.'
-WHERE Id = 4;
-
-INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge) VALUES
+(1, 'student_luis', 'luis.student@santamaria.cr', 'hashed_password_789', 2, NOW(), 3, TRUE, NULL),
+-- Técnicos adicionales (RoleId = 1)
 (2, 'coordinator_ashley', 'ashley.coordinator@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Program Coordinator'),
 (2, 'secretary_fabian', 'fabian.secr@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Academic Secretary'),
 (1, 'advisor_math', 'mathew.ads@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Student Advisor'),
 (2, 'tech_pepito', 'pedro.techelectrical@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Electrical Technician'),
-(3, 'cleaning_caleb', 'caleb.clean@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Cleaning Supervisor');
+(3, 'cleaning_caleb', 'caleb.clean@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Cleaning Supervisor'),
+-- Más estudiantes
+(3, 'student_carla', 'carla.student@cartago.cr', 'hashed_password_111', 2, NOW(), 4, TRUE, NULL);
 
-Insert into Technician_Specialities (UserId, SpecialityId) values
-(10, 3),
-(10, 4),
-(11, 5),
-(11, 2),
-(12, 14),
-(13, 13 ),
-(13, 12);
+-- ESPECIALIDADES DE TÉCNICOS
+INSERT INTO Technician_Specialities (UserId, SpecialityId) VALUES
+-- Técnicos originales
+(1, 11), -- tech_maria - Network Administrator
+(2, 9),  -- tech_pedro - IT Support
+(2, 10), -- tech_pedro - Systems Technician
+(4, 9),  -- tech_ana - IT Support
+(5, 10), -- tech_carlos - Systems Technician
+(5, 11), -- tech_carlos - Network Administrator
+(6, 11), -- tech_luisa - Network Administrator
+-- Técnicos adicionales
+(10, 3), -- coordinator_ashley - Academic Secretary
+(10, 4), -- coordinator_ashley - Accountant
+(11, 5), -- secretary_fabian - Student Coordinator
+(11, 2), -- secretary_fabian - Program Coordinator
+(12, 14), -- advisor_math - Electric Technician
+(13, 13), -- tech_pepito - Cleaning Supervisor
+(13, 12), -- tech_pepito - Maintenance Technician
+(14, 13); -- cleaning_caleb - Cleaning Supervisor
+
+-- ========================================
+-- TICKETS CON VARIEDAD DE ESTADOS Y FECHAS
+-- ========================================
 
 
-ALTER TABLE `dbacademyhelpdesk`.`sla` 
-ADD COLUMN `MaxTimeResolution` INT(11) NULL DEFAULT NULL AFTER `Active`;
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, State, Ticket_Response_SLA, Ticket_Resolution_SLA) VALUES
+(4, 3, 'No puedo acceder al campus virtual', 'Aparece error 404 al intentar ingresar', 3, DATE_SUB(NOW(), INTERVAL 1 HOUR), 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 24 HOUR)),
+(11, 1, 'Consulta sobre proceso de matrícula', 'Necesito información sobre fechas de matrícula para el próximo ciclo', 1, DATE_SUB(NOW(), INTERVAL 3 HOUR), 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 48 HOUR)),
+(10, 2, 'Problema con pago de mensualidad', 'El sistema no registra mi último pago', 2, DATE_SUB(NOW(), INTERVAL 5 HOUR), 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 72 HOUR)),
+(10, 1, 'Consulta sobre retiro de curso', 'Información sobre proceso y fechas', 1, DATE_SUB(NOW(), INTERVAL 4 HOUR), 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 48 HOUR)),
+(1, 1, 'Duplicado de carnet estudiantil', 'Perdí mi carnet :`v', 1, DATE_SUB(NOW(), INTERVAL 2 HOUR), 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 48 HOUR));
 
-ALTER TABLE `dbacademyhelpdesk`.`sla` 
-DROP COLUMN `MinTimeHours`;
+-- Tickets ASIGNADOS (ya tienen técnico pero no iniciados)
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, State, Ticket_Response_SLA, Ticket_Resolution_SLA) VALUES
+(1, 3, 'Falla en red del laboratorio 3', 'La conexión se cae cada 10 minutos', 3, DATE_SUB(NOW(), INTERVAL 2 DAY), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 DAY), INTERVAL 24 HOUR)),
+(2, 3, 'Error al instalar software educativo', 'Aparece mensaje de error durante instalación', 2, DATE_SUB(NOW(), INTERVAL 1 DAY), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 24 HOUR)),
+(4, 1, 'Corrección de calificaciones', 'Hay notas incorrectas en mi historial académico', 2, DATE_SUB(NOW(), INTERVAL 3 DAY), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 DAY), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 DAY), INTERVAL 48 HOUR)),
+(5, 2, 'Solicitud de certificado de estudios', 'Necesito certificado para trámite externo', 1, DATE_SUB(NOW(), INTERVAL 1 DAY), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 DAY), INTERVAL 72 HOUR)),
+(1, 1, 'Cambio de sección de curso', 'Necesito cambiar de horario', 1, DATE_SUB(NOW(), INTERVAL 6 HOUR), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 6 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 6 HOUR), INTERVAL 48 HOUR)),
+(4, 1, 'Acceso a actas de examen', 'No puedo ver mis resultados', 2, DATE_SUB(NOW(), INTERVAL 8 HOUR), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 8 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 8 HOUR), INTERVAL 48 HOUR));
 
-UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '4', `MaxTimeResolution` = '48' WHERE (`Id` = '1');
-UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '6', `MaxTimeResolution` = '72' WHERE (`Id` = '2');
-UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '1', `MaxTimeResolution` = '24' WHERE (`Id` = '3');
-UPDATE `dbacademyhelpdesk`.`sla` SET `MaxTimeHours` = '8', `MaxTimeResolution` = '72' WHERE (`Id` = '4');
+-- Tickets EN PROCESO (activamente siendo trabajados)
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, State, Ticket_Response_SLA, Ticket_Resolution_SLA, Response_Compliance) VALUES
+(1, 3, 'Computadora del laboratorio no enciende', 'PC número 15 no responde al encender', 3, DATE_SUB(NOW(), INTERVAL 4 DAY), 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 DAY), INTERVAL 24 HOUR), TRUE),
+(10, 1, 'Error en sistema de inscripción', 'No me permite inscribir el curso de matemáticas', 3, DATE_SUB(NOW(), INTERVAL 3 DAY), 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 DAY), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 DAY), INTERVAL 48 HOUR), TRUE),
+(14, 4, 'Aire acondicionado del aula 201 no funciona', 'Hace mucho calor en el salón', 2, DATE_SUB(NOW(), INTERVAL 5 DAY), 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 DAY), INTERVAL 72 HOUR), TRUE),
+(4, 2, 'Actualización de datos personales', 'Cambié de dirección y necesito actualizar información', 1, DATE_SUB(NOW(), INTERVAL 2 DAY), 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 DAY), INTERVAL 72 HOUR), TRUE),
+(14, 4, 'Luz fundida en pasillo principal', 'Pasillo está muy oscuro', 2, DATE_SUB(NOW(), INTERVAL 7 HOUR), 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 7 HOUR), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 7 HOUR), INTERVAL 72 HOUR), TRUE);
 
+-- Tickets RESUELTOS (terminados, esperando confirmación)
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, Ticket_End_Date, State, Resolution_Time, Ticket_Response_SLA, Ticket_Resolution_SLA, Response_Compliance, Resolution_Compliance) VALUES
+(1, 3, 'Impresora de red no imprime', 'La impresora del laboratorio 2 no responde', 2, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY), 'Resuelto', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 7 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 7 DAY), INTERVAL 24 HOUR), TRUE, TRUE),
+(10, 1, 'Consulta sobre horario de clases', 'No aparece mi horario en el sistema', 1, DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY), 'Resuelto', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 6 DAY), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 6 DAY), INTERVAL 48 HOUR), TRUE, TRUE),
+(2, 3, 'Lentitud en sistema de biblioteca virtual', 'El catálogo tarda mucho en cargar', 2, DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), 'Resuelto', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 8 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 8 DAY), INTERVAL 24 HOUR), TRUE, TRUE),
+(2, 3, 'Software de diseño no abre archivos', 'Aparece error al abrir proyectos', 3, DATE_SUB(NOW(), INTERVAL 18 DAY), DATE_SUB(NOW(), INTERVAL 12 DAY), 'Resuelto', 518400, DATE_ADD(DATE_SUB(NOW(), INTERVAL 18 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 18 DAY), INTERVAL 24 HOUR), TRUE, TRUE);
+
+-- Tickets CERRADOS (completamente finalizados y validados)
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, Ticket_End_Date, State, Resolution_Time, Ticket_Response_SLA, Ticket_Resolution_SLA, Response_Compliance, Resolution_Compliance) VALUES
+(14, 4, 'Puerta del aula 305 no cierra bien', 'La cerradura está dañada', 2, DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 15 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 15 DAY), INTERVAL 72 HOUR), TRUE, TRUE),
+(4, 2, 'Problema con acceso a biblioteca', 'Mi carnet no funciona en los torniquetes', 1, DATE_SUB(NOW(), INTERVAL 12 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY), 'Cerrado', 345600, DATE_ADD(DATE_SUB(NOW(), INTERVAL 12 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 12 DAY), INTERVAL 72 HOUR), TRUE, TRUE),
+(1, 3, 'Email institucional no recibe correos', 'No me llegan notificaciones al correo', 3, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY), 'Cerrado', 259200, DATE_ADD(DATE_SUB(NOW(), INTERVAL 10 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 10 DAY), INTERVAL 24 HOUR), TRUE, TRUE),
+(10, 1, 'Solicitud de constancia de notas', 'Necesito constancia para beca', 1, DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 20 DAY), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 20 DAY), INTERVAL 48 HOUR), TRUE, TRUE),
+(1, 3, 'Proyector del aula 101 no funciona', 'No se proyecta imagen', 2, DATE_SUB(NOW(), INTERVAL 25 DAY), DATE_SUB(NOW(), INTERVAL 20 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 25 DAY), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 25 DAY), INTERVAL 24 HOUR), TRUE, TRUE),
+(4, 2, 'Error en recibo de pago', 'El monto mostrado es incorrecto', 2, DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 18 DAY), 'Cerrado', 345600, DATE_ADD(DATE_SUB(NOW(), INTERVAL 22 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 22 DAY), INTERVAL 72 HOUR), TRUE, TRUE),
+(5, 2, 'Problema con beca estudiantil', 'No aparece mi beca en el sistema', 3, DATE_SUB(NOW(), INTERVAL 30 DAY), DATE_SUB(NOW(), INTERVAL 25 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 30 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 30 DAY), INTERVAL 72 HOUR), TRUE, TRUE),
+(14, 4, 'Silla rota en biblioteca', 'Silla del puesto 23 está dañada', 1, DATE_SUB(NOW(), INTERVAL 28 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 28 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 28 DAY), INTERVAL 72 HOUR), TRUE, TRUE);
+
+-- ========================================
+-- RELACIÓN USUARIOS - TICKETS
+-- ========================================
+INSERT INTO UserTickets (UserId, TicketId) VALUES
+-- Tickets Pendientes (1-5)
+(7, 1), (8, 2), (9, 3), (10, 4), (11, 5),
+-- Tickets Asignados (6-11)
+(7, 6), (8, 7), (9, 8), (10, 9), (11, 10), (12, 11),
+-- Tickets En Proceso (12-16)
+(7, 12), (8, 13), (9, 14), (10, 15), (11, 16),
+-- Tickets Resueltos (17-20)
+(7, 17), (8, 18), (9, 19), (10, 20),
+-- Tickets Cerrados (21-28)
+(11, 21), (12, 22), (7, 23), (8, 24), (9, 25), (10, 26), (11, 27), (12, 28);
+
+-- ========================================
+-- HISTORIAL DE TICKETS
+-- ========================================
+
+-- Historial para tickets PENDIENTES (solo estado inicial)
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(1, NULL, 'Pendiente', 7, DATE_SUB(NOW(), INTERVAL 1 HOUR)),
+(2, NULL, 'Pendiente', 8, DATE_SUB(NOW(), INTERVAL 3 HOUR)),
+(3, NULL, 'Pendiente', 9, DATE_SUB(NOW(), INTERVAL 5 HOUR)),
+(4, NULL, 'Pendiente', 10, DATE_SUB(NOW(), INTERVAL 4 HOUR)),
+(5, NULL, 'Pendiente', 11, DATE_SUB(NOW(), INTERVAL 2 HOUR));
+
+-- Historial para tickets ASIGNADOS (Creado -> Asignado)
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(6, NULL, 'Pendiente', 7, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(6, 'Pendiente', 'Asignado', 1, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 30 MINUTE),
+(7, NULL, 'Pendiente', 8, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(7, 'Pendiente', 'Asignado', 2, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 45 MINUTE),
+(8, NULL, 'Pendiente', 9, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(8, 'Pendiente', 'Asignado', 4, DATE_SUB(NOW(), INTERVAL 3 DAY) + INTERVAL 1 HOUR),
+(9, NULL, 'Pendiente', 10, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(9, 'Pendiente', 'Asignado', 5, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 20 MINUTE),
+(10, NULL, 'Pendiente', 11, DATE_SUB(NOW(), INTERVAL 6 HOUR)),
+(10, 'Pendiente', 'Asignado', 1, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 30 MINUTE),
+(11, NULL, 'Pendiente', 12, DATE_SUB(NOW(), INTERVAL 8 HOUR)),
+(11, 'Pendiente', 'Asignado', 4, DATE_SUB(NOW(), INTERVAL 8 HOUR) + INTERVAL 45 MINUTE);
+
+-- Historial para tickets EN PROCESO (Creado -> Asignado -> En Proceso)
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(12, NULL, 'Pendiente', 7, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(12, 'Pendiente', 'Asignado', 1, DATE_SUB(NOW(), INTERVAL 4 DAY) + INTERVAL 1 HOUR),
+(12, 'Asignado', 'En Proceso', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(13, NULL, 'Pendiente', 8, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(13, 'Pendiente', 'Asignado', 10, DATE_SUB(NOW(), INTERVAL 3 DAY) + INTERVAL 30 MINUTE),
+(13, 'Asignado', 'En Proceso', 10, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(14, NULL, 'Pendiente', 9, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(14, 'Pendiente', 'Asignado', 14, DATE_SUB(NOW(), INTERVAL 5 DAY) + INTERVAL 2 HOUR),
+(14, 'Asignado', 'En Proceso', 14, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(15, NULL, 'Pendiente', 10, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(15, 'Pendiente', 'Asignado', 4, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 1 HOUR),
+(15, 'Asignado', 'En Proceso', 4, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(16, NULL, 'Pendiente', 11, DATE_SUB(NOW(), INTERVAL 7 HOUR)),
+(16, 'Pendiente', 'Asignado', 14, DATE_SUB(NOW(), INTERVAL 7 HOUR) + INTERVAL 1 HOUR),
+(16, 'Asignado', 'En Proceso', 14, DATE_SUB(NOW(), INTERVAL 6 HOUR));
+
+-- Historial para tickets RESUELTOS (Creado -> Asignado -> En Proceso -> Resuelto)
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(17, NULL, 'Pendiente', 7, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(17, 'Pendiente', 'Asignado', 1, DATE_SUB(NOW(), INTERVAL 7 DAY) + INTERVAL 1 HOUR),
+(17, 'Asignado', 'En Proceso', 1, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(17, 'En Proceso', 'Resuelto', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(18, NULL, 'Pendiente', 8, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(18, 'Pendiente', 'Asignado', 10, DATE_SUB(NOW(), INTERVAL 6 DAY) + INTERVAL 30 MINUTE),
+(18, 'Asignado', 'En Proceso', 10, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(18, 'En Proceso', 'Resuelto', 10, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(19, NULL, 'Pendiente', 9, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(19, 'Pendiente', 'Asignado', 2, DATE_SUB(NOW(), INTERVAL 8 DAY) + INTERVAL 2 HOUR),
+(19, 'Asignado', 'En Proceso', 2, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(19, 'En Proceso', 'Resuelto', 2, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(20, NULL, 'Pendiente', 10, DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(20, 'Pendiente', 'Asignado', 2, DATE_SUB(NOW(), INTERVAL 18 DAY) + INTERVAL 2 HOUR),
+(20, 'Asignado', 'En Proceso', 2, DATE_SUB(NOW(), INTERVAL 17 DAY)),
+(20, 'En Proceso', 'Resuelto', 2, DATE_SUB(NOW(), INTERVAL 12 DAY));
+
+-- Historial para tickets CERRADOS (Creado -> Asignado -> En Proceso -> Resuelto -> Cerrado)
+INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Update_Date) VALUES
+(21, NULL, 'Pendiente', 11, DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(21, 'Pendiente', 'Asignado', 14, DATE_SUB(NOW(), INTERVAL 15 DAY) + INTERVAL 2 HOUR),
+(21, 'Asignado', 'En Proceso', 14, DATE_SUB(NOW(), INTERVAL 14 DAY)),
+(21, 'En Proceso', 'Resuelto', 14, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(21, 'Resuelto', 'Cerrado', 11, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(22, NULL, 'Pendiente', 12, DATE_SUB(NOW(), INTERVAL 12 DAY)),
+(22, 'Pendiente', 'Asignado', 4, DATE_SUB(NOW(), INTERVAL 12 DAY) + INTERVAL 1 HOUR),
+(22, 'Asignado', 'En Proceso', 4, DATE_SUB(NOW(), INTERVAL 11 DAY)),
+(22, 'En Proceso', 'Resuelto', 4, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(22, 'Resuelto', 'Cerrado', 12, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(23, NULL, 'Pendiente', 7, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(23, 'Pendiente', 'Asignado', 1, DATE_SUB(NOW(), INTERVAL 10 DAY) + INTERVAL 1 HOUR),
+(23, 'Asignado', 'En Proceso', 1, DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(23, 'En Proceso', 'Resuelto', 1, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(23, 'Resuelto', 'Cerrado', 7, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(24, NULL, 'Pendiente', 8, DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(24, 'Pendiente', 'Asignado', 10, DATE_SUB(NOW(), INTERVAL 20 DAY) + INTERVAL 30 MINUTE),
+(24, 'Asignado', 'En Proceso', 10, DATE_SUB(NOW(), INTERVAL 19 DAY)),
+(24, 'En Proceso', 'Resuelto', 10, DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(24, 'Resuelto', 'Cerrado', 8, DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(25, NULL, 'Pendiente', 9, DATE_SUB(NOW(), INTERVAL 25 DAY)),
+(25, 'Pendiente', 'Asignado', 1, DATE_SUB(NOW(), INTERVAL 25 DAY) + INTERVAL 1 HOUR),
+(25, 'Asignado', 'En Proceso', 1, DATE_SUB(NOW(), INTERVAL 24 DAY)),
+(25, 'En Proceso', 'Resuelto', 1, DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(25, 'Resuelto', 'Cerrado', 9, DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(26, NULL, 'Pendiente', 10, DATE_SUB(NOW(), INTERVAL 22 DAY)),
+(26, 'Pendiente', 'Asignado', 4, DATE_SUB(NOW(), INTERVAL 22 DAY) + INTERVAL 1 HOUR),
+(26, 'Asignado', 'En Proceso', 4, DATE_SUB(NOW(), INTERVAL 21 DAY)),
+(26, 'En Proceso', 'Resuelto', 4, DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(26, 'Resuelto', 'Cerrado', 10, DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(27, NULL, 'Pendiente', 11, DATE_SUB(NOW(), INTERVAL 30 DAY)),
+(27, 'Pendiente', 'Asignado', 5, DATE_SUB(NOW(), INTERVAL 30 DAY) + INTERVAL 1 HOUR),
+(27, 'Asignado', 'En Proceso', 5, DATE_SUB(NOW(), INTERVAL 29 DAY)),
+(27, 'En Proceso', 'Resuelto', 5, DATE_SUB(NOW(), INTERVAL 25 DAY)),
+(27, 'Resuelto', 'Cerrado', 11, DATE_SUB(NOW(), INTERVAL 25 DAY)),
+(28, NULL, 'Pendiente', 12, DATE_SUB(NOW(), INTERVAL 28 DAY)),
+(28, 'Pendiente', 'Asignado', 14, DATE_SUB(NOW(), INTERVAL 28 DAY) + INTERVAL 2 HOUR),
+(28, 'Asignado', 'En Proceso', 14, DATE_SUB(NOW(), INTERVAL 27 DAY)),
+(28, 'En Proceso', 'Resuelto', 14, DATE_SUB(NOW(), INTERVAL 23 DAY)),
+(28, 'Resuelto', 'Cerrado', 12, DATE_SUB(NOW(), INTERVAL 23 DAY));
+
+-- ========================================
+-- ARCHIVADOR (EVIDENCIAS)
+-- ========================================
+
+-- Evidencias para diferentes estados del historial
+INSERT INTO Archivador (HistoryTicketId, TicketId, UploadDate) VALUES
+-- Tickets En Proceso (evidencias al iniciar trabajo)
+(9, 12, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(12, 13, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(15, 14, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(18, 15, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(21, 16, DATE_SUB(NOW(), INTERVAL 6 HOUR)),
+-- Tickets Resueltos (evidencias de solución)
+(25, 17, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(29, 18, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(33, 19, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(37, 20, DATE_SUB(NOW(), INTERVAL 12 DAY)),
+-- Tickets Cerrados (evidencias históricas)
+(41, 21, DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(46, 22, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(51, 23, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(56, 24, DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(61, 25, DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(66, 26, DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(71, 27, DATE_SUB(NOW(), INTERVAL 25 DAY)),
+(76, 28, DATE_SUB(NOW(), INTERVAL 23 DAY));
+
+-- ========================================
+-- ASIGNACIONES
+-- ========================================
+
+INSERT INTO Assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method) VALUES
+-- Tickets Asignados
+(6, 1, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 30 MINUTE, 'Asignado por especialidad en redes.', 'Automático'),
+(7, 2, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 45 MINUTE, 'Asignado por experiencia en software.', 'Automático'),
+(8, 4, DATE_SUB(NOW(), INTERVAL 3 DAY) + INTERVAL 1 HOUR, 'Asignado manualmente por administrador.', 'Manual'),
+(9, 5, DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 20 MINUTE, 'Asignación automática por disponibilidad.', 'Automático'),
+(10, 1, DATE_SUB(NOW(), INTERVAL 6 HOUR) + INTERVAL 30 MINUTE, 'Asignado por disponibilidad.', 'Automático'),
+(11, 4, DATE_SUB(NOW(), INTERVAL 8 HOUR) + INTERVAL 45 MINUTE, 'Asignado manualmente.', 'Manual'),
+-- Tickets En Proceso
+(12, 1, DATE_SUB(NOW(), INTERVAL 4 DAY) + INTERVAL 1 HOUR, 'Asignación automática por categoría.', 'Automático'),
+(13, 10, DATE_SUB(NOW(), INTERVAL 3 DAY) + INTERVAL 30 MINUTE, 'Asignado por especialidad académica.', 'Automático'),
+(14, 14, DATE_SUB(NOW(), INTERVAL 5 DAY) + INTERVAL 2 HOUR, 'Asignación manual por tipo de infraestructura.', 'Manual'),
+(15, 4, DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 1 HOUR, 'Asignado automáticamente.', 'Automático'),
+(16, 14, DATE_SUB(NOW(), INTERVAL 7 HOUR) + INTERVAL 1 HOUR, 'Asignación por carga de trabajo.', 'Automático'),
+-- Tickets Resueltos
+(17, 1, DATE_SUB(NOW(), INTERVAL 7 DAY) + INTERVAL 1 HOUR, 'Asignación por especialidad en hardware.', 'Automático'),
+(18, 10, DATE_SUB(NOW(), INTERVAL 6 DAY) + INTERVAL 30 MINUTE, 'Asignación automática por carga de trabajo.', 'Automático'),
+(19, 2, DATE_SUB(NOW(), INTERVAL 8 DAY) + INTERVAL 2 HOUR, 'Asignado manualmente por complejidad.', 'Manual'),
+(20, 2, DATE_SUB(NOW(), INTERVAL 18 DAY) + INTERVAL 2 HOUR, 'Asignación manual por complejidad.', 'Manual'),
+-- Tickets Cerrados
+(21, 14, DATE_SUB(NOW(), INTERVAL 15 DAY) + INTERVAL 2 HOUR, 'Asignación por especialidad en mantenimiento.', 'Automático'),
+(22, 4, DATE_SUB(NOW(), INTERVAL 12 DAY) + INTERVAL 1 HOUR, 'Asignación automática.', 'Automático'),
+(23, 1, DATE_SUB(NOW(), INTERVAL 10 DAY) + INTERVAL 1 HOUR, 'Asignado por especialidad en comunicaciones.', 'Automático'),
+(24, 10, DATE_SUB(NOW(), INTERVAL 20 DAY) + INTERVAL 30 MINUTE, 'Asignación manual por prioridad.', 'Manual'),
+(25, 1, DATE_SUB(NOW(), INTERVAL 25 DAY) + INTERVAL 1 HOUR, 'Asignación automática por categoría.', 'Automático'),
+(26, 4, DATE_SUB(NOW(), INTERVAL 22 DAY) + INTERVAL 1 HOUR, 'Asignación automática.', 'Automático'),
+(27, 5, DATE_SUB(NOW(), INTERVAL 30 DAY) + INTERVAL 1 HOUR, 'Asignación por especialidad.', 'Automático'),
+(28, 14, DATE_SUB(NOW(), INTERVAL 28 DAY) + INTERVAL 2 HOUR, 'Asignado automáticamente.', 'Automático');
+
+-- ========================================
+-- VALORACIONES (Solo para tickets cerrados)
+-- ========================================
+
+INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
+(21, 11, 5, 'Excelente servicio, problema resuelto rápidamente.', DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(22, 12, 4, 'Buena atención, aunque tardó un poco más de lo esperado.', DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(23, 7, 5, 'Muy profesional y eficiente. Quedé muy satisfecho.', DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(24, 8, 4, 'Buen trabajo, el técnico explicó todo claramente.', DATE_SUB(NOW(), INTERVAL 15 DAY)),
+(25, 9, 5, 'Rápido y efectivo. Muy buen técnico.', DATE_SUB(NOW(), INTERVAL 20 DAY)),
+(26, 10, 3, 'Funciona, pero la explicación pudo ser mejor.', DATE_SUB(NOW(), INTERVAL 18 DAY)),
+(27, 11, 5, 'Excelente atención y seguimiento.', DATE_SUB(NOW(), INTERVAL 25 DAY)),
+(28, 12, 4, 'Buen servicio, cumplió con lo prometido.', DATE_SUB(NOW(), INTERVAL 23 DAY));
