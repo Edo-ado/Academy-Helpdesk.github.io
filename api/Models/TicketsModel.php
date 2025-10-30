@@ -73,6 +73,20 @@ WHERE ut.UserId = $id;  ";
     }
 
 
+    
+public function WeeklyPartialTechTicketsFilter($id, $fechaInicio, $fechaFin) {
+     $query = "SELECT * FROM tickets 
+              WHERE TechnicianId = '$id' 
+              AND Ticket_Start_Date BETWEEN '$fechaInicio' AND '$fechaFin'";  ;
+    
+
+
+
+    $vResultado = $this->enlace->ExecuteSQL($query);
+    return $vResultado;
+}
+    
+
 
 
 

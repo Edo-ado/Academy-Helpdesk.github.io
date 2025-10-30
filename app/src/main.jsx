@@ -9,6 +9,8 @@ import { TechnicianList } from './components/Pages/Technicians'
 import { DetailTechnician } from './components/Pages/DetailTechnician'
 import { Categories } from "./components/Pages/Categories";  
 import { DetailCategory } from "./components/Pages/DetailCategory";  
+import { Tickets } from "./components/Pages/Tickets"; 
+
 
 
 // Crear las rutas
@@ -23,7 +25,9 @@ const rutas = createBrowserRouter([
      { path: '/technicians', element: <TechnicianList /> },
      { path: '/technician/:id', element: <DetailTechnician /> }, 
      { path: '/categories', element: <Categories /> },  
-       { path: '/category/:id', element: <DetailCategory /> },
+     { path: '/category/:id', element: <DetailCategory /> },
+     { path: '/Tickets', element: <Tickets /> },
+     { path: '/Tickets/:id', element: <Tickets /> },
     
 
      //Error page

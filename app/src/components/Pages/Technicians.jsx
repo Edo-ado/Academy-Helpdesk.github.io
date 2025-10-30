@@ -66,7 +66,7 @@ useEffect(() => {
 return (
   
   
-  <div className="bg-[#dff1ff] min-h-screen p-8">
+  <div className="bg-gradient-to-b from-blue-100 to-white  min-h-screen p-8">
     
     <div className="max-w-7xl mx-auto">
      <h1 className="text-4xl font-extrabold text-center text-blue-600 tracking-wide drop-shadow-lg mt-6 mb-8">

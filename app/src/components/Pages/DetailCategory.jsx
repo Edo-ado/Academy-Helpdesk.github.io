@@ -80,7 +80,7 @@ export function DetailCategory() {
   const tags = category.tags ? category.tags.split(', ') : [];
 
   return (
-    <div className="bg-[#dff1ff] min-h-screen p-8">
+    <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate("/categories")}

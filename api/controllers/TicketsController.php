@@ -4,17 +4,7 @@ class TicketsController
 
     //GETALL
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController
- public function index()
-    {
-        try {
-            $response = new Response();
-            $Tickets = new TicketsModel();
-            $result = $Tickets->all();
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-    }
+
 
 
     //GetAllticketsMin
@@ -60,6 +50,22 @@ class TicketsController
         } catch (Exception $e) {
             handleException($e);
         }
+    }
+
+
+
+      public function WeeklyPartialTicketsFilter($id, $first_day, $last_day)
+    {
+
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day, $last_day);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+
     }
 
 }

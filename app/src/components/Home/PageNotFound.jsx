@@ -1,17 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
+
 
 export const PageNotFound = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white flex items-center justify-center px-6">
       <div className="text-center">
-        {/* Número 404 animado */}
+       
         <h1 className="text-9xl font-bold text-blue-600 animate-bounce mb-8">
           404
         </h1>
         
      
 
-        {/* Mensajes de error */}
+       
         <h2 className="text-3xl font-semibold text-gray-800 mb-4">
           ¡Ups! Página no encontrada
         </h2>
@@ -19,10 +22,10 @@ export const PageNotFound = () => {
           Parece que la página que estás buscando ha sido movida o no existe.
         </p>
 
-        {/* Botón para volver al inicio */}
-        <Link 
-          to="/" 
-          className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 
+    
+        <button 
+          onClick={() => navigate(-1)}
+            className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 
                      text-white font-medium rounded-lg transition-colors duration-200"
         >
           <svg 
@@ -38,8 +41,8 @@ export const PageNotFound = () => {
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-          Volver al inicio
-        </Link>
+          Volver atras
+        </button>
       </div>
     </div>
   );

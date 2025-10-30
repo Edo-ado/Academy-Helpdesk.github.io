@@ -6,15 +6,13 @@ class RoutesController
 
     public function __construct()
     {
-        // $this->authMiddleware = new AuthMiddleware();
-        // $this->registerRoutes();
+
         $this->routes();
     }
 
     private function registerRoutes()
     {
-        // Registrar rutas protegidas
-        //---------------------  Metodo,path (en minuscula),controlador, accion, array de nombres de roles
+        
         $this->addProtectedRoute('GET', '/apimovie/actor', 'actor', 'index', ['Administrador']);
     }
 
@@ -23,10 +21,10 @@ class RoutesController
         $method = $_SERVER['REQUEST_METHOD'];
         $path = strtolower($_SERVER['REQUEST_URI']);
 
-        // Si la ruta es protegida, aplicar autenticación
+   
         if ($this->isProtectedRoute($method, $path)) {
             $route = $this->protectedRoutes["$method:$path"];
-            //Verifica los roles autorizados con los del usuario del token
+       
             if (!$this->authMiddleware->handle($route['requiredRole'])) {
                 return;
             }
@@ -46,20 +44,21 @@ class RoutesController
     {
         return isset($this->protectedRoutes["$method:$path"]);
     }
+    
     public function index()
     {
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         $baseFolder = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 
-        // Normalizar a minúsculas para evitar problemas en Windows
+      
         if ($baseFolder !== '/' && stripos($requestUri, $baseFolder) === 0) {
             $requestUri = substr($requestUri, strlen($baseFolder));
         }
 
         $routesArray = explode("/", trim($requestUri, "/"));
 
-        // Gestión de imágenes
+
         if (isset($routesArray[0]) && $routesArray[0] === 'uploads') {
             $filePath = __DIR__ . '/' . implode("/", $routesArray);
             if (file_exists($filePath)) {
@@ -73,13 +72,13 @@ class RoutesController
             }
         }
 
-        // Manejo de preflight
+ 
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
             exit();
         }
 
-        // Si no hay al menos controlador
+   
         if (empty($routesArray[0])) {
             $json = [
                 "success" => false,
@@ -94,7 +93,9 @@ class RoutesController
         $action     = $routesArray[1] ?? null;
         $param1     = $routesArray[2] ?? null;
         $param2     = $routesArray[3] ?? null;
-        // echo "Controller: " . $controller . ", acción: " . $action . ", param1: " . $param1 . ", param2: " . $param2;
+        $param3     = $routesArray[4] ?? null;
+        
+ 
 
         try {
             if ($controller && class_exists($controller)) {
@@ -103,22 +104,25 @@ class RoutesController
                 switch ($_SERVER['REQUEST_METHOD']) {
                     case 'GET':
                         if ($action && is_numeric($action)) {
-                            // URL del tipo /movie/1
+                       
                             $response->get($action);
                         } elseif ($action && method_exists($response, $action)) {
-                            // URL del tipo /movie/recent, /movie/search, etc.
-                            if ($param1 && $param2) {
-                                // URL con dos parámetros → /movie/search/2023/drama
+                       
+                            if ($param1 && $param2 && $param3) {
+                               
+                                $response->$action($param1, $param2, $param3);
+                            } elseif ($param1 && $param2) {
+                             
                                 $response->$action($param1, $param2);
                             } elseif ($param1) {
-                                // URL con un parámetro → /movie/search/2023
+                            
                                 $response->$action($param1);
                             } else {
-                                // URL sin parámetros → /movie/recent
+                            
                                 $response->$action();
                             }
                         } elseif (!$action) {
-                            // URL del tipo /movie
+                        
                             $response->index();
                         } else {
                             $json = [
