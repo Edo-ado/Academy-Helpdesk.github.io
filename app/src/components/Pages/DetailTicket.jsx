@@ -33,6 +33,7 @@ export function DetailTicket() {
           category: t.Category || "Sin categoría",
           technician: t.Tecnico || "Sin asignar",
           client: t.Cliente || "Desconocido"
+          
         };
         
         console.log("Mapped ticket:", mappedTicket);
@@ -40,6 +41,7 @@ export function DetailTicket() {
       } catch (err) {
         console.error("Error:", err);
         setError(err.message || "Error al cargar el detalle del ticket");
+        
       } finally {
         setLoading(false);
       }
