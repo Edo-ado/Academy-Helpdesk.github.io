@@ -2,14 +2,13 @@
 class TicketsController
 {
 
-    //GETALL
-    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController
+
 
 
 
     //GetAllticketsMin
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetAllticketsMin
-     public function GetAllticketsMin()
+    public function GetAllticketsMin()
     {
         try {
             $response = new Response();
@@ -24,7 +23,7 @@ class TicketsController
 
     //TicketAssignedToTEC
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketAssignedToTEC/1
-     public function TicketAssignedToTEC($param)
+    public function TicketAssignedToTEC($param)
     {
         try {
             $response = new Response();
@@ -40,7 +39,7 @@ class TicketsController
     //TicketsPerUser
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketsPerUser/1
 
-     public function TicketsPerUser($param)
+    public function TicketsPerUser($param)
     {
         try {
             $response = new Response();
@@ -53,8 +52,10 @@ class TicketsController
     }
 
 
+    //WeeklyPartialTicketsFilter
+//http://localhost/Academy-Helpdesk.github.io/api/TicketsController/WeeklyPartialTicketsFilter/1/2025-10-30/2025-11-10
 
-      public function WeeklyPartialTicketsFilter($id, $first_day, $last_day)
+    public function WeeklyPartialTicketsFilter($id, $first_day, $last_day)
     {
 
         try {
@@ -66,6 +67,21 @@ class TicketsController
             handleException($e);
         }
 
+    }
+
+
+    //GetTicketById
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetTicketById/1
+    public function GetTicketById($id)
+    {
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->GetTicketById($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
     }
 
 }

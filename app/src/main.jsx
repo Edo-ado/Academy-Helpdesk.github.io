@@ -10,6 +10,7 @@ import { DetailTechnician } from './components/Pages/DetailTechnician'
 import { Categories } from "./components/Pages/Categories";  
 import { DetailCategory } from "./components/Pages/DetailCategory";  
 import { Tickets } from "./components/Pages/Tickets"; 
+import { DetailTicket } from "./components/Pages/DetailTicket";
 
 
 
@@ -27,8 +28,7 @@ const rutas = createBrowserRouter([
      { path: '/categories', element: <Categories /> },  
      { path: '/category/:id', element: <DetailCategory /> },
      { path: '/Tickets', element: <Tickets /> },
-     { path: '/Tickets/:id', element: <Tickets /> },
-    
+     { path: '/Ticket/:id', element: <DetailTicket /> },
 
      //Error page
       { path: '*', element: <PageNotFound /> },
