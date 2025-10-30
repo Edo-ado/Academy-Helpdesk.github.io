@@ -427,4 +427,13 @@ INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, I
 (2, 'tech_pepito', 'pedro.techelectrical@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Electrical Technician'),
 (3, 'cleaning_caleb', 'caleb.clean@helpdesk.com', '123LOL', 1, NOW(), NULL, TRUE, 'Cleaning Supervisor');
 
+Insert into Technician_Specialities (UserId, SpecialityId) values
+(16, 3),
+(16, 4),
+(17, 5),
+(17, 2),
+(18, 14),
+(19, 13 ),
+(19, 12)
+;
 

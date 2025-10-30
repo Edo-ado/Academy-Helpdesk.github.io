@@ -24,28 +24,44 @@ export function DetailTechnician() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchTechnicianDetail = async () => {
-      try {
-        const response = await TechniciansLists.GetDetailByIdAll(id);
+     try {
+
+         const response = await TechniciansLists.GetDetailByIdAll(id);
         console.log("Detalle del técnico:", response.data);
         
         const techData = response.data.data[0];
         setTechnician(techData);
 
-        const specResponse = await TechniciansLists.GetSpecialitiesInformationByUserID(id);
-        setSpecialities(specResponse.data.data || []);
+        try {
+          const specResponse = await TechniciansLists.GetSpecialitiesInformationByUserID(id);
+  
+          setSpecialities(specResponse.data.data || []);
 
+        } catch (specError) {
+   
+          if (specError.response && specError.response.status === 404) {
+          
+            setSpecialities([]);
+       } else {
+        
+            throw specError;
+          }
+        }
+
+    
         try {
           const ticketsResponse = await TicketLists.getTicketsAssignedToTechnician(id);
+       
           setTickets(ticketsResponse.data.data || []);
         } catch (ticketError) {
          
           if (ticketError.response && ticketError.response.status === 404) {
-
+     
             setTickets([]);
           } else {
-        
+         
             throw ticketError;
           }
         }
@@ -60,7 +76,6 @@ export function DetailTechnician() {
 
     fetchTechnicianDetail();
   }, [id]);
-
   
   const workloadStats = useMemo(() => {
     if (!tickets || tickets.length === 0) {
