@@ -21,7 +21,10 @@ class TicketsModel
 
     }
 
-    public function GetTicketById($id){
+
+
+    public function GetTicketById($id)
+    {
         $msg = "SELECT 
     t.Id AS TicketId,
     t.Title,
@@ -41,7 +44,7 @@ INNER JOIN Categories c ON t.CategoryId = c.Id
 WHERE t.Id = $id;  ";
 
 
-         $vResultado = $this->enlace->ExecuteSQL($msg);
+        $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
     }
 
@@ -73,7 +76,7 @@ WHERE t.TechnicianId = $id;  ";
 
     public function TicketsPerUser($id)
     {
-       $msg = "SELECT 
+        $msg = "SELECT 
     t.Id AS TicketId,
     t.Title,
     t.Description,
@@ -98,19 +101,65 @@ ORDER BY t.Id DESC;";
     }
 
 
-    
-public function WeeklyPartialTechTicketsFilter($id, $fechaInicio, $fechaFin) {
-     $query = "SELECT * FROM tickets 
+
+    public function WeeklyPartialTechTicketsFilter($id, $fechaInicio, $fechaFin)
+    {
+        $query = "SELECT  t.Id AS TicketId,
+   t.Id AS TicketId,
+    t.Title,
+    t.Description,
+    t.Priority,
+    t.State,
+    t.Ticket_Start_Date,
+    t.Ticket_End_Date,
+    c.Name AS Category,
+    tech.UserName AS Tecnico,
+    u.UserName AS Cliente
+FROM Tickets t
+INNER JOIN UserTickets ut ON t.Id = ut.TicketId
+INNER JOIN Users u ON ut.UserId = u.Id          
+INNER JOIN Users tech ON t.TechnicianId = tech.Id
+INNER JOIN Categories c ON t.CategoryId = c.Id
+ 
               WHERE TechnicianId = '$id' 
-              AND Ticket_Start_Date BETWEEN '$fechaInicio' AND '$fechaFin'";  ;
-    
+              AND Ticket_Start_Date BETWEEN '$fechaInicio' AND '$fechaFin'";
+        ;
 
 
 
-    $vResultado = $this->enlace->ExecuteSQL($query);
-    return $vResultado;
-}
-    
+
+        $vResultado = $this->enlace->ExecuteSQL($query);
+        return $vResultado;
+    }
+
+
+   public function WeeklyPartialUserTicketsFilter($id, $fechaInicio, $fechaFin)
+    {
+       $msg = "SELECT 
+    t.Id AS TicketId,
+    t.Title,
+    t.Description,
+    t.Priority,
+    t.State,
+    t.Ticket_Start_Date,
+    t.Ticket_End_Date,
+    c.Name AS Category,
+    u.UserName AS Cliente,
+    tech.UserName AS Tecnico
+FROM UserTickets ut
+INNER JOIN Tickets t ON ut.TicketId = t.Id
+INNER JOIN Users u ON ut.UserId = u.Id         
+LEFT JOIN Users tech ON t.TechnicianId = tech.Id 
+INNER JOIN Categories c ON t.CategoryId = c.Id
+  WHERE TechnicianId = '$id' 
+              AND Ticket_Start_Date BETWEEN '$fechaInicio' AND '$fechaFin'";
+
+
+
+
+        $vResultado = $this->enlace->ExecuteSQL($msg);
+        return $vResultado;
+    }
 
 
 

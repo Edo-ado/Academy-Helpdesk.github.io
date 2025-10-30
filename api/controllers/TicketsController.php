@@ -20,6 +20,17 @@ class TicketsController
         }
     }
 
+    public function GetAllTicketsByRol(){
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->GetAllTicketsByRol();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
 
     //TicketAssignedToTEC
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketAssignedToTEC/1
@@ -67,6 +78,17 @@ class TicketsController
             handleException($e);
         }
 
+    }
+
+    public function WeeklyPartialUserTicketsFilter($id, $first_day, $last_day){
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day, $last_day);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
     }
 
 
