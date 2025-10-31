@@ -62,6 +62,16 @@ class TicketsController
         }
     }
 
+    public function GetTicketHistory($id){
+        try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->GetTicketHistory($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
 
 
     public function GetDailyAssignments($param1, $param2){
@@ -86,6 +96,9 @@ class TicketsController
             handleException($e);
         } 
     }
+
+
+
 
 
 }
