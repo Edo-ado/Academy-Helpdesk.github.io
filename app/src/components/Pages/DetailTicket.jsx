@@ -57,7 +57,7 @@ useEffect(() => {
         state: t.State || "Pendiente",
         startDate: t.Ticket_Start_Date || null,
         endDate: t.Ticket_End_Date || null,
-        category: t.Category || "Sin categoría",
+        Category: t.Category || "Sin categoría",
         technician: t.Tecnico || "Sin asignar",
         client: t.Cliente || "Desconocido",
         comments,
@@ -305,7 +305,7 @@ return (
               <span className="text-blue-600 text-xl">📂</span>
               <p className="font-semibold text-gray-700">Categoría</p>
             </div>
-            <p className="text-gray-900 font-medium">{ticket.category}</p>
+            <p className="text-gray-900 font-medium">{ticket.Category}</p>
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg">
