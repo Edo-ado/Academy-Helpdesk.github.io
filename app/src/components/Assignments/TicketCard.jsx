@@ -44,7 +44,7 @@ export function TicketCard({ ticket, onClick }) {
     switch (state) {
       case 'Pendiente': return { percent: 0, color: 'bg-red-400' };
       case 'Asignado': return { percent: 25, color: 'bg-orange-400' };
-      case 'En Progreso': return { percent: 50, color: 'bg-yellow-400' };
+      case 'En Procreso': return { percent: 50, color: 'bg-yellow-400' };
       case 'Resuelto': return { percent: 75, color: 'bg-green-400' };
       case 'Cerrado': return { percent: 100, color: 'bg-green-500' };
       default: return { percent: 0, color: 'bg-gray-400' };
