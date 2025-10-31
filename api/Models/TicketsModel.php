@@ -30,10 +30,12 @@ class TicketsModel
     t.State,
     t.Priority,
     t.Ticket_Start_Date,
-    t.Ticket_End_Date
+    t.Ticket_End_Date,
+    c.Name AS Category
 FROM Users u
 INNER JOIN Roles r ON u.RoleId = r.Id
 LEFT JOIN Tickets t
+INNER JOIN Categories c ON t.CategoryId = c.Id
     ON ( (r.Name = 'Technician' AND t.TechnicianId = u.Id) OR (r.Name = 'Student' AND t.Id IN (  SELECT ut.TicketId FROM UserTickets ut WHERE ut.UserId = u.Id  ))
         OR (r.Name = 'Administrator')
     )

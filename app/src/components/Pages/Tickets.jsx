@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import TicketsLists from "../../services/TicketsLists";
+import TicketsLists from "../../Services/TicketsLists";
 import { useUser } from "../../context/UserContext";
 
 export function Tickets() {
@@ -20,7 +20,7 @@ useEffect(() => {
             id: t.TicketId,
             title: t.Title,
             priority: t.Priority,
-            category: t.Category,
+            Category: t.Category,
           }))
         : [];
 
@@ -124,7 +124,7 @@ useEffect(() => {
                 <div>
                   <p className="text-gray-600 text-sm">Categoría:</p>
                   <p className="text-gray-800 font-semibold">
-                    {ticket.category}
+                    {ticket.Category}
                   </p>
                 </div>
 
