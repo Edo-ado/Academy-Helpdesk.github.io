@@ -615,5 +615,8 @@ VALUES
 (1, 'admin_ashley', 'ashley.admin@helpdesk.com', 'admin123', 3, NOW(), NULL, NULL, TRUE, 'System Administrator', TRUE);
 
 
+ALTER TABLE `dbacademyhelpdesk`.`archivador` 
+CHANGE COLUMN `Image` `Image` VARCHAR(100) NULL DEFAULT NULL ;
 
 
+UPDATE `dbacademyhelpdesk`.`archivador` SET `Image` = 'uploads/archivador/sillafea.jpg' WHERE (`Id` = '17');
