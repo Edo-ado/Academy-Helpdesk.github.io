@@ -9,8 +9,9 @@ const TicketsLists = {
   getTicketsAssignedToTechnician: (technicianId) =>  axios.get(`${API_URL}/TicketAssignedToTEC/${technicianId}`),
   getTicketsPerUser: (userId) =>  axios.get(`${API_URL}/TicketsPerUser/${userId}`),
   GetTicketById: (id) => axios.get(`${API_URL}/GetTicketById/${id}`),
-  WeeklyPartialTechTicketsFilter: (technicianId, startDate, endDate) => axios.get(`${API_URL}/WeeklyPartialTechTicketsFilter/${technicianId}/${startDate}/${endDate}`),
-  WeeklyPartialUserTicketsFilter: (userId, startDate, endDate) => axios.get(`${API_URL}/WeeklyPartialUserTicketsFilter/${userId}/${startDate}/${endDate}`),
+GetDailyAssignments: (date, technicianId) => axios.get(`${API_URL}/GetDailyAssignments/${date}/${technicianId}`),
+
+
 };
 
 export default TicketsLists;

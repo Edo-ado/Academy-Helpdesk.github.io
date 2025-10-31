@@ -2,10 +2,6 @@
 class TicketsController
 {
 
-
-
-
-
     //GetAllticketsMin
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetAllticketsMin
     public function GetAllticketsMin()
@@ -20,16 +16,6 @@ class TicketsController
         }
     }
 
-    public function GetAllTicketsByRol(){
-        try {
-            $response = new Response();
-            $Tickets = new TicketsModel();
-            $result = $Tickets->GetAllTicketsByRol();
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-    }
 
 
     //TicketAssignedToTEC
@@ -62,37 +48,6 @@ class TicketsController
         }
     }
 
-
-    //WeeklyPartialTicketsFilter
-//http://localhost/Academy-Helpdesk.github.io/api/TicketsController/WeeklyPartialTicketsFilter/1/2025-10-30/
-
-    public function WeeklyPartialTicketsFilter($id, $first_day)
-    {
-
-        try {
-            $response = new Response();
-            $Tickets = new TicketsModel();
-            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-
-    }
-//WeeklyPartialTicketsFilter
-//http://localhost/Academy-Helpdesk.github.io/api/TicketsController/WeeklyPartialTicketsFilter/1/2025-10-30/
-    public function WeeklyPartialUserTicketsFilter($id, $first_day, ){
-        try {
-            $response = new Response();
-            $Tickets = new TicketsModel();
-            $result = $Tickets->WeeklyPartialTechTicketsFilter($id, $first_day);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-    }
-
-
     //GetTicketById
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetTicketById/1
     public function GetTicketById($id)
@@ -105,6 +60,19 @@ class TicketsController
         } catch (Exception $e) {
             handleException($e);
         }
+    }
+
+
+
+    public function GetDailyAssignments($param1, $param2){
+       try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->GetDailyAssignments($param1, $param2);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        } 
     }
 
 }
