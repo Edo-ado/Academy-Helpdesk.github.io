@@ -592,3 +592,23 @@ VALUES
 (7, 7, 'Se resolvió reiniciando el servidor de base de datos.', '2025-10-29 13:30:00'),
 (8, 8, 'El problema se debe a permisos de usuario, ya corregido.', '2025-10-30 11:00:00'),
 (9, 3, 'Falta documentación adjunta del usuario.', '2025-10-30 12:15:00');
+
+
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, Ticket_End_Date, State, Ticket_Response_SLA, Ticket_Resolution_SLA) VALUES
+(14, 4, 'Se meo un chiquillo', 'Aula 3 piso 15', 3, DATE_SUB(NOW(), INTERVAL 1 HOUR), DATE_ADD(NOW(), INTERVAL 1 HOUR), 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 24 HOUR)),
+(14, 4, 'Se Cayo el porton', 'Se cayo el porton', 1, DATE_SUB(NOW(), INTERVAL 1 HOUR), DATE_ADD(NOW(), INTERVAL 2 HOUR), 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 48 HOUR)),
+(14, 4, 'Adriana Salteeee', 'Enrique', 2, DATE_SUB(NOW(), INTERVAL 5 HOUR), DATE_ADD(NOW(), INTERVAL 3 HOUR), 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 72 HOUR)),
+(14, 4, 'Watajai', 'Ok Mañana 💜', 1, DATE_SUB(NOW(), INTERVAL 4 HOUR), DATE_ADD(NOW(), INTERVAL 5 HOUR), 'Resuelto', DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 48 HOUR)),
+(14, 4, 'Sybau', 'Filamento ', 1, DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_ADD(NOW(), INTERVAL 6 HOUR), 'Cerrado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 48 HOUR));
+
+
+INSERT INTO UserTickets (UserId, TicketId) values
+(9, 29),
+(9, 30),
+(9, 31),
+(9, 32),
+(9, 33);
+
+
+
+
