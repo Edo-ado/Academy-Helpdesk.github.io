@@ -62,6 +62,8 @@ class TicketsController
         }
     }
 
+    //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetTicketHistory/28
+
     public function GetTicketHistory($id){
         try {
             $response = new Response();

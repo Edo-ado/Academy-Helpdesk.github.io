@@ -146,27 +146,19 @@ ORDER BY t.Id DESC;";
     }
 
 
-    public function GetTicketHistory($ticketId)
+public function GetTicketHistory($ticketId)
 {
     $sql = "SELECT 
-                th.Id AS HistoryId,
-                th.TicketId,
-                th.Last_State,
-                th.Actual_State,
-                u.UserName AS UserAtCharge,
-                th.Update_Date,
-                a.Id AS ArchivoId,
-                a.Image AS Archivo,
-                a.UploadDate
-            FROM TicketHistory th
-            INNER JOIN Users u ON th.UserAtCharge = u.Id
-            LEFT JOIN Archivador a ON th.Id = a.HistoryTicketId
-            WHERE th.TicketId = $ticketId
-            ORDER BY th.Update_Date DESC;";
-
+                Id AS ArchivoId,
+                TicketId,
+                Image AS Archivo,
+                UploadDate
+            FROM Archivador
+            WHERE TicketId = $ticketId";
     $vResultado = $this->enlace->ExecuteSQL($sql);
     return $vResultado;
 }
+
 
 public function GetDailyAssignments($id, $date)
 {
