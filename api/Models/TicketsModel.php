@@ -23,28 +23,49 @@ class TicketsModel
 
 
 
-    public function GetTicketById($id)
+    public function GetTicketById($id )
     {
-        $msg = "SELECT 
-    t.Id AS TicketId,
-    t.Title,
-    t.Description,
-    t.Priority,
-    t.State,
-    t.Ticket_Start_Date,
-    t.Ticket_End_Date,
-    c.Name AS Category,
-    tech.UserName AS Tecnico,
-    u.UserName AS Cliente
-FROM Tickets t
-INNER JOIN UserTickets ut ON t.Id = ut.TicketId
-INNER JOIN Users u ON ut.UserId = u.Id          
-INNER JOIN Users tech ON t.TechnicianId = tech.Id
-INNER JOIN Categories c ON t.CategoryId = c.Id
-WHERE t.Id = $id;  ";
 
+        
 
-        $vResultado = $this->enlace->ExecuteSQL($msg);
+        $sql = " SELECT 
+        t.Id AS TicketId,
+        t.Title,
+        t.Description,
+        t.Priority,
+        t.State,
+        t.Ticket_Start_Date,
+        t.Ticket_End_Date,
+        c.Name AS Category,
+        tech.UserName AS Tecnico,
+        u.UserName AS Cliente,
+
+        tc.Id AS CommentId,
+        tc.CommentText,
+        tc.CommentDate,
+        cu.UserName AS CommentUser,
+        tr.Id AS RatingId,
+
+        tr.Rating,
+        tr.Comment AS RatingComment,
+        ru.UserName AS RatingUser,
+        tr.Rating_Date
+
+    FROM Tickets t
+    INNER JOIN UserTickets ut ON t.Id = ut.TicketId
+    INNER JOIN Users u ON ut.UserId = u.Id
+    INNER JOIN Users tech ON t.TechnicianId = tech.Id
+    INNER JOIN Categories c ON t.CategoryId = c.Id
+
+    LEFT JOIN TicketComments tc ON t.Id = tc.TicketId
+    LEFT JOIN Users cu ON tc.UserId = cu.Id
+    
+    LEFT JOIN Ratings tr ON t.Id = tr.TicketId
+    LEFT JOIN Users ru ON tr.UserId = ru.Id
+    WHERE t.Id = $id
+    
+    ";
+        $vResultado = $this->enlace->ExecuteSQL($sql);
         return $vResultado;
     }
 
@@ -102,22 +123,7 @@ ORDER BY t.Id DESC;";
 
 
 
-    public function WeeklyPartialTechTicketsFilter($id, $fechaInicio)
-    {
-        $query = "";
 
-        $vResultado = $this->enlace->ExecuteSQL($query);
-        return $vResultado;
-    }
-
-
-
-    public function WeeklyPartialUserTicketsFilter($id, $fechaInicio)
-{
-   $query = " ";
-
-    return $this->enlace->ExecuteSQL($query);
-}
 
 
 
