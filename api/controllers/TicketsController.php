@@ -75,4 +75,17 @@ class TicketsController
         } 
     }
 
+
+  public function GetWeeklyAssignments($param1, $param2){
+       try {
+            $response = new Response();
+            $Tickets = new TicketsModel();
+            $result = $Tickets->GetWeeklyAssignments($param1, $param2);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        } 
+    }
+
+
 }

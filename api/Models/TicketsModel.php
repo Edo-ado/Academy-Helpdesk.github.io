@@ -133,7 +133,33 @@ public function GetDailyAssignments($id, $date)
     return $vResultado;
 }
 
+public function GetWeeklyAssignments($technicianId, $date)
+{
+    $baseDate = date('Y-m-d', strtotime($date));
 
+    // Calcular lunes y domingo de esa semana
+    $startOfWeek = date('Y-m-d', strtotime('monday this week', strtotime($baseDate)));
+    $endOfWeek   = date('Y-m-d', strtotime('sunday this week', strtotime($baseDate)));
+
+    $sql = "SELECT 
+                t.Id AS TicketId,
+                t.Title,
+                t.Description,
+                t.Priority,
+                t.State,
+                t.Ticket_Start_Date,
+                t.Ticket_End_Date,
+                c.Name AS Category,
+                TIMESTAMPDIFF(HOUR, NOW(), Ticket_Resolution_SLA) AS TimeRemaining
+            FROM Tickets t
+            INNER JOIN Categories c ON t.CategoryId = c.Id
+            WHERE t.TechnicianId = $technicianId
+              AND DATE(t.Ticket_Start_Date) BETWEEN '$startOfWeek' AND '$endOfWeek'
+            ORDER BY t.Ticket_Start_Date ASC;";
+
+    $vResultado = $this->enlace->ExecuteSQL($sql);
+    return $vResultado;
+}
 
 
 
