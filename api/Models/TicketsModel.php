@@ -20,7 +20,7 @@ class TicketsModel
     }
 
     public function TicketsByRolAndIDUser($id){
- $msg = "SELECT 
+         $msg = "SELECT 
     u.Id AS UserId,
     u.UserName,
     r.Name AS RoleName,
@@ -33,11 +33,14 @@ class TicketsModel
     t.Ticket_End_Date
 FROM Users u
 INNER JOIN Roles r ON u.RoleId = r.Id
-INNER JOIN UserTickets ut ON u.Id = ut.UserId
-INNER JOIN Tickets t ON ut.TicketId = t.Id
-WHERE u.Id = @UserId
+LEFT JOIN Tickets t
+    ON ( (r.Name = 'Technician' AND t.TechnicianId = u.Id) OR (r.Name = 'Student' AND t.Id IN (  SELECT ut.TicketId FROM UserTickets ut WHERE ut.UserId = u.Id  ))
+        OR (r.Name = 'Administrator')
+    )
+WHERE u.Id = $id
 ORDER BY t.Ticket_Start_Date DESC;
 ";
+
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
         
@@ -63,7 +66,7 @@ INNER JOIN Users u ON ut.UserId = u.Id
 INNER JOIN Users tech ON t.TechnicianId = tech.Id
 INNER JOIN Categories c ON t.CategoryId = c.Id
 WHERE t.TechnicianId = $id
-AND t.State <> 'Resuelto';";
+AND t.State <> 'Cerrado';";
 
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;

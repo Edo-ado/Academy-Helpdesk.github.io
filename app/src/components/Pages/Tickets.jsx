@@ -7,38 +7,34 @@ export function Tickets() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { selectedUser } = useUser();
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      if (!selectedUser?.Id) return; 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Aquí usamos la función adaptada por rol y usuario
-        const response = await TicketsLists.getTicketsByRolAndUserId(selectedUser?.id);
-        const data = response.data;
-        console.log("Response from API:", data);
+      const response = await TicketsLists.TicketsByRolAndIDUser(selectedUser.Id);
+      const data = response.data;
 
-        const mappedData = Array.isArray(data.data)
-          ? data.data.map((t) => ({
-              id: t.id,
-              title: t.Title,
-              priority: t.Priority,
-              category: t.Category,
-            }))
-          : [];
+      const mappedData = Array.isArray(data.data)
+        ? data.data.map((t) => ({
+            id: t.TicketId,
+            title: t.Title,
+            priority: t.Priority,
+            category: t.Category,
+          }))
+        : [];
 
-        console.log("Mapped data:", mappedData);
-        setTickets(mappedData);
-      } catch (err) {
-        console.error("Error:", err);
-        setError(err.message || "Error al cargar los tickets");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (selectedUser?.id) {
-      fetchData();
+      setTickets(mappedData);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Error al cargar los tickets");
+    } finally {
+      setLoading(false);
     }
-  }, [selectedUser]);
+  };
+
+  fetchData();
+}, [selectedUser]);
 
   const getPriorityColor = (priority) => {
     switch (priority?.toLowerCase()) {

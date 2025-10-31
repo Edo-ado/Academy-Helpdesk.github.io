@@ -609,6 +609,11 @@ INSERT INTO UserTickets (UserId, TicketId) values
 (9, 32),
 (9, 33);
 
+INSERT INTO Users 
+(InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, PositionId, State, Work_Charge, Active) 
+VALUES
+(1, 'admin_ashley', 'ashley.admin@helpdesk.com', 'admin123', 3, NOW(), NULL, NULL, TRUE, 'System Administrator', TRUE);
+
 
 
 
