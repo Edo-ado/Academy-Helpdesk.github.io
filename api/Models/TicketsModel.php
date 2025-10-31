@@ -11,19 +11,42 @@ class TicketsModel
 
     public function AllticketsMin()
     {
-
         $msg = "SELECT t.id, T.Title, T.Priority, C.Name as Category 
         FROM tickets T 
         INNER JOIN 
         categories C ON T.CategoryId = C.Id";
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
+    }
+
+    public function TicketsByRolAndIDUser($id){
+ $msg = "SELECT 
+    u.Id AS UserId,
+    u.UserName,
+    r.Name AS RoleName,
+    t.Id AS TicketId,
+    t.Title,
+    t.Description,
+    t.State,
+    t.Priority,
+    t.Ticket_Start_Date,
+    t.Ticket_End_Date
+FROM Users u
+INNER JOIN Roles r ON u.RoleId = r.Id
+INNER JOIN UserTickets ut ON u.Id = ut.UserId
+INNER JOIN Tickets t ON ut.TicketId = t.Id
+WHERE u.Id = @UserId
+ORDER BY t.Ticket_Start_Date DESC;
+";
+        $vResultado = $this->enlace->ExecuteSQL($msg);
+        return $vResultado;
+        
 
     }
 
     public function TicketAssignedToTEC($id)
     {
-        $msg = "SELECT 
+    $msg = "SELECT 
     t.Id AS TicketId,
     t.Title,
     t.Description,
@@ -36,10 +59,12 @@ class TicketsModel
     u.UserName AS Cliente
 FROM Tickets t
 INNER JOIN UserTickets ut ON t.Id = ut.TicketId
-INNER JOIN Users u ON ut.UserId = u.Id          
+INNER JOIN Users u ON ut.UserId = u.Id
 INNER JOIN Users tech ON t.TechnicianId = tech.Id
 INNER JOIN Categories c ON t.CategoryId = c.Id
-WHERE t.TechnicianId = $id;  ";
+WHERE t.TechnicianId = $id
+AND t.State <> 'Resuelto';";
+
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
     }
@@ -143,7 +168,7 @@ ORDER BY t.Id DESC;";
 public function GetDailyAssignments($id, $date)
 {
     $sql = "SELECT
-        t.Id AS TicketID,
+        t.Id AS TicketId,
         c.Name AS Category,
         t.State,
         t.Priority,

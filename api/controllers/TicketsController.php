@@ -98,6 +98,17 @@ class TicketsController
     }
 
 
+    public function TicketsByRolAndIDUser($id){
+         try {
+                $response = new Response();
+                $Tickets = new TicketsModel();
+                $result = $Tickets->TicketsByRolAndIDUser($id);
+                $response->toJSON($result);
+          } catch (Exception $e) {
+                handleException($e);
+          }
+        
+    }
 
 
 

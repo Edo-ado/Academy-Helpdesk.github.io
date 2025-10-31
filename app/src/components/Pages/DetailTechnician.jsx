@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TechniciansLists from "../../services/TechniciansLists";
-import TicketLists from "../../services/TicketsList";
+import TicketLists from "../../services/TicketsLists";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 

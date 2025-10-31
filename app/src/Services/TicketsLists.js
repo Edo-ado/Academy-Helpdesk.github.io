@@ -12,6 +12,7 @@ const TicketsLists = {
 GetDailyAssignments: (date, technicianId) => axios.get(`${API_URL}/GetDailyAssignments/${date}/${technicianId}`),
 GetWeeklyAssignments: (weekStartDate, technicianId) => axios.get(`${API_URL}/GetWeeklyAssignments/${weekStartDate}/${technicianId}`),
 GetTicketHistory: (id) => axios.get(`${API_URL}/GetTicketHistory/${id}`),
+TicketsByRolAndIDUser: (id) => axios.get(`${API_URL}/TicketsByRolAndIDUser/${id}`),
 
 };
 

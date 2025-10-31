@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import TechniciansLists from "../../Services/TicketsList";
+import TicketsLists from "../../services/TicketsLists";
+import { useUser } from "../../context/UserContext";
 
 export function Tickets() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { selectedUser } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await TechniciansLists.getAllTicketsMin();
-        const data = response.data; 
+        // Aquí usamos la función adaptada por rol y usuario
+        const response = await TicketsLists.getTicketsByRolAndUserId(selectedUser?.id);
+        const data = response.data;
         console.log("Response from API:", data);
 
         const mappedData = Array.isArray(data.data)
@@ -32,8 +35,10 @@ export function Tickets() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (selectedUser?.id) {
+      fetchData();
+    }
+  }, [selectedUser]);
 
   const getPriorityColor = (priority) => {
     switch (priority?.toLowerCase()) {
