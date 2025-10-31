@@ -90,8 +90,8 @@ CREATE TABLE Tickets (
     Title VARCHAR(100),
     Description VARCHAR(255),
     Priority INT,
-    Ticket_Start_Date date DEFAULT CURRENT_TIMESTAMP,
-    Ticket_End_Date date,
+    Ticket_Start_Date Datetime DEFAULT CURRENT_TIMESTAMP,
+    Ticket_End_Date Datetime,
     State VARCHAR(50),
     Resolution_Time BIGINT,
     Ticket_Response_SLA DATETIME,
@@ -565,3 +565,30 @@ INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
 (26, 10, 3, 'Funciona, pero la explicación pudo ser mejor.', DATE_SUB(NOW(), INTERVAL 18 DAY)),
 (27, 11, 5, 'Excelente atención y seguimiento.', DATE_SUB(NOW(), INTERVAL 25 DAY)),
 (28, 12, 4, 'Buen servicio, cumplió con lo prometido.', DATE_SUB(NOW(), INTERVAL 23 DAY));
+
+
+
+
+CREATE TABLE TicketComments (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    TicketId INT NOT NULL,
+    UserId INT NOT NULL,
+    CommentText TEXT NOT NULL,
+    CommentDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (TicketId) REFERENCES Tickets(Id),
+    FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
+
+INSERT INTO TicketComments (TicketId, UserId, CommentText, CommentDate)
+VALUES
+(1, 2, 'Estoy revisando el problema de inicio de sesión.', '2025-10-25 09:30:00'),
+(1, 3, 'Confirmo que el error ocurre solo en Chrome.', '2025-10-25 10:10:00'),
+(2, 5, 'Se reemplazó el cable de red, el equipo ya conecta.', '2025-10-26 14:45:00'),
+(3, 4, 'Pendiente de aprobación por parte del supervisor.', '2025-10-27 08:20:00'),
+(4, 2, 'Actualicé el sistema operativo, funciona correctamente.', '2025-10-27 15:00:00'),
+(5, 6, 'El usuario confirmó que el error persiste, reabrí el ticket.', '2025-10-28 09:10:00'),
+(6, 2, 'Asignado al técnico Juan Pérez para seguimiento.', '2025-10-28 10:00:00'),
+(7, 7, 'Se resolvió reiniciando el servidor de base de datos.', '2025-10-29 13:30:00'),
+(8, 8, 'El problema se debe a permisos de usuario, ya corregido.', '2025-10-30 11:00:00'),
+(9, 3, 'Falta documentación adjunta del usuario.', '2025-10-30 12:15:00');
