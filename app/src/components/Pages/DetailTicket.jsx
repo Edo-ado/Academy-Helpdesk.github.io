@@ -13,10 +13,7 @@ useEffect(() => {
   const fetchTicketDetail = async () => {
     try {
       const response = await TicketLists.GetTicketById(id);
-      const historyResponse = await TicketLists.GetTicketHistory(id);
-
       console.log("Detalle del ticket:", response.data);
-      console.log("Historial del ticket:", historyResponse.data);
 
       if (!response.data || !response.data.data || response.data.data.length === 0) {
         throw new Error("No se encontraron datos del ticket");
@@ -25,6 +22,7 @@ useEffect(() => {
       const rows = response.data.data;
       const t = rows[0];
 
+      // Agrupamos los posibles comentarios, valoraciones y evidencias
       const comments = rows
         .filter(r => r.CommentId && r.CommentText)
         .map(r => ({
@@ -44,17 +42,12 @@ useEffect(() => {
           date: r.Rating_Date
         }));
 
-      // img
-      const archivador = historyResponse.data.data
-        ?.filter(r => r.Archivo)
+      const evidences = rows
+        .filter(r => r.EvidencePath)
         .map(r => ({
-          id: r.ArchivoId,
-          path: r.Archivo.startsWith("http")
-            ? r.Archivo
-            : `/uploads/archivador/${r.Archivo}`,
-          uploadDate: r.UploadDate,
-          uploadedBy: r.UserAtCharge
-        })) || [];
+          id: r.EvidenceId || Math.random(),
+          path: r.EvidencePath
+        }));
 
       const mappedTicket = {
         ticketId: t.TicketId || "N/A",
@@ -69,9 +62,10 @@ useEffect(() => {
         client: t.Cliente || "Desconocido",
         comments,
         ratings,
-        archivador
+        evidences
       };
 
+      console.log("Mapped ticket:", mappedTicket);
       setTicket(mappedTicket);
     } catch (err) {
       console.error("Error:", err);
@@ -81,13 +75,13 @@ useEffect(() => {
     }
   };
 
-  if (id) fetchTicketDetail();
-  else {
+  if (id) {
+    fetchTicketDetail();
+  } else {
     setError("ID de ticket no válido");
     setLoading(false);
   }
 }, [id]);
-
 
 
   const getPriorityConfig = (priority) => {
@@ -427,52 +421,30 @@ return (
           <p className="text-gray-500 italic">No hay valoraciones disponibles.</p>
         )}
       </div>
-{/* ARCHIVADOR (IMÁGENES) */}
-<div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500 mb-6">
-  <div className="flex items-center gap-2 mb-6">
-    <span className="text-green-500 text-2xl">🗂️</span>
-    <h2 className="text-2xl font-bold text-gray-900">Archivador (Imágenes)</h2>
-  </div>
 
-  {ticket.archivador?.length > 0 ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {ticket.archivador.map((a) => {
-        console.log("🧾 Imagen desde BD:", a.path);
+     
+      <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500 mb-6">
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-green-500 text-2xl">📸</span>
+          <h2 className="text-2xl font-bold text-gray-900">Evidencias</h2>
+        </div>
 
-        let cleanPath = (a.path || "").trim();
-        cleanPath = cleanPath.replace(/^\/+/, "");
-
-       
-        const imageSrc = cleanPath.startsWith("")
-          ? "/" + cleanPath
-          : `/uploads/archivador/${cleanPath}`;
-
-        console.log("✅ Ruta final usada:", imageSrc);
-
-        return (
-          <div key={a.id} className="rounded-lg overflow-hidden shadow-md bg-gray-50">
-            <img
-              src={imageSrc}
-              alt={`Archivo ${a.id}`}
-              className="object-cover w-full h-48 hover:scale-105 transition-transform"
-              onError={(e) => {
-                console.error("❌ No se pudo cargar la imagen:", imageSrc);
-                e.target.src = "/uploads/placeholder.png"; 
-              }}
-            />
-            <div className="p-2 text-sm text-gray-600 text-center">
-              📅 {formatDate(a.uploadDate)} — 👤 {a.uploadedBy || "Desconocido"}
-            </div>
+        {ticket.evidences?.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {ticket.evidences.map((e) => (
+              <div key={e.id} className="rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={e.path}
+                  alt={`Evidencia ${e.id}`}
+                  className="object-cover w-full h-48 hover:scale-105 transition-transform"
+                />
+              </div>
+            ))}
           </div>
-        );
-      })}
-    </div>
-  ) : (
-    <p className="text-gray-500 italic">No hay archivos en el archivador.</p>
-  )}
-</div>
-
-
+        ) : (
+          <p className="text-gray-500 italic">No hay evidencias registradas.</p>
+        )}
+      </div>
 
     </div> 
   </div>
