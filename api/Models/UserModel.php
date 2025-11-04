@@ -82,4 +82,70 @@ class UserModel
         return $vResultado;
     }
 
+ /**
+     * Crear pelicula
+     * @param $objeto pelicula a insertar
+     * @return $this->get($idMovie) - Objeto pelicula
+     */
+    //
+    public function create($objeto)
+    {
+        //Consulta sql
+        //Identificador autoincrementable
+        $sql = "INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge)" .
+            "('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password', '$objeto->idrol', NOW(), NULL, TRUE, '$objeto->trabajocargo')";
+
+        //Ejecutar la consulta
+        //Obtener ultimo insert
+        $iduser = $this->enlace->executeSQL_DML_last($sql);
+        //--- Especialidades ---
+        //Crear elementos a insertar en especialidades
+        foreach ($objeto->especialidades as $value) {
+            $sql = "Insert Technician_Specialities (UserId, SpecialityId)" .
+                " Values($iduser, $value)";
+            $vResultadoGen = $this->enlace->executeSQL_DML($sql);
+        }
+
+        //Retornar usuario
+        return $this->get($iduser);
+    }
+
+public function update($objeto)
+{
+    // Consulta SQL para actualizar el usuario principal
+    $sql = "UPDATE Users SET 
+                InsuranceId = '$objeto->seguro',
+                UserName = '$objeto->name',
+                Email = '$objeto->email',
+                Password = '$objeto->password',
+                RoleId = '$objeto->idrol',
+                State = " . ($objeto->state ? 'TRUE' : 'FALSE') . ",
+                Work_Charge = '$objeto->trabajocargo'
+            WHERE Id = $objeto->id";
+
+    // Ejecutar la actualización
+    $this->enlace->executeSQL_DML($sql);
+
+    // --- Especialidades ---
+    // Eliminar especialidades asociadas al usuario
+    $sql = "DELETE FROM Technician_Specialities WHERE UserId = $objeto->id";
+    $this->enlace->executeSQL_DML($sql);
+
+    // Insertar nuevas especialidades
+    foreach ($objeto->especialidades as $value) {
+        $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
+                VALUES ($objeto->id, $value)";
+        $this->enlace->executeSQL_DML($sql);
+    }
+
+    // Retornar usuario actualizado
+    return $this->get($objeto->id);
+}
+
+
+
+
+
+
+
 }

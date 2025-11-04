@@ -59,10 +59,28 @@ class UserController
     }
 
 
+    public function create(){
+        try {
+            $response = new Response();
+            $Tecnico = new UserModel();
+            $result = $Tecnico->create();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
 
 
-
-
+    public function update(){
+        try {
+            $response = new Response();
+            $Tecnico = new UserModel();
+            $result = $Tecnico->update();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
 
 }
 
