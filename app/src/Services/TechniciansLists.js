@@ -8,7 +8,9 @@ const TechniciansLists = {
   getAllTechnicians: () => axios.get(`${API_URL}/GetAllTechnicians`),
   getTechnicianById: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
   GetDetailByIdAll: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
-  GetSpecialitiesInformationByUserID: (userId) => axios.get(`${API_URL_SPECIALITIES}/GetSpecialitiesInformationByUserID/${userId}`)  
+  GetSpecialitiesInformationByUserID: (userId) => axios.get(`${API_URL_SPECIALITIES}/GetSpecialitiesInformationByUserID/${userId}`)  ,
+  getSeguros: () => axios.get(`${API_URL}/GetSeguros`)
+
 };
 
 export default TechniciansLists;

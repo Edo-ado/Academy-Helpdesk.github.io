@@ -140,9 +140,15 @@ public function update($objeto)
 
     // Retornar usuario actualizado
     return $this->get($objeto->id);
+
+ 
 }
 
-
+   public function GetSeguros(){
+        $vSql = "SELECT * FROM Insurances WHERE Active = 1";
+        $vResultado = $this->enlace->ExecuteSQL($vSql);
+        return $vResultado;
+    }
 
 
 

@@ -82,6 +82,21 @@ class UserController
         }
     }
 
+
+    //GET Seguros
+    //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetSeguros/
+    public function GetSeguros()
+    {
+        try {
+            $response = new Response();
+            $Usuario = new UserModel();
+            $result = $Usuario->GetSeguros();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
 }
 
 

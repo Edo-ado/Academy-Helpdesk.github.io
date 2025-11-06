@@ -18,7 +18,8 @@ export function Header() {
     console.log("Usuario seleccionado:", user.Id);
   };
 
-  
+  //filtro por idrol para ver la parte de mantenimiento
+
   const mantItems = [
     { href: "/mantenimiento/tecnicos", title: "Técnicos", icon: "👤" },
     { href: "/mantenimiento/tickets", title: "Tickets", icon: "🎫" },
