@@ -1,6 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import TicketLists from "../../services/TicketsLists";
+import TicketLists from "../../Services/TicketsLists";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faArrowLeft,
+  faTicket,
+  faClipboardList,
+  faFolder,
+faUser,
+faTriangleExclamation,
+faUserTie,
+faComments,
+faStar,
+faCalendarDays,
+faCamera,
+faFire,
+faX,
+faCheck,
+faQuestion,
+faMagnifyingGlass,
+faClock,
+faAlarmClock,
+faStopwatch
+ } from "@fortawesome/free-solid-svg-icons";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export function DetailTicket() {
   const { id } = useParams();
@@ -130,42 +153,42 @@ useEffect(() => {
       return { 
         label: "Pendiente", 
         color: "bg-gray-100 text-gray-800",
-        icon: "⏳"
+        icon: <FontAwesomeIcon icon={faTriangleExclamation} />
       };
     }
     if (stateStr === "asignado" || stateStr === "2") {
       return { 
         label: "Asignado", 
         color: "bg-blue-100 text-blue-800",
-        icon: "👤"
+        icon: <FontAwesomeIcon icon={faClipboardList} />
       };
     }
     if (stateStr === "en proceso" || stateStr === "3") {
       return { 
         label: "En Proceso", 
         color: "bg-yellow-100 text-yellow-800",
-        icon: "🔄"
+        icon: <FontAwesomeIcon icon={faFire} />
       };
     }
     if (stateStr === "resuelto" || stateStr === "4") {
       return { 
         label: "Resuelto", 
         color: "bg-green-100 text-green-800",
-        icon: "✓"
+        icon: <FontAwesomeIcon icon={faCheck} />
       };
     }
     if (stateStr === "cerrado" || stateStr === "5") {
       return { 
         label: "Cerrado", 
         color: "bg-purple-100 text-purple-800",
-        icon: "✕"
+        icon: <FontAwesomeIcon icon={faX} />
       };
     }
     
     return { 
       label: state || "Desconocido", 
       color: "bg-gray-100 text-gray-800",
-      icon: "?"
+      icon: <FontAwesomeIcon icon={faQuestion} />
     };
   };
 
@@ -224,7 +247,7 @@ useEffect(() => {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
         <div className="text-center bg-white p-8 rounded-xl shadow-lg">
-          <span className="text-6xl mb-4 block">⚠️</span>
+          <span className="text-6xl mb-4 block"> <FontAwesomeIcon icon={faTriangleExclamation} /></span>
           <p className="text-red-500 text-lg mb-4">{error}</p>
          <button
   onClick={() => navigate(-1)}  
@@ -274,7 +297,7 @@ return (
       <div className={`bg-white rounded-2xl shadow-xl p-8 border-2 ${priorityConfig.borderColor} mb-6`}>
         <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
           <div className="w-24 h-24 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-            <span className="text-white text-4xl">🎫</span>
+            <span className="text-white text-4xl"> <FontAwesomeIcon icon={faTicket} /></span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {ticket.title}
@@ -282,7 +305,7 @@ return (
           <p className="text-gray-600 text-sm mb-3">Ticket #{ticket.ticketId}</p>
           <div className="flex justify-center gap-3 flex-wrap">
             <span className={`inline-block ${priorityConfig.color} text-white px-4 py-1 rounded-full text-sm font-semibold`}>
-              🔥 Prioridad: {priorityConfig.label}
+              <FontAwesomeIcon icon={faFire} /> Prioridad: {priorityConfig.label}
             </span>
             <span className={`inline-block ${stateConfig.color} px-4 py-1 rounded-full text-sm font-semibold`}>
               {stateConfig.icon} {stateConfig.label}
@@ -292,7 +315,9 @@ return (
 
         {/* Descripción */}
         <div className="mb-6 bg-gray-50 p-6 rounded-lg">
-          <h3 className="font-semibold text-gray-700 mb-3 text-lg">📋 Descripción</h3>
+          <h3 className="font-semibold text-gray-700 mb-3 text-lg"> 
+            <FontAwesomeIcon icon={faClipboardList} className="text-gray-700 mr-3" />
+            Descripción</h3>
           <p className="text-gray-900 leading-relaxed whitespace-pre-wrap">
             {ticket.description}
           </p>
@@ -302,7 +327,7 @@ return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-blue-600 text-xl">📂</span>
+              <span className="text-blue-600 text-xl"> <FontAwesomeIcon icon={faFolder} /></span>
               <p className="font-semibold text-gray-700">Categoría</p>
             </div>
             <p className="text-gray-900 font-medium">{ticket.Category}</p>
@@ -310,7 +335,7 @@ return (
 
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-blue-600 text-xl">👤</span>
+              <span className="text-blue-600 text-xl"> <FontAwesomeIcon icon={faUser} /></span>
               <p className="font-semibold text-gray-700">Cliente</p>
             </div>
             <p className="text-gray-900 font-medium">{ticket.client}</p>
@@ -318,7 +343,7 @@ return (
 
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-blue-600 text-xl">👨‍💼</span>
+              <span className="text-blue-600 text-xl"> <FontAwesomeIcon icon={faUserTie} /></span>
               <p className="font-semibold text-gray-700">Técnico Asignado</p>
             </div>
             <p className="text-gray-900 font-medium">
@@ -332,7 +357,7 @@ return (
 
           <div className={`${priorityConfig.bgLight} p-4 rounded-lg border-l-4 ${priorityConfig.borderColor}`}>
             <div className="flex items-center gap-2 mb-2">
-              <span className={`${priorityConfig.textColor} text-xl`}>⚠️</span>
+              <span className={`${priorityConfig.textColor} text-xl`}> <FontAwesomeIcon icon={faTriangleExclamation} /></span>
               <p className="font-semibold text-gray-700">Nivel de Prioridad</p>
             </div>
             <p className={`${priorityConfig.textColor} font-bold text-lg`}>
@@ -345,20 +370,20 @@ return (
       {/* Tarjeta de Fechas */}
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-600 mb-6">
         <div className="flex items-center gap-2 mb-6">
-          <span className="text-green-500 text-2xl">📅</span>
+          <span className="text-green-500 text-2xl"> <FontAwesomeIcon icon={faCalendarDays} /></span>
           <h2 className="text-2xl font-bold text-gray-900">Línea de Tiempo</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
-            <p className="font-semibold text-gray-700 mb-2">🕐 Fecha de Inicio</p>
+            <p className="font-semibold text-gray-700 mb-2"> <FontAwesomeIcon icon={faClock} /> Fecha de Inicio</p>
             <p className="text-gray-900 font-medium">
               {formatDate(ticket.startDate)}
             </p>
           </div>
 
           <div className={`${ticket.endDate ? 'bg-purple-50 border-purple-600' : 'bg-gray-50 border-gray-300'} p-6 rounded-lg border-l-4`}>
-            <p className="font-semibold text-gray-700 mb-2">🏁 Fecha de Finalización</p>
+            <p className="font-semibold text-gray-700 mb-2"> <FontAwesomeIcon icon={faAlarmClock} /> Fecha de Finalización</p>
             <p className={`font-medium ${ticket.endDate ? 'text-gray-900' : 'text-gray-500 italic'}`}>
               {formatDate(ticket.endDate)}
             </p>
@@ -367,7 +392,7 @@ return (
 
         {duration !== null && (
           <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg text-center border-2 border-blue-200">
-            <p className="text-gray-600 text-sm mb-1">⏱️ Duración Total</p>
+            <p className="text-gray-600 text-sm mb-1"><FontAwesomeIcon icon={faStopwatch} /> Duración Total</p>
             <p className="text-gray-900 font-bold text-lg">
               {duration} {duration === 1 ? 'día' : 'días'}
             </p>
@@ -378,7 +403,7 @@ return (
       {/* COMENTARIOS*/}
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600 mb-6">
         <div className="flex items-center gap-2 mb-6">
-          <span className="text-blue-500 text-2xl">💬</span>
+          <FontAwesomeIcon icon={faComments} className="text-blue-500 text-2xl" />
           <h2 className="text-2xl font-bold text-gray-900">Comentarios</h2>
         </div>
 
@@ -401,7 +426,7 @@ return (
       {/* VALORACIONES*/}
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-yellow-500 mb-6">
         <div className="flex items-center gap-2 mb-6">
-          <span className="text-yellow-500 text-2xl">⭐</span>
+          <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-2xl" />
           <h2 className="text-2xl font-bold text-gray-900">Valoraciones</h2>
         </div>
 
@@ -409,7 +434,7 @@ return (
           <div className="space-y-4">
             {ticket.ratings.map((r) => (
               <div key={r.id} className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
-                <p className="text-lg font-semibold text-yellow-700">⭐ {r.rating}/5</p>
+                <p className="text-lg font-semibold text-yellow-700"> <FontAwesomeIcon icon={faStar} />  {r.rating}/5</p>
                 <p className="text-gray-900">{r.comment || "Sin comentario adicional."}</p>
                 <p className="text-sm text-gray-600 mt-1">
                   Por {r.user} — {formatDate(r.date)}
@@ -425,7 +450,7 @@ return (
      
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500 mb-6">
         <div className="flex items-center gap-2 mb-6">
-          <span className="text-green-500 text-2xl">📸</span>
+          <FontAwesomeIcon icon={faCamera} className="text-green-500 text-2xl" />
           <h2 className="text-2xl font-bold text-gray-900">Evidencias</h2>
         </div>
 

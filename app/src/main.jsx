@@ -14,6 +14,7 @@ import { Tickets } from "./components/Pages/Tickets"
 import { DetailTicket } from "./components/Pages/DetailTicket"
 import { MyTickets } from "./components/Assignments/MyTickets"
 import { MaintainTechnician } from "./components/Pages/MaintainTechnician";
+import { CreateATicket } from "./components/Pages/CreateATicket";
 
 
 
@@ -33,6 +34,7 @@ const rutas = createBrowserRouter([
      { path: '/tickets', element: <Tickets /> },
      { path: '/ticket/:id', element: <DetailTicket /> },
      { path: '/my-tickets', element: <MyTickets /> }, 
+     { path: '/create-ticket', element: <CreateATicket /> },
       //Rutas de mantenimiento
 
 { path: "/mantenimiento/tecnicos", element: <MaintainTechnician /> },

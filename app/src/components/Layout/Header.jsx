@@ -1,7 +1,15 @@
-// src/components/Layout/Header.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBell,
+  faChevronDown,
+  faUserCircle,
+  faUserGear,
+  faTicket,
+  faFolderOpen,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function Header() {
   const { selectedUser, setSelectedUser, users, loading, error } = useUser();
@@ -18,102 +26,110 @@ export function Header() {
     console.log("Usuario seleccionado:", user.Id);
   };
 
-  //filtro por idrol para ver la parte de mantenimiento
-
   const mantItems = [
-    { href: "/mantenimiento/tecnicos", title: "Técnicos", icon: "👤" },
-    { href: "/mantenimiento/tickets", title: "Tickets", icon: "🎫" },
-    { href: "/mantenimiento/categorías", title: "Categorías", icon: "📂" }
-   
+    { href: "/mantenimiento/tecnicos", title: "Técnicos", icon: faUserGear },
+    { href: "/mantenimiento/tickets", title: "Tickets", icon: faTicket },
+    {
+      href: "/mantenimiento/categorías",
+      title: "Categorías",
+      icon: faFolderOpen,
+    },
   ];
-
   return (
-    <header className="flex justify-between items-center bg-white shadow-sm border-b px-6 py-3 top-0 sticky z-10">
-      <button className="text-blue-600 hover:text-blue-800 transition">🔔</button>
+    <header className="bg-[#0a1e4a] text-white shadow-lg sticky top-0 z-10 border-b-4 border-[#DFA200]">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+        <button className="hover:text-[#DFA200] transition">
+          <FontAwesomeIcon icon={faBell} className="text-xl" />
+        </button>
 
-      <div className="flex items-center gap-5 relative">
-        {/* Menú de Mantenimientos */}
-        <div className="relative">
-          <button
-            onClick={() => setOpenMantMenu(!openMantMenu)}
-            className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-500 font-medium"
-          >
-            Mantenimientos
-            <span
-              className={`text-xs transition-transform ${
-                openMantMenu ? "rotate-180" : ""
-              }`}
+        <div className="flex items-center gap-6 relative">
+          <div className="relative">
+            <button
+              onClick={() => setOpenMantMenu(!openMantMenu)}
+              className="flex items-center gap-2 text-sm font-medium hover:text-[#DFA200] transition"
             >
-              ▼
-            </span>
-          </button>
+              Mantenimientos
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`text-xs transition-transform ${
+                  openMantMenu ? "rotate-180" : ""
+                }`}
+              />
+            </button>
 
-          {openMantMenu && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg z-20">
-              {mantItems.map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  onClick={() => setOpenMantMenu(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 transition"
-                >
-                  <span>{item.icon}</span> {item.title}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Menú de Usuarios */}
-        <div className="relative">
-          <button
-            onClick={() => setOpenUserMenu(!openUserMenu)}
-            className="flex items-center gap-3 focus:outline-none"
-          >
-            <div className="text-right">
-              <p className="text-sm font-semibold text-gray-700 leading-tight">
-                {selectedUser.UserName}
-              </p>
-              <p className="text-xs text-gray-500">{selectedUser.Rol}</p>
-            </div>
-
-            <div className="bg-yellow-400 rounded-full p-2 text-white">💔🥀</div>
-
-            <span
-              className={`ml-1 text-xs transition-transform duration-200 ${
-                openUserMenu ? "rotate-180" : ""
-              }`}
-            >
-              ▼
-            </span>
-          </button>
-
-          {openUserMenu && (
-            <div className="absolute right-0 mt-2 w-52 bg-white border rounded-xl shadow-lg overflow-hidden z-20 animate-fadeIn">
-              {loading ? (
-                <p className="px-4 py-2 text-sm text-gray-400">Cargando...</p>
-              ) : error ? (
-                <p className="px-4 py-2 text-sm text-red-500">{error}</p>
-              ) : users.length > 0 ? (
-                users.map((user) => (
-                  <button
-                    key={user.Id}
-                    onClick={() => handleSelectUser(user)}
-                    className={`w-full text-left px-4 py-2 hover:bg-gray-100 transition ${
-                      selectedUser.Id === user.Id ? "bg-gray-50" : ""
-                    }`}
+            {openMantMenu && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 border border-gray-200 rounded-xl shadow-lg z-20">
+                {mantItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setOpenMantMenu(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#f5f7ff] hover:text-[#101DCF] transition"
                   >
-                    <p className="text-sm font-medium text-gray-800">
-                      {user.UserName}
-                    </p>
-                    <p className="text-xs text-gray-500">{user.Rol}</p>
-                  </button>
-                ))
-              ) : (
-                <p className="px-4 py-2 text-sm text-gray-400">Sin usuarios</p>
-              )}
-            </div>
-          )}
+                    <FontAwesomeIcon
+                      icon={item.icon}
+                      className="text-[#DFA200] w-4 h-4"
+                    />
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="relative">
+            <button
+              onClick={() => setOpenUserMenu(!openUserMenu)}
+              className="flex items-center gap-3 focus:outline-none hover:text-[#DFA200]"
+            >
+              <div className="text-right">
+                <p className="text-sm font-semibold leading-tight">
+                  {selectedUser.UserName}
+                </p>
+                <p className="text-xs text-gray-300">{selectedUser.Rol}</p>
+              </div>
+
+              <div className="bg-[#DFA200] rounded-full p-2 text-[#101DCF]">
+                <FontAwesomeIcon icon={faUserCircle} className="text-lg" />
+              </div>
+
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`text-xs transition-transform ${
+                  openUserMenu ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {openUserMenu && (
+              <div className="absolute right-0 mt-2 w-52 bg-white text-gray-800 border border-gray-200 rounded-xl shadow-lg overflow-hidden z-20">
+                {loading ? (
+                  <p className="px-4 py-2 text-sm text-gray-400">Cargando...</p>
+                ) : error ? (
+                  <p className="px-4 py-2 text-sm text-red-500">{error}</p>
+                ) : users.length > 0 ? (
+                  users.map((user) => (
+                    <button
+                      key={user.Id}
+                      onClick={() => handleSelectUser(user)}
+                      className={`w-full text-left px-4 py-2 hover:bg-[#f5f7ff] transition ${
+                        selectedUser.Id === user.Id ? "bg-gray-50" : ""
+                      }`}
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.UserName}
+                      </p>
+                      <p className="text-xs text-gray-500">{user.Rol}</p>
+                    </button>
+                  ))
+                ) : (
+                  <p className="px-4 py-2 text-sm text-gray-400">
+                    Sin usuarios
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

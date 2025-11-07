@@ -11,20 +11,20 @@ export const Sidebar = () => {
 
   return (
     <>
-      {/* btn hamburguersa*/}
+  
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 bg-[#0a1e4a] text-white p-3 rounded-lg"
+        className="lg:hidden fixed top-4 left-4 z-50 bg-[#0a1e4a]  text-white p-3 rounded-lg "
       >
         <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
       </button>
 
-      {/* overlay */}
+ 
       {isOpen && (
         <div className="lg:hidden fixed inset-0 bg-black/50 z-30" onClick={() => setIsOpen(false)} />
       )}
 
-      {/* responsividad*/}
+
       <aside 
         className={`
           fixed lg:static z-40
@@ -35,7 +35,7 @@ export const Sidebar = () => {
         aria-label="Sidebar"
       >
         {/* Logo */}
-        <div className="p-6 border-b border-blue-800">
+        <div className="p-2 border-b-4 border-[#DFA200]">
           <Link to="/" className="flex items-center gap-3">
             <div className="w-12 h-12 flex items-center justify-center">
               <img src={logo} alt="Academy Helpdesk" className="w-full h-full object-contain" />
@@ -47,6 +47,7 @@ export const Sidebar = () => {
         {/* Navigation */}
         <nav className="flex-1 p-6 overflow-auto">
           <section aria-labelledby="create-tickets" className="space-y-2">
+
             <Link to="/create-ticket" className={TailwinButton}>
               <FontAwesomeIcon icon={faPlus} />
               <span>Create a Ticket</span>
@@ -63,7 +64,7 @@ export const Sidebar = () => {
             </Link>
           </section>
 
-          <div className="my-6 border-b border-blue-800"></div>
+          <div className="my-6 border-b border-[#DFA200]"></div>
 
           <section aria-labelledby="work-part" className="space-y-2">
             <Link to="/my-tickets" className={TailwinButton}>
@@ -76,7 +77,7 @@ export const Sidebar = () => {
             </Link>
           </section>
 
-          <div className="my-6 border-b border-blue-800"></div>
+          <div className="my-6 border-b border-[#DFA200]"></div>
 
           <Link to="/tickets" className={TailwinButton}>
             <FontAwesomeIcon icon={faTicket} />

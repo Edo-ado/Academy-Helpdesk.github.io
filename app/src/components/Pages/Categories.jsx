@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CategoriesList from "../../services/CategoriesList";
+import CategoriesList from "../../Services/CategoriesList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 
@@ -64,7 +64,7 @@ export function Categories() {
   return (
     <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-center text-blue-600 tracking-wide drop-shadow-lg mt-6 mb-8">
+        <h1 className="text-4xl font-extrabold text-center text-[#101dcf] tracking-wide drop-shadow-lg mt-6 mb-8 border-b-4 border-[#DFA200] pb-4">
           Categorías
         </h1>
 
