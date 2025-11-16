@@ -6,13 +6,11 @@ class RoutesController
 
     public function __construct()
     {
-
         $this->routes();
     }
 
     private function registerRoutes()
     {
-        
         $this->addProtectedRoute('GET', '/apimovie/actor', 'actor', 'index', ['Administrador']);
     }
 
@@ -21,10 +19,8 @@ class RoutesController
         $method = $_SERVER['REQUEST_METHOD'];
         $path = strtolower($_SERVER['REQUEST_URI']);
 
-   
         if ($this->isProtectedRoute($method, $path)) {
             $route = $this->protectedRoutes["$method:$path"];
-       
             if (!$this->authMiddleware->handle($route['requiredRole'])) {
                 return;
             }
@@ -44,20 +40,17 @@ class RoutesController
     {
         return isset($this->protectedRoutes["$method:$path"]);
     }
-    
+
     public function index()
     {
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         $baseFolder = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-
-      
         if ($baseFolder !== '/' && stripos($requestUri, $baseFolder) === 0) {
             $requestUri = substr($requestUri, strlen($baseFolder));
         }
 
         $routesArray = explode("/", trim($requestUri, "/"));
-
 
         if (isset($routesArray[0]) && $routesArray[0] === 'uploads') {
             $filePath = __DIR__ . '/' . implode("/", $routesArray);
@@ -72,20 +65,17 @@ class RoutesController
             }
         }
 
- 
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
             exit();
         }
 
-   
         if (empty($routesArray[0])) {
-            $json = [
+            echo json_encode([
                 "success" => false,
                 "status"  => 404,
                 "message" => 'Controlador no especificado'
-            ];
-            echo json_encode($json, http_response_code($json["status"]));
+            ], http_response_code(404));
             return;
         }
 
@@ -94,43 +84,31 @@ class RoutesController
         $param1     = $routesArray[2] ?? null;
         $param2     = $routesArray[3] ?? null;
         $param3     = $routesArray[4] ?? null;
-        
- 
 
         try {
             if ($controller && class_exists($controller)) {
                 $response = new $controller();
 
                 switch ($_SERVER['REQUEST_METHOD']) {
+
                     case 'GET':
                         if ($action && is_numeric($action)) {
-                       
                             $response->get($action);
                         } elseif ($action && method_exists($response, $action)) {
-                       
                             if ($param1 && $param2 && $param3) {
-                               
                                 $response->$action($param1, $param2, $param3);
                             } elseif ($param1 && $param2) {
-                             
                                 $response->$action($param1, $param2);
                             } elseif ($param1) {
-                            
                                 $response->$action($param1);
                             } else {
-                            
                                 $response->$action();
                             }
                         } elseif (!$action) {
-                        
                             $response->index();
                         } else {
-                            $json = [
-                                "success" => false,
-                                "status"  => 404,
-                                "message" => 'Acción no encontrada'
-                            ];
-                            echo json_encode($json, http_response_code($json["status"]));
+                            echo json_encode(["success" => false, "status" => 404, "message" => "Acción GET no encontrada"],
+                                http_response_code(404));
                         }
                         break;
 
@@ -144,45 +122,41 @@ class RoutesController
 
                     case 'PUT':
                     case 'PATCH':
-                        if ($param1) {
-                            $response->update($param1);
-                        } elseif ($action && method_exists($response, $action)) {
-                            $response->$action();
+                        if ($action && method_exists($response, $action)) {
+                            if     ($param1 && $param2 && $param3) $response->$action($param1, $param2, $param3);
+                            elseif ($param1 && $param2)            $response->$action($param1, $param2);
+                            elseif ($param1)                       $response->$action($param1);
+                            else                                   $response->$action();
                         } else {
-                            $response->update();
+                            echo json_encode(["success" => false, "status" => 404, "message" => "Acción no encontrada en PATCH/PUT"],
+                                http_response_code(404));
                         }
                         break;
 
+        
                     case 'DELETE':
-                        if ($param1) {
-                            $response->delete($param1);
-                        } elseif ($action && method_exists($response, $action)) {
-                            $response->$action();
+                        if ($action && method_exists($response, $action)) {
+                            if     ($param1 && $param2 && $param3) $response->$action($param1, $param2, $param3);
+                            elseif ($param1 && $param2)            $response->$action($param1, $param2);
+                            elseif ($param1)                       $response->$action($param1);
+                            else                                   $response->$action();
                         } else {
-                            $response->delete();
+                            $response->delete($param1);
                         }
                         break;
 
                     default:
-                        $json = [
-                            "success" => false,
-                            "status"  => 405,
-                            "message" => 'Método HTTP no permitido'
-                        ];
-                        echo json_encode($json, http_response_code($json["status"]));
-                        break;
+                        echo json_encode(["success" => false, "status" => 405, "message" => "Método HTTP no permitido"],
+                            http_response_code(405));
                 }
+
             } else {
-                $json = [
-                    "success" => false,
-                    "status"  => 404,
-                    "message" => 'Controlador no encontrado'
-                ];
-                echo json_encode($json, http_response_code($json["status"]));
+                echo json_encode(["success" => false, "status" => 404, "message" => "Controller no encontrado"],
+                    http_response_code(404));
             }
         } catch (\Throwable $th) {
-            $json = ['status' => 500, 'result' => $th->getMessage()];
-            echo json_encode($json, http_response_code($json["status"]));
+            echo json_encode(['status' => 500, 'result' => $th->getMessage()],
+                http_response_code(500));
         }
     }
 }

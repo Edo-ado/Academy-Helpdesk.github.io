@@ -45,5 +45,69 @@ class CategoriesController
     }
 
 
+    public function UpdateCategoryByid($param, $param2, $param3)
+    {
+        try {
+            $response = new Response();
+            $Categories = new CategoriesModel();
+            $result = $Categories->UpdateCategoryByid($param, $param2, $param3);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
+    public function GetCategoryById($id){
+        try {
+            $response = new Response();
+            $Categories = new CategoriesModel();
+            $result = $Categories->GetCategoryById($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        } 
+    }
+
+    //http://localhost/Academy-Helpdesk.github.io/api/CategoriesController/DeleteCategory/1
+    public function DeleteCategory($param)
+    {
+        try {
+            $response = new Response();
+            $Categories = new CategoriesModel();
+            $result = $Categories->DeleteCategory($param);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
+
+    public function ActivateCategory($param){
+          try {
+            $response = new Response();
+            $Categories = new CategoriesModel();
+            $result = $Categories->ActivateCategory($param);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+    //http://localhost/Academy-Helpdesk.github.io/api/CategoriesController/createCategory
+    public function createCategory($data)
+    {
+        try {
+            $response = new Response();
+            $Categories = new CategoriesModel();
+            $result = $Categories->CreateCategory($data);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
 
 }
