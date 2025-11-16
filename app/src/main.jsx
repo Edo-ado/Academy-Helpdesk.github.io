@@ -15,6 +15,8 @@ import { DetailTicket } from "./components/Pages/DetailTicket"
 import { MyTickets } from "./components/Assignments/MyTickets"
 import {  CreateTechnician } from "./components/Pages/CreateTechnician";
 
+import { Toaster } from "react-hot-toast";
+
 
 import { CreateATicket } from "./components/Pages/CreateATicket";
 import MaintainListTechnician from './components/Pages/MaintainListTechnician'
@@ -56,6 +58,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <UserProvider> 
       <RouterProvider router={rutas} />
+      <Toaster position="top-right" />
     </UserProvider> 
   </StrictMode>,
 )

@@ -93,11 +93,16 @@ VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password
 
     foreach ($objeto->especialidades as $value) {
         $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
-                VALUES ($iduser, $value)";
+                VALUES ($iduser, {$value->Id})";
         $this->enlace->executeSQL_DML($sql);
     }
 
-    return $this->get($iduser);
+   return [
+    "success" => true,
+    "message" => "Técnico creado correctamente",
+    "Id" => $iduser
+];
+
 }
 
 
