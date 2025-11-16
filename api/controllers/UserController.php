@@ -57,18 +57,35 @@ class UserController
             handleException($e);
         }
     }
+public function create()
+{
+    try {
+        $input = file_get_contents("php://input");
+        $objeto = json_decode($input);
 
+        // ⬇ Agregar esto temporalmente ⬇
+        error_log("📌 DATA RECIBIDA: " . print_r($objeto, true));
 
-    public function create(){
-        try {
-            $response = new Response();
-            $Tecnico = new UserModel();
-            $result = $Tecnico->create();
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
+        $Tecnico = new UserModel();
+        $result = $Tecnico->create($objeto);
+
+        echo json_encode([
+            "status" => 200,
+            "data" => $result,
+            "message" => "Técnico creado correctamente"
+        ]);
+
+    } catch (Exception $e) {
+        error_log("❌ ERROR CREATE USER: " . $e->getMessage());
+
+        echo json_encode([
+            "status" => 500,
+            "error" => $e->getMessage()
+        ]);
     }
+}
+
+
 
 
     public function update(){

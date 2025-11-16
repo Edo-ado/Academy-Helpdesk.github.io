@@ -1,4 +1,5 @@
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../alert";
+
 
 /**
  * Componente de alerta de error.

@@ -109,10 +109,10 @@ useEffect(() => {
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
         <div className="text-center">
           <p className="text-red-500 text-lg mb-4">{error}</p>
-          <button
-            onClick={() => navigate("/technicians")}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
+        <button
+  onClick={() => navigate(-1)}
+  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+>
             Volver a la lista
           </button>
         </div>
@@ -132,7 +132,7 @@ useEffect(() => {
     <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
         <button
-          onClick={() => navigate("/technicians")}
+       onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition"
         >
           <FontAwesomeIcon icon={faArrowLeft} />

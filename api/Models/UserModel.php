@@ -82,33 +82,24 @@ class UserModel
         return $vResultado;
     }
 
- /**
-     * Crear pelicula
-     * @param $objeto pelicula a insertar
-     * @return $this->get($idMovie) - Objeto pelicula
-     */
-    //
-    public function create($objeto)
-    {
-        //Consulta sql
-        //Identificador autoincrementable
-        $sql = "INSERT INTO Users (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge)" .
-            "('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password', '$objeto->idrol', NOW(), NULL, TRUE, '$objeto->trabajocargo')";
+public function create($objeto)
+{
+    $sql = "INSERT INTO Users 
+       (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge)
+VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password', '$objeto->idrol', NOW(), NULL, TRUE, '$objeto->trabajocargo')
+";
 
-        //Ejecutar la consulta
-        //Obtener ultimo insert
-        $iduser = $this->enlace->executeSQL_DML_last($sql);
-        //--- Especialidades ---
-        //Crear elementos a insertar en especialidades
-        foreach ($objeto->especialidades as $value) {
-            $sql = "Insert Technician_Specialities (UserId, SpecialityId)" .
-                " Values($iduser, $value)";
-            $vResultadoGen = $this->enlace->executeSQL_DML($sql);
-        }
+    $iduser = $this->enlace->executeSQL_DML_last($sql);
 
-        //Retornar usuario
-        return $this->get($iduser);
+    foreach ($objeto->especialidades as $value) {
+        $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
+                VALUES ($iduser, $value)";
+        $this->enlace->executeSQL_DML($sql);
     }
+
+    return $this->get($iduser);
+}
+
 
 public function update($objeto)
 {
@@ -145,11 +136,12 @@ public function update($objeto)
 }
 
    public function GetSeguros(){
-        $vSql = "SELECT * FROM Insurances WHERE Active = 1";
+        $vSql = "SELECT Id, Name, Description FROM Insurances WHERE Active = 1";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
 
+    
 
 
 

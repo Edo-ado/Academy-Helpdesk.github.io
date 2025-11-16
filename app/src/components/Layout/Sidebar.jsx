@@ -12,13 +12,12 @@ export const Sidebar = () => {
   return (
     <>
   
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 bg-[#0a1e4a]  text-white p-3 rounded-lg "
-      >
-        <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
-      </button>
-
+       <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="lg:hidden fixed top-4 left-4 z-[60] bg-[#0a1e4a] text-white p-3 rounded-lg"
+    >
+      <FontAwesomeIcon icon={isOpen ? faTimes : faBars} />
+    </button>
  
       {isOpen && (
         <div className="lg:hidden fixed inset-0 bg-black/50 z-30" onClick={() => setIsOpen(false)} />

@@ -36,8 +36,10 @@ export function Header() {
     },
   ];
   return (
-    <header className="bg-[#0a1e4a] text-white shadow-lg sticky top-0 z-10 border-b-4 border-[#DFA200]">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+    <header className="bg-[#0a1e4a] text-white shadow-lg sticky top-0 z-50 border-b-4 border-[#DFA200]">
+<div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 pl-16 lg:pl-6">
+
+
         <button className="hover:text-[#DFA200] transition">
           <FontAwesomeIcon icon={faBell} className="text-xl" />
         </button>
@@ -102,7 +104,7 @@ export function Header() {
             </button>
 
             {openUserMenu && (
-              <div className="absolute right-0 mt-2 w-52 bg-white text-gray-800 border border-gray-200 rounded-xl shadow-lg overflow-hidden z-20">
+<div className="absolute right-0 mt-2 w-52 bg-white text-gray-800  border border-gray-200 rounded-xl shadow-lg  max-h-60 overflow-y-auto z-20">
                 {loading ? (
                   <p className="px-4 py-2 text-sm text-gray-400">Cargando...</p>
                 ) : error ? (

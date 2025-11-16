@@ -27,46 +27,29 @@ import { SpecialityForm } from "../../components/ui/SpecialityForm";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
 
 
-export function MaintainTechnician() {
+export function CreateTechnician() {
 
-  const [rolesList, setRolesList] = useState([]);
+const rolesList = [{ id: 1, role: "Técnico" }];
+
   const [dataSpecialities, setDataSpecialities] = useState([]);
   const [dataSeguros, setDataSeguros] = useState([]);
   const [dataTechnicians, setDataTechnicians] = useState([]);
   const [error, setError] = useState(null);
 
  /*** Esquema de validación Yup ***/
-  const technicianSchema= yup.object({
-    name: yup.string()
-            .required('El nombre completo es requerido')
-            .min(2, "El título debe tener al menos 2 caracteres"),
-    seguro: yup 
-      .number() 
-      .typeError('Solo acepta números') 
-      .required('El año es requerido') 
-      .positive('Solo acepta números positivos'), 
-    email: yup.string()
-          .required("El email es requerido")
-          .email("El email no es válido"),
-              trabajocargo: yup.string()
-      .required("El cargo de trabajo es requerido")
-      .min(2, "El cargo de trabajo debe tener al menos 2 caracteres"),
-    password: yup.string()
-      .required("La contraseña es requerida")
-      .min(6, "La contraseña debe tener al menos 6 caracteres"),
-    idrole: yup.array().min(1, 'El rol es requerido'),
-    speciality_id: yup.array().of(
-      yup.object().shape({ 
-        actor_id: yup 
-          .number() 
-          .typeError('La especialidad es requerida') 
-          .required('La especialidad es requerida'), 
-        role: yup.string().required('La especialidad es requerida'), 
-      }), 
-    ), 
-  })
-
-
+const technicianSchema = yup.object({
+  name: yup.string().required("El nombre completo es requerido").min(2, "Debe tener al menos 2 caracteres"),
+  seguro: yup.number()
+    .typeError("Debe seleccionar un seguro").required("El seguro es requerido").positive("Valor inválido"),
+  email: yup.string().required("El email es requerido") .email("Formato de email no válido"),
+  trabajocargo: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
+ password: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
+  idrol: yup.number().required("El rol es requerido"),
+especialidades: yup.array() .of( yup.object({
+     Id: yup.number().typeError("Debe seleccionar una especialidad").required("La especialidad es requerida"),
+    })
+  ).min(1, "Debe seleccionar al menos una especialidad")
+});
 
   /*** React Hook Form ***/
   const {
@@ -74,16 +57,17 @@ export function MaintainTechnician() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      name: "",
-      seguro: "",
-      email: "",
-      password: "",
-      idrole: "",
-      trabajocargo: "",
-      speciality_id: [],
+ defaultValues: {
+  name: "",
+  seguro: "",
+  email: "",
+  password: "",
+  idrol: 1, 
+  trabajocargo: "",
+  especialidades: [], 
+}
+,
 
-    },
     resolver:yupResolver(technicianSchema),
   });
 
@@ -92,12 +76,12 @@ export function MaintainTechnician() {
 
 const { fields, append, remove } = useFieldArray({
   control,
-  name: "speciality_id",
+  name: "especialidades",
 });
 
 
 const addNewSpeciality = () => {
-  append({ speciality_id: "", name: "" });
+   append({ Id: null });
 };
 
 const removeSpeciality = (index) => {
@@ -119,9 +103,8 @@ const removeSpeciality = (index) => {
         setDataSpecialities(specialitiesRes.data.data || []); 
         setDataSeguros(segurosRes.data.data || []); 
         setDataTechnicians(techniciansRes.data.data || []); 
-        console.log(specialitiesRes) 
-        console.log(segurosRes) 
-        console.log(techniciansRes) 
+    
+        
       } catch (error) {
         console.log(error)
         if(error.name != "AbortError") setError(error.message)
@@ -133,35 +116,46 @@ const removeSpeciality = (index) => {
 
 /*** Submit ***/
 const onSubmit = async (dataForm) => {
+  const payload = {
+    seguro: dataForm.seguro,
+    name: dataForm.name,
+    email: dataForm.email,
+    password: dataForm.password,
+    idrol: dataForm.idrol,
+    trabajocargo: dataForm.trabajocargo,
+    especialidades: dataForm.especialidades, 
+  };
+
+  console.log("📤 Enviando payload al API:", payload);
+
   try {
-    // Crear técnico en el API
-    const response = await TechniciansLists.create(dataForm);
-    if (response.data) {
-      toast.success(`Técnico creado #${response.data.data.id} - ${response.data.data.name}`, {
-        duration: 4000,
-        position: "top-center",
-      });
-      navigate("/maintenance/table");
-    } else if (response.error) {
-      setError(response.error);
-    }
+    const response = await TechniciansLists.create(payload);
+    toast.success("Técnico creado correctamente");
+    
+    navigate("/maintenance/table");
   } catch (err) {
-    console.error(err);
-    setError("Error al crear técnico");
+    console.error("❌ Error al crear:", err.response?.data || err);
+    toast.error(err.response?.data?.message ?? "Error al crear técnico");
   }
 };
 
 
 
+
   return (
 
-<Card className="p-6 max-w-5xl mx-auto">
-  <h2 className="text-2xl font-bold mb-6">Crear Técnico</h2>
+<Card className="p-6 max-w-5xl mx-auto mt-16 border-2 border-[#DFA200] rounded-xl shadow-md">
 
-  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+
+     <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
+    Crear Técnico
+</h1>
+
+
+  <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
     
     {/* Nombre completo y correo */}
-    <div className="grid sm:grid-cols-2 gap-4">
+    <div className="grid sm:grid-cols-2 gap-4 ">
       <Controller
         name="name"
         control={control}
@@ -169,7 +163,7 @@ const onSubmit = async (dataForm) => {
           <CustomInputField
             {...field}
             label="Nombre completo"
-            placeholder="Ashley Rojas"
+            placeholder="Su nombre completo"
             error={errors.name?.message}
           />
         )}
@@ -182,7 +176,7 @@ const onSubmit = async (dataForm) => {
           <CustomInputField
             {...field}
             label="Correo electrónico"
-            placeholder="ashley@example.com"
+            placeholder="technician@Helpdesk.com"
             error={errors.email?.message}
           />
         )}
@@ -213,15 +207,17 @@ const onSubmit = async (dataForm) => {
             field={field}
             data={dataSeguros}
             label="Seguro médico"
-            getOptionLabel={(item) => `${item.name}`}
-            getOptionValue={(item) => item.id}
+            getOptionLabel={(item) => `${item.Name}`}
+            getOptionValue={(item) => item.Id}
             error={errors.seguro?.message}
           />
         )}
       />
+
+      
     </div>
 
-    {/* Cargo y rol */}
+    {/* Cargo*/}
     <div className="grid sm:grid-cols-2 gap-4">
       <Controller
         name="trabajocargo"
@@ -230,27 +226,14 @@ const onSubmit = async (dataForm) => {
           <CustomInputField
             {...field}
             label="Cargo de trabajo"
-            placeholder="Electricista"
+            placeholder="Accountant"
             error={errors.trabajocargo?.message}
           />
         )}
       />
 
-      <Controller
-        name="idrole"
-        control={control}
-        render={({ field }) => (
-          <CustomMultiSelect
-            field={field}
-            data={rolesList}
-            label="Roles asignados"
-            getOptionLabel={(item) => item.role}
-            getOptionValue={(item) => item.id}
-            error={errors.idrole?.message}
-            placeholder="Seleccione roles"
-          />
-        )}
-      />
+
+
     </div>
 
     {/* Especialidades (useFieldArray) */}
@@ -273,7 +256,7 @@ const onSubmit = async (dataForm) => {
       <div className="space-y-4 mt-3">
         {fields.map((field, index) => (
           <SpecialityForm
-            key={field.id}
+            key={field.Id}
             index={index}
             control={control}
             data={dataSpecialities}
@@ -286,19 +269,30 @@ const onSubmit = async (dataForm) => {
     </div>
 
     <div className="flex justify-between gap-4 mt-6">
-      <Button
-        type="button"
-        variant="default"
-        className="flex items-center gap-2 bg-accent text-white"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Regresar
-      </Button>
-      <Button type="submit" className="flex-1">
-        <Save className="w-4 h-4" />
-        Guardar
-      </Button>
+
+<Button
+  type="button"
+  onClick={() => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate("/technicians"); 
+  }}
+  className="flex items-center gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
+>
+  <ArrowLeft className="w-4 h-4" />
+  Regresar
+</Button>
+
+
+
+<Button
+  type="submit"
+  className="flex-1 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046]"
+>
+  <Save className="w-4 h-4" />
+  Guardar
+</Button>
+
+
     </div>
   </form>
 </Card>

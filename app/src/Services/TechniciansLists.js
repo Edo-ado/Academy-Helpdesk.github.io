@@ -9,8 +9,14 @@ const TechniciansLists = {
   getTechnicianById: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
   GetDetailByIdAll: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
   GetSpecialitiesInformationByUserID: (userId) => axios.get(`${API_URL_SPECIALITIES}/GetSpecialitiesInformationByUserID/${userId}`)  ,
-  getSeguros: () => axios.get(`${API_URL}/GetSeguros`)
-
+  getSeguros: () => axios.get(`${API_URL}/GetSeguros`),
+  
+ create: (data) =>
+    axios.post(`${API_URL}/create`, JSON.stringify(data), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
 };
 
 export default TechniciansLists;

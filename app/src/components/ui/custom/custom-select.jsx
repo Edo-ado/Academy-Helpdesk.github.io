@@ -9,9 +9,7 @@ export function CustomSelect({ field, data, label, getOptionLabel, getOptionValu
 
       <select
         {...field}
-        className={`block w-full border rounded-md py-2 px-3 text-sm ${
-          error ? "border-red-500" : "border-gray-300"
-        }`}
+       className="w-full p-2 border-2 border-[#071f5f] rounded-xl focus:ring-0 focus:border-[#071f5f]"
       >
         <option value="">Seleccionar...</option>
         {data.map((item) => (

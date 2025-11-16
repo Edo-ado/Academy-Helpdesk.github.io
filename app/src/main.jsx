@@ -13,8 +13,11 @@ import { DetailCategory } from "./components/Pages/DetailCategory"
 import { Tickets } from "./components/Pages/Tickets"
 import { DetailTicket } from "./components/Pages/DetailTicket"
 import { MyTickets } from "./components/Assignments/MyTickets"
-import { MaintainTechnician } from "./components/Pages/MaintainTechnician";
+import {  CreateTechnician } from "./components/Pages/CreateTechnician";
+
+
 import { CreateATicket } from "./components/Pages/CreateATicket";
+import MaintainListTechnician from './components/Pages/MaintainListTechnician'
 
 
 
@@ -37,7 +40,9 @@ const rutas = createBrowserRouter([
      { path: '/create-ticket', element: <CreateATicket /> },
       //Rutas de mantenimiento
 
-{ path: "/mantenimiento/tecnicos", element: <MaintainTechnician /> },
+{ path: "/mantenimiento/tecnicos", element: <MaintainListTechnician /> },
+//create
+{ path: "/technicians/create", element: <CreateTechnician/> },
 
       
 
