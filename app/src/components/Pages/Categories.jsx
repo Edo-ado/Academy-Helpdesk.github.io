@@ -13,7 +13,7 @@ export function Categories() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await CategoriesList.getAllCategories();
+        const response = await CategoriesList.GetAllCategoriesListActive();
         console.log("Response from API:", response.data);
 
         const mappedData = Array.isArray(response.data.data)

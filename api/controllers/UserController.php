@@ -16,6 +16,19 @@ class UserController
         }
     }
 
+     public function GetAllTechniciansListActive()
+    {
+        try {
+            $response = new Response();
+            $Tecnico = new UserModel();
+            $result = $Tecnico->GetAllTechniciansListActive();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
 
     //GET TECHNICIAN DETAIL BY ID
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetDetailByIdAll/1

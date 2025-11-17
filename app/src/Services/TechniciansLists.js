@@ -12,7 +12,7 @@ const TechniciansLists = {
   getSeguros: () => axios.get(`${API_URL}/GetSeguros`),
   DeleteUsers: (id) => axios.patch(`${API_URL}/DeleteUsers/${id}`),
   ActivateUser : (id) => axios.patch(`${API_URL}/ActivateUser/${id}`),
-
+  GetAllTechniciansListActive :() => axios.get(`${API_URL}/GetAllTechniciansListActive`),
   
  create: (data) =>
     axios.post(`${API_URL}/create`, JSON.stringify(data), {

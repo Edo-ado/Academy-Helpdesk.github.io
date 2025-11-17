@@ -28,6 +28,26 @@ class UserModel
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
+
+    public function GetAllTechniciansListActive()
+    {
+        $Role = "Technician";
+        $vSql = "SELECT 
+    
+        u.Email,
+        u.UserName,
+        u.Id,
+        u.Usercode,
+        u.Active
+        FROM 
+        users u
+        where u.RoleId= 1 and u.Active = 1;
+";
+        $vResultado = $this->enlace->ExecuteSQL($vSql);
+        return $vResultado;
+    }
+
+
     public function GetAllUsers()
     {
 
@@ -52,6 +72,9 @@ class UserModel
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
+
+
+
 
     public function GetDetailByIdAll($id)
     {
@@ -107,39 +130,28 @@ VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password
     }
 
 
-    public function update($objeto)
-    {
-        // Consulta SQL para actualizar el usuario principal
-        $sql = "UPDATE Users SET 
-                InsuranceId = '$objeto->seguro',
-                UserName = '$objeto->name',
-                Email = '$objeto->email',
-                Password = '$objeto->password',
-                RoleId = '$objeto->idrol',
-                State = " . ($objeto->state ? 'TRUE' : 'FALSE') . ",
+  public function update($objeto)
+{
+    $sql = "UPDATE Users SET  InsuranceId = '$objeto->seguro', UserName = '$objeto->name', Email = '$objeto->email', Password = '$objeto->password',RoleId = '$objeto->idrol',
+State = " . ($objeto->state ? 'TRUE' : 'FALSE') . ",
                 Work_Charge = '$objeto->trabajocargo'
             WHERE Id = $objeto->id";
 
-        // Ejecutar la actualización
+    $this->enlace->executeSQL_DML($sql);
+
+ 
+    $sql = "DELETE FROM Technician_Specialities WHERE UserId = $objeto->id";
+    $this->enlace->executeSQL_DML($sql);
+
+   
+    foreach ($objeto->especialidades as $value) {
+        $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
+                VALUES ($objeto->id, {$value->Id})";
         $this->enlace->executeSQL_DML($sql);
-
-        // --- Especialidades ---
-        // Eliminar especialidades asociadas al usuario
-        $sql = "DELETE FROM Technician_Specialities WHERE UserId = $objeto->id";
-        $this->enlace->executeSQL_DML($sql);
-
-        // Insertar nuevas especialidades
-        foreach ($objeto->especialidades as $value) {
-            $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
-                VALUES ($objeto->id, $value)";
-            $this->enlace->executeSQL_DML($sql);
-        }
-
-        // Retornar usuario actualizado
-        return $this->get($objeto->id);
-
-
     }
+
+  return   $this->enlace->executeSQL_DML($sql);
+}
 
     public function GetSeguros()
     {
