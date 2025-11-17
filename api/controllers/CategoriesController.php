@@ -16,6 +16,19 @@ class CategoriesController
         }
     }
 
+ public function GetAllCategoriesListActive()
+    {
+        try {
+            $response = new Response();
+            $Categories = new CategoriesModel();
+            $result = $Categories->GetAllCategoriesListActive();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
     //GetByID
     //http://localhost/Academy-Helpdesk.github.io/api/CategoriesController/get/1
     public function get($param)

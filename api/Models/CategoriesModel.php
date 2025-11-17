@@ -10,6 +10,14 @@ class CategoriesModel
     }
 
 
+    public function GetAllCategoriesListActive()
+    {
+        $vSql = "SELECT * FROM categories c where c.Active =1 ORDER BY id desc;";
+        $vResultado = $this->enlace->ExecuteSQL($vSql);
+        return $vResultado;
+    }
+
+
     public function GetAllCategories()
     {
         $vSql = "SELECT * FROM categories  ORDER BY id desc;";
@@ -31,7 +39,7 @@ class CategoriesModel
     //nombre de la categoria, lista de etiquetas, lista de especialidades y su SLA
     public function GetCategoryDetailsByID($id)
     {
-        $vSql = "SELECT Categories.Name AS Categorie, SLA.MaxTimeResolution AS TiempoMaximoResolucion, SLA.MaxTimeHours AS TiempoMaximoRespuesta, GROUP_CONCAT(DISTINCT Specialities.Speciality SEPARATOR ', ') AS Especielities, GROUP_CONCAT(DISTINCT Tags.Tag SEPARATOR ', ') AS tags           
+        $vSql = "SELECT Categories.Name AS Categorie, SLA.MaxTimeResolution AS TiempoMaximoResolucion, SLA.MaxTimeResponse AS TiempoMaximoRespuesta, GROUP_CONCAT(DISTINCT Specialities.Speciality SEPARATOR ', ') AS Especielities, GROUP_CONCAT(DISTINCT Tags.Tag SEPARATOR ', ') AS tags           
 FROM Categories
 JOIN SLA ON Categories.SLAId = SLA.Id
 JOIN Specialities ON Specialities.CategoryId = Categories.Id

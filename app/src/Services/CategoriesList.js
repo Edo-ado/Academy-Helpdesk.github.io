@@ -5,6 +5,7 @@ const API_URL = 'http://localhost/Academy-Helpdesk.github.io/api/CategoriesContr
 
 const CategoriesList = {
    getAllCategories: () => axios.get(`${API_URL}`),
+     GetAllCategoriesListActive: () => axios.get(`${API_URL}/GetAllCategoriesListActive`),
     GetCategoryById: (id) => axios.get(`${API_URL}/GetCategoryById/${id}`),
     GetCategoryDetailsByID: (id) => axios.get(`${API_URL}/details/${id}`),
     UpdateCategoryByid: (id, data) => axios.put(`${API_URL}/UpdateCategory/${id}`, data),
