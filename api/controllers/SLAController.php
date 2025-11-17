@@ -31,15 +31,15 @@ class SLAController
     }
 
 
-    public function CreateSLA($param, $param2){
-        try {
-            $response = new Response();
-            $SLA = new SLAModel();
-            $result = $SLA->CreateSLA($param, $param2  );
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        } 
+    public function CreateSLA(){
+       $response = new Response();
+        $request = new Request();
+        //Obtener json enviado
+        $inputJSON = $request->getJSON();
+        $Tecnico = new SLAModel();
+        $result = $Tecnico->CreateSLA($inputJSON);
+        //Dar respuesta
+        $response->toJSON($result);
     }
 
 
