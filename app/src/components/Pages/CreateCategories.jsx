@@ -76,37 +76,53 @@ export function CreateCategories() {
 
 
   const [SlaDataSaved, setSlaDataSaved] = useState(null);
-  const formData = {
-    name: "",
-    description: "",
-    slaId: null,
-  };
+ 
   
 
   // validaciones para la creacion de la categoría
   const onSubmit = async (SlaData) => {
+  let slaIdToUse = null;
 
-    if (selectedOption === "new") {
-      try {
-        const Sla = await SLAService.CreateSLA(
-          SlaData.slaHours,
-          SlaData .slaMinutes
-        );
-        setSlaDataSaved("true");
-
-      } catch (err) {
-        toast.error("No se pudo crear el SLA");
-        setSlaDataSaved("false");
-      }
-    }else if (selectedOption === "existing") {
-      formData.slaId = SlaData.slaId;
-    }
-
+ 
+  if (selectedOption === "new") {
     try {
+
+      const Sla = await SLAService.CreateSLA(
+        SlaData.slaHours,
+        SlaData.slaMinutes
+      );
+      
+      slaIdToUse =  Sla.data.data?.id;
+    
+      setSlaDataSaved("true");
+      toast.success("SLA creado exitosamente");
+    } catch (err) {
+      toast.error("No se pudo crear el SLA");
+       setSlaDataSaved("false");
+      return;
+    }
+  } else if (selectedOption === "existing") {
+
+    slaIdToUse = SlaData.slaId;
+ 
+  } else {
+    toast.error("Debes seleccionar o crear un SLA");
+    return;
+  }
+
+  
+  const formData = {
+    Name: SlaData.name,
+    Descripcion: SlaData.description,
+    SLAId: slaIdToUse,  
+  };
+
+ 
+  try {
       const response = await CategoriesServices.CreateCategory(formData);
 
       if (response.data?.success === true) {
-        toast.success(`Categoría "${formData.name}" creada exitosamente`);
+        toast.success(`Categoría "${formData.Name}" creada exitosamente`);
         navigate(-1);
         return;
       }
@@ -115,7 +131,8 @@ export function CreateCategories() {
     } catch (err) {
       toast.error(err.response?.data?.message || "Error al crear la categoría");
     }
-  };
+
+};
 
   return (
     <Card className="p-6 max-w-3xl mx-auto mt-16 border-2 border-[#DFA200] rounded-xl shadow-md">

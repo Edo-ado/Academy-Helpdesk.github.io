@@ -96,17 +96,18 @@ class CategoriesController
     }
 
     //http://localhost/Academy-Helpdesk.github.io/api/CategoriesController/createCategory
-    public function createCategory($arrayData)
-    {
-        try {
-            $response = new Response();
-            $Categories = new CategoriesModel();
-            $result = $Categories->CreateCategory($arrayData);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
-    }
+   public function CreateCategory()
+{
+          $response = new Response();
+        $request = new Request();
+        //Obtener json enviado
+        $inputJSON = $request->getJSON();
+        $Categories = new CategoriesModel();
+        $result = $Categories->CreateCategory($inputJSON);
+        //Dar respuesta
+        $response->toJSON($result);
+}
+
 
 
 

@@ -39,12 +39,10 @@ const location = useLocation();
 
 
 
-const rolesList = [{ id: 1, role: "Técnico" }];
 
   const [dataSpecialities, setDataSpecialities] = useState([]);
   const [dataSeguros, setDataSeguros] = useState([]);
-  const [dataTechnicians, setDataTechnicians] = useState([]);
-  const [error, setError] = useState(null);
+
 
  /*** Esquema de validación Yup ***/
 const technicianSchema = yup.object({
@@ -62,7 +60,7 @@ especialidades: yup
         Id: yup
           .number()
           .typeError("Debe seleccionar una especialidad")
-          .required("La especialidad es repetida"),
+          .required("La especialidad es requerida"),
       })
     )
     .min(1, "Debe seleccionar al menos una especialidad"),
@@ -116,12 +114,11 @@ const removeSpeciality = (index) => {
         //Lista de seguros
         const segurosRes= await TechniciansLists.getSeguros()
         //Lista de tecnicos
-        const techniciansRes= await TechniciansLists.getAllTechnicians()
+        
         // s la petición es exitosa, se guardan los datos 
         setDataSpecialities(specialitiesRes.data.data || []); 
         setDataSeguros(segurosRes.data.data || []); 
-        setDataTechnicians(techniciansRes.data.data || []); 
-    
+
         
       } catch (error) {
         console.log(error)
@@ -302,9 +299,8 @@ const onSubmit = async (dataForm) => {
 <Button
   type="button"
   onClick={() => {
-    if (location.key !== "default") navigate(-1);
-    else navigate("/technicians");
-  }}
+navigate(-1);
+ }}
   className="flex items-center gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
 >
   <ArrowLeft className="w-4 h-4" />

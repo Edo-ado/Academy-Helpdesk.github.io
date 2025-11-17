@@ -74,12 +74,19 @@ public function ActivateCategory($id){
 
     
     //sin probar
-    public function CreateCategory($data)
-    {
-        $sql = "INSERT INTO categories (Name, Descripcion, SLAId) VALUES ('$data->Name', '$data->Descripcion', $data->SLAId);";
-        $sqlresult = $this->enlace->executeSQL_DML($sql);
-        return $sqlresult;
-    }
+public function CreateCategory($data)
+{
+   
+   
+        $slaId = intval($data->SLAId);
+                $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
+                VALUES ('$data->Name', $slaId, '$data->Descripcion', 1)";
+        
+    
+            return  $this->enlace->executeSQL_DML($sql);
 
+
+ 
+        }
 
 }

@@ -8,7 +8,12 @@ const CategoriesList = {
     GetCategoryById: (id) => axios.get(`${API_URL}/GetCategoryById/${id}`),
     GetCategoryDetailsByID: (id) => axios.get(`${API_URL}/details/${id}`),
     UpdateCategoryByid: (id, data) => axios.put(`${API_URL}/UpdateCategory/${id}`, data),
-    CreateCategory: (data) => axios.post(`${API_URL}/CreateCategory`, data),
+   CreateCategory: (data) => 
+  axios.post(`${API_URL}/CreateCategory`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }),
    DeleteCategoryById: (id) => axios.patch(`${API_URL}/DeleteCategory/${id}`),
    ActivateCategory: (id) => axios.patch(`${API_URL}/ActivateCategory/${id} `)
 

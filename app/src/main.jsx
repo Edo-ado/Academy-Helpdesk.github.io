@@ -22,7 +22,7 @@ import { Toaster } from "react-hot-toast";
 import { CreateATicket } from "./components/Pages/CreateATicket"
 import MaintainListTechnician from './components/Pages/MaintainListTechnician'
 import  MaintainListCategories from './components/Pages/MaintainListCategories'
-
+import { UpdateTechnician } from "./components/Pages/UpdateTechnician"
 
 
 // Crear las rutas
@@ -53,6 +53,9 @@ const rutas = createBrowserRouter([
 //create
 { path: "/technicians/create", element: <CreateTechnician/> },
 { path: "/categories/create", element: <CreateCategories/> },
+//update
+  { path: "/technicians/update/:id", element: <UpdateTechnician/> },
+
 
 
 
