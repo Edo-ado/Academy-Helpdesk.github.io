@@ -18,8 +18,7 @@ export function UserProvider({ children }) {
     const fetchData = async () => {
       try {
         const response = await Users.GetAllUsers();
-        console.log("Response from API:", response.data);
-
+  
         const usersData = Array.isArray(response.data)
           ? response.data
           : Array.isArray(response.data.data)
@@ -32,7 +31,7 @@ export function UserProvider({ children }) {
           Rol: c.Rol,
         }));
 
-        console.log("Mapped data:", mappedData);
+       
         setUsers(mappedData);
       } catch (err) {
         console.error("Error:", err);

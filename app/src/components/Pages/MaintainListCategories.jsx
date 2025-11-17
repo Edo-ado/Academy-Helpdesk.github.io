@@ -128,7 +128,7 @@ const handleDelete = async (Id) => {
                 size="icon"
                 className="text-[#DFA200] border-2 border-[#DFA200] rounded-xl hover:bg-[#1d173f] hover:text-white transition"
               >
-                <Link to="/technicians/create">
+                <Link to="/categories/create">
                   <Plus className="h-4 w-4" />
                 </Link>
               </Button>
@@ -245,7 +245,7 @@ const handleDelete = async (Id) => {
                       <TooltipTrigger asChild>
 
                          {/*Aqui esta el de Eliminar */}
-                        <Button className="hover:bg-red-600/10" variant="ghost" size="icon"
+                        <Button className="hover"
                           onClick={() => handleDelete(row.Id)}
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />

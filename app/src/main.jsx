@@ -14,6 +14,7 @@ import { Tickets } from "./components/Pages/Tickets"
 import { DetailTicket } from "./components/Pages/DetailTicket"
 import { MyTickets } from "./components/Assignments/MyTickets"
 import {  CreateTechnician } from "./components/Pages/CreateTechnician"
+import {  CreateCategories } from "./components/Pages/CreateCategories" 
 
 import { Toaster } from "react-hot-toast";
 
@@ -47,10 +48,14 @@ const rutas = createBrowserRouter([
       //Rutas de mantenimiento
 
 { path: "/mantenimiento/tecnicos", element: <MaintainListTechnician /> },
+ {path: '/mantenimiento/categorías', element: <MaintainListCategories />},
+
 //create
 { path: "/technicians/create", element: <CreateTechnician/> },
+{ path: "/categories/create", element: <CreateCategories/> },
 
- {path: '/mantenimiento/categorías', element: <MaintainListCategories />},
+
+
 
 
 

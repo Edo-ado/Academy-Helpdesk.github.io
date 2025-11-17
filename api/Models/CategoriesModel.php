@@ -74,13 +74,10 @@ public function ActivateCategory($id){
 
     
     //sin probar
-    public function CreateCategory($arrayData)
+    public function CreateCategory($data)
     {
-
-
-
-        $sql = "INSERT INTO categories (Name, Descripcion, SLAId) VALUES ($arrayData->Name, $arrayData->Descripcion, $arrayData->SLAId);";
-        $sqlresult = $this->enlace->ExecuteSQL($sql);
+        $sql = "INSERT INTO categories (Name, Descripcion, SLAId) VALUES ('$data->Name', '$data->Descripcion', $data->SLAId);";
+        $sqlresult = $this->enlace->executeSQL_DML($sql);
         return $sqlresult;
     }
 
