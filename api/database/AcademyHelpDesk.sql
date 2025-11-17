@@ -620,3 +620,6 @@ CHANGE COLUMN `Image` `Image` VARCHAR(100) NULL DEFAULT NULL ;
 
 
 UPDATE `dbacademyhelpdesk`.`archivador` SET `Image` = 'uploads/archivador/sillafea.jpg' WHERE (`Id` = '17');
+
+ALTER TABLE `dbacademyhelpdesk`.`sla` 
+CHANGE COLUMN `MaxTimeRespons` `MaxTimeResponse` INT(11) NULL DEFAULT NULL ;
