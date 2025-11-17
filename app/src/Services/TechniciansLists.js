@@ -10,6 +10,9 @@ const TechniciansLists = {
   GetDetailByIdAll: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
   GetSpecialitiesInformationByUserID: (userId) => axios.get(`${API_URL_SPECIALITIES}/GetSpecialitiesInformationByUserID/${userId}`)  ,
   getSeguros: () => axios.get(`${API_URL}/GetSeguros`),
+  DeleteUsers: (id) => axios.patch(`${API_URL}/DeleteUsers/${id}`),
+  ActivateUser : (id) => axios.patch(`${API_URL}/ActivateUser/${id}`),
+
   
  create: (data) =>
     axios.post(`${API_URL}/create`, JSON.stringify(data), {

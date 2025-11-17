@@ -17,11 +17,12 @@ class UserModel
         u.Email,
         u.UserName,
         u.Id,
-        u.Usercode
+        u.Usercode,
+        u.Active
         FROM 
         users u
 
-        where u.RoleId =1 and u.Active=1;
+        where u.RoleId =1;
     
 ";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
@@ -82,34 +83,34 @@ class UserModel
         return $vResultado;
     }
 
-public function create($objeto)
-{
-    $sql = "INSERT INTO Users 
+    public function create($objeto)
+    {
+        $sql = "INSERT INTO Users 
        (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge)
 VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password', '$objeto->idrol', NOW(), NULL, TRUE, '$objeto->trabajocargo')
 ";
 
-    $iduser = $this->enlace->executeSQL_DML_last($sql);
+        $iduser = $this->enlace->executeSQL_DML_last($sql);
 
-    foreach ($objeto->especialidades as $value) {
-        $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
+        foreach ($objeto->especialidades as $value) {
+            $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
                 VALUES ($iduser, {$value->Id})";
-        $this->enlace->executeSQL_DML($sql);
+            $this->enlace->executeSQL_DML($sql);
+        }
+
+        return [
+            "success" => true,
+            "message" => "Técnico creado correctamente",
+            "Id" => $iduser
+        ];
+
     }
 
-   return [
-    "success" => true,
-    "message" => "Técnico creado correctamente",
-    "Id" => $iduser
-];
 
-}
-
-
-public function update($objeto)
-{
-    // Consulta SQL para actualizar el usuario principal
-    $sql = "UPDATE Users SET 
+    public function update($objeto)
+    {
+        // Consulta SQL para actualizar el usuario principal
+        $sql = "UPDATE Users SET 
                 InsuranceId = '$objeto->seguro',
                 UserName = '$objeto->name',
                 Email = '$objeto->email',
@@ -119,34 +120,52 @@ public function update($objeto)
                 Work_Charge = '$objeto->trabajocargo'
             WHERE Id = $objeto->id";
 
-    // Ejecutar la actualización
-    $this->enlace->executeSQL_DML($sql);
-
-    // --- Especialidades ---
-    // Eliminar especialidades asociadas al usuario
-    $sql = "DELETE FROM Technician_Specialities WHERE UserId = $objeto->id";
-    $this->enlace->executeSQL_DML($sql);
-
-    // Insertar nuevas especialidades
-    foreach ($objeto->especialidades as $value) {
-        $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
-                VALUES ($objeto->id, $value)";
+        // Ejecutar la actualización
         $this->enlace->executeSQL_DML($sql);
+
+        // --- Especialidades ---
+        // Eliminar especialidades asociadas al usuario
+        $sql = "DELETE FROM Technician_Specialities WHERE UserId = $objeto->id";
+        $this->enlace->executeSQL_DML($sql);
+
+        // Insertar nuevas especialidades
+        foreach ($objeto->especialidades as $value) {
+            $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
+                VALUES ($objeto->id, $value)";
+            $this->enlace->executeSQL_DML($sql);
+        }
+
+        // Retornar usuario actualizado
+        return $this->get($objeto->id);
+
+
     }
 
-    // Retornar usuario actualizado
-    return $this->get($objeto->id);
-
- 
-}
-
-   public function GetSeguros(){
+    public function GetSeguros()
+    {
         $vSql = "SELECT Id, Name, Description FROM Insurances WHERE Active = 1";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
 
-    
+
+    public function DeleteUsers($id)
+    {
+
+        $sql = "UPDATE  users SET Active = 0 where Id = $id";
+
+        return $this->enlace->executeSQL_DML($sql);
+
+    }
+
+    public function ActivateUser($id){
+         $sql = "UPDATE  users SET Active = 1 WHERE Id = $id";
+
+        return $this->enlace->executeSQL_DML($sql);
+    }
+
+
+
 
 
 

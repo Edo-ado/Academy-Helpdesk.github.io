@@ -1,7 +1,7 @@
 <?php
 class UserController
 {
-  
+
     //GET TECHNICIANS
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetAllTechnicians/
     public function GetAllTechnicians()
@@ -17,7 +17,7 @@ class UserController
     }
 
 
-        //GET TECHNICIAN DETAIL BY ID
+    //GET TECHNICIAN DETAIL BY ID
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetDetailByIdAll/1
     public function GetDetailByIdAll($id)
     {
@@ -35,7 +35,7 @@ class UserController
 
     //GET Users
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetAllUsers/
-     public function GetAllUsers()
+    public function GetAllUsers()
     {
         try {
             $response = new Response();
@@ -46,9 +46,10 @@ class UserController
             handleException($e);
         }
     }
-    public function GetUsersById($id)    {
+    public function GetUsersById($id)
+    {
 
-          try {
+        try {
             $response = new Response();
             $Tecnico = new UserModel();
             $result = $Tecnico->GetAllUsers();
@@ -57,10 +58,10 @@ class UserController
             handleException($e);
         }
     }
-    
-public function create()
-{
-          $response = new Response();
+
+    public function create()
+    {
+        $response = new Response();
         $request = new Request();
         //Obtener json enviado
         $inputJSON = $request->getJSON();
@@ -68,12 +69,13 @@ public function create()
         $result = $Tecnico->create($inputJSON);
         //Dar respuesta
         $response->toJSON($result);
-}
+    }
 
 
 
 
-    public function update(){
+    public function update()
+    {
         try {
             $response = new Response();
             $Tecnico = new UserModel();
@@ -99,6 +101,35 @@ public function create()
         }
     }
 
+
+    public function DeleteUsers($id)
+    {
+        try {
+            $response = new Response();
+            $Usuario = new UserModel();
+            $result = $Usuario->DeleteUsers($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+
+    }
+
+public function ActivateUser($id){
+     try {
+            $response = new Response();
+            $Usuario = new UserModel();
+            $result = $Usuario->ActivateUser($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
 }
+
+}
+
+
+
+
 
 

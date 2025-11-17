@@ -209,7 +209,7 @@ const handleDelete = async (Id) => {
                           }
                           onClick={() => handleUpdate(row.Id)}
                         >
-                          <Edit className="h-4 w-4 text-primary" />
+                          <Edit className="h-4 w-4 text-destructive " />
                         </Button>
                       </TooltipTrigger>
                     </Tooltip>
@@ -248,7 +248,7 @@ const handleDelete = async (Id) => {
                         <Button className="hover"
                           onClick={() => handleDelete(row.Id)}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                        <Trash2 className="h-4 w-4 text-destructive text-red-600 " />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
