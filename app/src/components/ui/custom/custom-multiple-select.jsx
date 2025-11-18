@@ -1,122 +1,145 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { Check, ChevronsUpDown, X, AlertCircle } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
-
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "../command";
-
 import { Button } from "../button";
-
 import { cn } from "../../../lib/utils";
 
+export function CustomMultiSelect({
+  field,
+  data,
+  label,
+  getOptionLabel,
+  getOptionValue,
+  error,
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
-export function CustomMultiSelect({ field, data, label, getOptionLabel, getOptionValue, error }) {
-    const [open, setOpen] = useState(false);
-    const [selectedValues, setSelectedValues] = useState(field.value || []);
+  // Siempre trabajamos con strings
+  const selectedValues = (field?.value ?? []).map(String);
 
-    const toggleValue = (value) => {
-        const newValues = selectedValues.includes(value)
-            ? selectedValues.filter((v) => v !== value)
-            : [...selectedValues, value];
+  const toggleValue = (value) => {
+    const exists = selectedValues.includes(value);
+    const newValues = exists
+      ? selectedValues.filter((v) => v !== value)
+      : [...selectedValues, value];
 
-        setSelectedValues(newValues);
-        field.onChange(newValues);
-    };
+    field?.onChange(newValues);
+  };
 
-    const removeValue = (value) => {
-        const newValues = selectedValues.filter((v) => v !== value);
-        setSelectedValues(newValues);
-        field.onChange(newValues);
-    };
+  const removeValue = (value) => {
+    const newValues = selectedValues.filter((v) => v !== value);
+    field?.onChange(newValues);
+  };
 
-    useEffect(() => {
-        if (JSON.stringify(field.value) !== JSON.stringify(selectedValues)) {
-            setSelectedValues(field.value || []);
-        }
-    }, [field.value, selectedValues]);
-
-    const selectedItems = data?.filter((item) =>
-        selectedValues.includes(String(getOptionValue(item)))
+  const filteredOptions = useMemo(() => {
+    const term = search.toLowerCase();
+    return (data ?? []).filter((item) =>
+      getOptionLabel(item).toLowerCase().includes(term)
     );
+  }, [data, search, getOptionLabel]);
 
-    return (
-        <div className="w-full">
-            <label className="block mb-1 text-sm font-medium">{label}</label>
+  const selectedItems =
+    (data ?? []).filter((item) =>
+      selectedValues.includes(String(getOptionValue(item)))
+    ) || [];
 
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        role="combobox"
-                        aria-expanded={open}
-                        className={cn(
-            "w-full justify-between rounded-xl border shadow-sm text-base transition-all duration-200 placeholder:text-gray-400",
-            "bg-transparent hover:bg-transparent active:bg-transparent focus:bg-transparent text-gray-400",
-            error ? "border-red-500" : "border-gray-300 focus:border-primary"
+  return (
+    <div className="w-full relative">
+      <label className="block mb-1 text-sm font-medium">{label}</label>
+
+      {/* Botón principal */}
+      <Button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className={cn(
+          "w-full justify-between rounded-xl border shadow-sm text-base",
+          "bg-transparent text-gray-400",
+          error ? "border-red-500" : "border-gray-300"
         )}
-                    >
-                        {selectedItems?.length > 0
-                            ? `${selectedItems.length} seleccionado(s)`
-                            : `Seleccionar ${label}`}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                </PopoverTrigger>
+      >
+        {selectedItems.length > 0
+          ? `${selectedItems.length} seleccionado(s)`
+          : `Seleccionar ${label}`}
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
 
-                <PopoverContent className="w-[300px] p-0">
-                    <Command>
-                        <CommandInput  placeholder={`Buscar ${label}...`} />
-                        <CommandEmpty>No se encontraron resultados.</CommandEmpty>
-                        <CommandGroup>
-                            {data?.map((item) => {
-                                const value = String(getOptionValue(item));
-                                return (
-                                    <CommandItem key={value} onSelect={() => toggleValue(value)}>
-                                        <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                selectedValues.includes(value) ? "opacity-100" : "opacity-0"
-                                            )}
-                                        />
-                                        {getOptionLabel(item)}
-                                    </CommandItem>
-                                );
-                            })}
-                        </CommandGroup>
-                    </Command>
-                </PopoverContent>
-            </Popover>
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute z-[9999] mt-1 w-full max-h-60 overflow-auto rounded-xl border bg-white shadow-lg p-2">
+       
+          {filteredOptions.length === 0 && (
+            <p className="text-sm text-gray-500 px-1">
+              No se encontraron resultados.
+            </p>
+          )}
 
-            {/* Chips debajo del select */}
-            <div className="mt-2 flex flex-wrap gap-2">
-                {selectedItems?.map((item) => {
-                    const value = String(getOptionValue(item));
-                    return (
-                        <span
-                            key={value}
-                            className="flex items-center bg-secondary text-white text-sm px-2 py-1 rounded-full gap-1"
-                        >
-                            {getOptionLabel(item)}
-                            <X className="w-3 h-3 cursor-pointer" onClick={() => removeValue(value)} />
-                        </span>
-                    );
-                })}
-            </div>
-
-            {/* Mensaje de error */}
-            {error && (
-                <p className="flex items-center gap-1 mt-1 text-sm text-red-500">
-                    <AlertCircle className="h-4 w-4" />
-                    {error}
-                </p>
-            )}
+          <ul className="space-y-1">
+            {filteredOptions.map((item) => {
+              const value = String(getOptionValue(item));
+              const selected = selectedValues.includes(value);
+              return (
+                <li
+                  key={value}
+                  className={cn(
+                    "flex items-center justify-between px-2 py-1 rounded-md cursor-pointer text-sm",
+                    selected
+                      ? "bg-[#071f5f] text-white"
+                      : "hover:bg-gray-100 text-gray-800"
+                  )}
+                  onClick={() => toggleValue(value)}
+                >
+                  <span className="flex items-center gap-2">
+                    <Check
+                      className={cn(
+                        "h-4 w-4",
+                        selected ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {getOptionLabel(item)}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </div>
-    );
+      )}
+
+      {/* Chips debajo */}
+      <div className="mt-2 flex flex-wrap gap-2">
+        {selectedItems.map((item) => {
+          const value = String(getOptionValue(item));
+          return (
+            <span
+              key={value}
+              className="flex items-center bg-[#071f5f] text-white text-sm px-2 py-1 rounded-full gap-1"
+            >
+              {getOptionLabel(item)}
+              <X
+                className="w-3 h-3 cursor-pointer"
+                onClick={() => removeValue(value)}
+              />
+            </span>
+          );
+        })}
+      </div>
+
+      {/* Error */}
+      {error && (
+        <p className="flex items-center gap-1 mt-1 text-sm text-red-500">
+          <AlertCircle className="h-4 w-4" />
+          {error}
+        </p>
+      )}
+    </div>
+  );
 }
 
 CustomMultiSelect.propTypes = {
-    field: PropTypes.object.isRequired,
-    data: PropTypes.array.isRequired,
-    label: PropTypes.string.isRequired,
-    getOptionLabel: PropTypes.func.isRequired,
-    getOptionValue: PropTypes.func.isRequired,
-    error: PropTypes.string,
+  field: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+  label: PropTypes.string.isRequired,
+  getOptionLabel: PropTypes.func.isRequired,
+  getOptionValue: PropTypes.func.isRequired,
+  error: PropTypes.string,
 };

@@ -16,6 +16,19 @@ class SpecialitiesController
         }
     }
 
+    public function GetAllTags()
+    {
+        try {
+            $response = new Response();
+            $Specialities = new SpecialitiesModel();
+            $result = $Specialities->GetAllTags();
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
     //GetByID
     //http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesController/getById/1
     public function getById($param)

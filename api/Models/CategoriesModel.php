@@ -28,7 +28,6 @@ class CategoriesModel
     public function GetCategoryById($id)
 {
     $sql = "SELECT * FROM categories WHERE id = $id;";
-    
     // Aquí SÍ usamos correctamente ExecuteSQL
     $result = $this->enlace->executeSQL($sql, "asoc");
 
@@ -66,8 +65,6 @@ WHERE Categories.Id = $id
 
     }
 
-
-
     // en proceso 
 public function DeleteCategory($id)
 {
@@ -85,16 +82,17 @@ public function ActivateCategory($id){
 public function CreateCategory($data)
 {
    
+    //insertar sus especialidades y etiquetas
+    
    
         $slaId = intval($data->SLAId);
                 $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
                 VALUES ('$data->Name', $slaId, '$data->Descripcion', 1)";
-        
-    
+
             return  $this->enlace->executeSQL_DML($sql);
 
 
  
-        }
+  }
 
 }

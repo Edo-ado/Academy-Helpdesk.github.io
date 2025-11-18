@@ -7,6 +7,7 @@ const API_URL = 'http://localhost/Academy-Helpdesk.github.io/api/SpecialitiesCon
 
 const TechniciansLists = {
 getAll: () => axios.get(`${API_URL}/GetAll`),
+GetAllTags: () => axios.get(`${API_URL}/GetAllTags`),
 getById: (id) => axios.get(`${API_URL}/GetById/${id}`)
 };
 

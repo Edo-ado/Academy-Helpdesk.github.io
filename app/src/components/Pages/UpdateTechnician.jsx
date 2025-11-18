@@ -239,7 +239,7 @@ const onSubmit = async (dataForm) => {
         render={({ field }) => (
           <CustomInputField
             {...field}
-            type="password"
+        
             label="Contraseña"
             placeholder="********"
             error={errors.password?.message}

@@ -26,7 +26,7 @@ CREATE TABLE Positions (
 
 CREATE TABLE SLA (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    MaxTimeHours INT,
+    MaxTimeResponse INT,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     MaxTimeResolution INT NULL DEFAULT NULL
 );
@@ -49,19 +49,34 @@ CREATE TABLE Categories (
 
 CREATE TABLE Tags (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    CategoryId INT,
-    Tag VARCHAR(100),
-    Active BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+    Tag VARCHAR(100) NOT NULL,
+    Active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE Specialities (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    CategoryId INT,
-    Speciality VARCHAR(100),
-    Active BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+    Speciality VARCHAR(100) NOT NULL,
+    Active BOOLEAN NOT NULL DEFAULT TRUE
 );
+
+CREATE TABLE Category_Tags (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    CategoryId INT NOT NULL,
+    TagId INT NOT NULL,
+    Active BOOLEAN NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+    FOREIGN KEY (TagId) REFERENCES Tags(Id)
+);
+
+CREATE TABLE Category_Specialities (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    CategoryId INT NOT NULL,
+    SpecialityId INT NOT NULL,
+    Active BOOLEAN NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+    FOREIGN KEY (SpecialityId) REFERENCES Specialities(Id)
+);
+
 
 CREATE TABLE Users (
     Id INT PRIMARY KEY AUTO_INCREMENT,
@@ -208,8 +223,8 @@ END$$
 
 DELIMITER ;
 
--- INSERTS INICIALES
-INSERT INTO SLA (MaxTimeHours, MaxTimeResolution, Active) VALUES
+
+INSERT INTO SLA (MaxTimeResponse, MaxTimeResolution, Active) VALUES
 (4, 48, TRUE),
 (6, 72, TRUE),
 (1, 24, TRUE),
@@ -221,49 +236,51 @@ INSERT INTO Categories (Name, SLAId, Descripcion, Active) VALUES
 ('Technology', 3, 'Technology support including systems, software, and technical assistance.', TRUE),
 ('Physical Infrastructure and Maintenance', 4, 'Maintenance and management of physical spaces, equipment, and infrastructure.', TRUE);
 
-INSERT INTO Tags (CategoryId, Tag, Active) VALUES
-(1, 'Schedules', TRUE),
-(1, 'Enrollments', TRUE),
-(1, 'Scholarships', TRUE),
-(1, 'Records', TRUE),
-(1, 'Evaluations', TRUE),
-(1, 'Grades', TRUE),
-(1, 'Certifications', TRUE),
-(2, 'Library', TRUE),
-(2, 'Transportation', TRUE),
-(2, 'Extracurricular Activities', TRUE),
-(2, 'Student Orientation', TRUE),
-(2, 'Administrative Procedures', TRUE),
-(2, 'Payments', TRUE),
-(3, 'Hardware', TRUE),
-(3, 'Software', TRUE),
-(3, 'Connectivity', TRUE),
-(3, 'Computer Labs', TRUE),
-(3, 'Virtual Campus', TRUE),
-(4, 'Classrooms', TRUE),
-(4, 'Furniture', TRUE),
-(4, 'Lighting', TRUE),
-(4, 'Security', TRUE),
-(4, 'Cleaning', TRUE),
-(4, 'Accessibility', TRUE),
-(4, 'Sports Areas', TRUE);
 
-INSERT INTO Specialities (CategoryId, Speciality, Active) VALUES
-(1, 'Academic Registrar', TRUE),
-(1, 'Program Coordinator', TRUE),
-(1, 'Academic Secretary', TRUE),
-(2, 'Accountant', TRUE),
-(2, 'Student Coordinator', TRUE),
-(2, 'Librarian', TRUE),
-(2, 'Service Administrator', TRUE),
-(2, 'Student Advisor', TRUE),
-(3, 'IT Support', TRUE),
-(3, 'Systems Technician', TRUE),
-(3, 'Network Administrator', TRUE),
-(4, 'Maintenance Technician', TRUE),
-(4, 'Cleaning Supervisor', TRUE),
-(4, 'Electric Technician', TRUE),
-(4, 'Safety Officer', TRUE);
+INSERT INTO Tags (Tag) VALUES
+('Schedules'),
+('Enrollments'),
+('Scholarships'),
+('Records'),
+('Evaluations'),
+('Grades'),
+('Certifications'),
+('Library'),
+('Transportation'),
+('Extracurricular Activities'),
+('Student Orientation'),
+('Administrative Procedures'),
+('Payments'),
+('Hardware'),
+('Software'),
+('Connectivity'),
+('Computer Labs'),
+('Virtual Campus'),
+('Classrooms'),
+('Furniture'),
+('Lighting'),
+('Security'),
+('Cleaning'),
+('Accessibility'),
+('Sports Areas');
+
+INSERT INTO Specialities (Speciality) VALUES
+('Academic Registrar'),
+('Program Coordinator'),
+('Academic Secretary'),
+('Accountant'),
+('Student Coordinator'),
+('Librarian'),
+('Service Administrator'),
+('Student Advisor'),
+('IT Support'),
+('Systems Technician'),
+('Network Administrator'),
+('Maintenance Technician'),
+('Cleaning Supervisor'),
+('Electric Technician'),
+('Safety Officer');
+
 
 INSERT INTO Roles (Name, Description) VALUES
 ('Technician', 'Manage technical tickets.'),
@@ -615,11 +632,3 @@ VALUES
 (1, 'admin_ashley', 'ashley.admin@helpdesk.com', 'admin123', 3, NOW(), NULL, NULL, TRUE, 'System Administrator', TRUE);
 
 
-ALTER TABLE `dbacademyhelpdesk`.`archivador` 
-CHANGE COLUMN `Image` `Image` VARCHAR(100) NULL DEFAULT NULL ;
-
-
-UPDATE `dbacademyhelpdesk`.`archivador` SET `Image` = 'uploads/archivador/sillafea.jpg' WHERE (`Id` = '17');
-
-ALTER TABLE `dbacademyhelpdesk`.`sla` 
-CHANGE COLUMN `MaxTimeRespons` `MaxTimeResponse` INT(11) NULL DEFAULT NULL ;

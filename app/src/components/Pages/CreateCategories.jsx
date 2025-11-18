@@ -7,6 +7,7 @@ import { useForm, Controller, set } from "react-hook-form";
 
 // Servicio de categorías
 import CategoriesServices from "../../Services/CategoriesList";
+import SpecialitiesList from "../../Services/SpecialitiesList";
 import SLAService from "../../Services/SLAService";
 
 // UI
@@ -14,6 +15,7 @@ import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { CustomInputField } from "../../components/ui/custom/custom-input-field";
 import { CustomSelect } from "../../components/ui/custom/custom-select";
+import { CustomMultiSelect } from "../../components/ui/custom/custom-multiple-select";
 import { Save, ArrowLeft } from "lucide-react";
 
 export function CreateCategories() {
@@ -28,23 +30,34 @@ export function CreateCategories() {
 
   // LISTA DE SLA DESDE LA BDA
   const [slaList, setSlaList] = useState([]);
+  //especialidades
+  const [dataSpecialities, setDataSpecialities] = useState([]);
+  //tags
+  const [dataTags, setDataTags] = useState([]);
 
+  
+  /***Listados de carga en el formulario ***/
+ useEffect(() => {
+  const loadSLAList = async () => {
+    try {
+      const response = await SLAService.getAllSLA();
+      const ResEspecialidades = await SpecialitiesList.getAll();
+      const ResTags = await SpecialitiesList.GetAllTags();
+ 
+      setSlaList(response.data.data || []);
+      setDataSpecialities(ResEspecialidades.data.data || []);
+      setDataTags(ResTags.data.data || []);
 
+      console.log("Especialidades:", ResEspecialidades.data);
+console.log("Tags:", ResTags.data);
 
-  // Cargar lista de SLA existente
-  useEffect(() => {
-    const loadSLAList = async () => {
-      try {
-        const response = await SLAService.getAllSLA();
-        setSlaList(response.data.data || []);
-        console.log(response.data.data);
-      } catch (err) {
-        console.log(err);
-        toast.error("No se pudieron cargar los SLA");
-      }
-    };
-    loadSLAList();
-  }, []);
+    } catch (err) {
+      console.error('Error completo:', err); 
+      toast.error("No se pudieron cargar los datos");
+    }
+  };
+  loadSLAList();
+}, []);
 
   const categorySchema = yup.object({
     name: yup.string().required("El nombre es requerido").min(2),
@@ -70,6 +83,8 @@ export function CreateCategories() {
       slaHours: null,
       slaMinutes: null,
       slaId: null,
+      especialidades: [], 
+      tags: []
     },
     resolver: yupResolver(categorySchema),
   });
@@ -115,6 +130,8 @@ export function CreateCategories() {
     Name: SlaData.name,
     Descripcion: SlaData.description,
     SLAId: slaIdToUse,  
+    Tags: SlaData.tags,
+    Specialities: SlaData.especialidades,
   };
 
  
@@ -169,6 +186,41 @@ export function CreateCategories() {
           )}
         />
 
+        {/* Especialidades*/}
+      
+          <Controller
+            name="especialidades"
+            control={control}
+            render={({ field }) =>
+              <CustomMultiSelect field={field} data={dataSpecialities}
+                label="Especialidades"
+                getOptionLabel={(item) => item.Speciality}
+                getOptionValue={(item) => item.Id}
+
+                placeholder="Seleccione especialidades" 
+                error={errors.especialidades?.message}/>}
+          />
+       
+
+        {/* Etiquetas */}
+
+                  
+          <Controller
+            name="tags"
+            control={control}
+            render={({ field }) =>
+              <CustomMultiSelect field={field} data={dataTags}
+                label="Etiquetas"
+                getOptionLabel={(item) => item.Tag}
+               getOptionValue={(item) => item.Id}
+
+                placeholder="Seleccione etiquetas" 
+                error={errors.tags?.message}/>}
+          />
+       
+
+                  
+
         {/* BOTONES SLA */}
 
         <div className="flex justify-evenly gap-1 mt-6">
@@ -185,6 +237,8 @@ export function CreateCategories() {
           >
             Crear nuevo SLA
           </Button>
+
+          
 
           {/* SLA EXISTENTE */}
           <Button
