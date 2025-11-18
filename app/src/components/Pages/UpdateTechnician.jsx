@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate, useLocation} from "react-router-dom";
-
-
-
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
 
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 
@@ -25,9 +21,7 @@ import { Card } from "../../components/ui/card";
 import { CustomInputField } from "../../components/ui/custom/custom-input-field";
 import { CustomSelect } from "../../components/ui/custom/custom-select";
 import { CustomMultiSelect } from "../../components/ui/custom/custom-multiple-select";
-import { SpecialityForm } from "../../components/ui/SpecialityForm";  
-
-
+import { SpecialityForm } from "../../components/ui/SpecialityForm";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
 
@@ -51,7 +45,6 @@ const technicianSchema = yup.object({
   email: yup.string().required("El email es requerido") .email("Formato de email no válido"),
   trabajocargo: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
  password: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
-  idrol: yup.number().required("El rol es requerido"),
 especialidades: yup
     .array()
     .of(
@@ -72,8 +65,11 @@ especialidades: yup
     control,
     handleSubmit,
     formState: { errors },
+    reset,
+    setError
   } = useForm({
  defaultValues: {
+  id: "",
   name: "",
   seguro: "",
   email: "",
@@ -114,32 +110,40 @@ const removeSpeciality = (index) => {
         const segurosRes= await TechniciansLists.getSeguros()
     
       
-        const TechnicianRes = await TechniciansLists.GetDetailByIdAll(id);
+        const TechnicianRes = await TechniciansLists.GetDetailTechnicianById(id);
 
         setDataSpecialities(specialitiesRes.data.data || []); 
         setDataSeguros(segurosRes.data.data || []); 
-        setDataTechnicians(techniciansRes.data.data || []); 
+        setDataTechnician(TechnicianRes.data.data || []); 
 
-
-          if (TechnicianRes.data) {
-          const technician = TechnicianRes.data.data;
+   try {
+   
+    
+   if (TechnicianRes.data) {
+          const technician = TechnicianRes.data.data[0];
           console.log(technician)
-          reset({
-            id: technician.id,
-            name: technician.name,
-            email: technician.email,
-            seguro: technician.seguro,
-            password: technician.password,
-            trabajocargo: technician.trabajocargo,
-            especialidades: technician.technician.map(g => ({ Id: g.Id }))
-
-          });
-
+       
+    reset({
+      id: technician.Id,
+      name: technician.UserName,
+      email: technician.Email,
+      seguro: technician.idInsu, 
+      password: technician.Password,
+      trabajocargo: technician.Work_Charge,
+      especialidades: technician.Especialidades.map(e => ({ Id: e.Id }))
+    });
+       
           //Guardar
           setDataTechnician(technician)
         }
 
 
+
+   } catch (error) {
+         if (error.name !== "AbortError") setError(error.message)
+       
+   }
+       
     
         
       } catch (error) {
@@ -165,34 +169,26 @@ const onSubmit = async (dataForm) => {
   }
 
   try {
-    const response = await TechniciansLists.UpdateTechnician(dataForm);
 
-    if (response.data?.success === true) {
+   
+    const response = await TechniciansLists.update(dataForm);
+
+
+    if (response.data) {
+      const formData = new FormData();
+      formData.append("Id", response.data.data.id);
+      
       toast.success(`Técnico ${dataForm.name} actualizado exitosamente`);
       navigate(-1);
       return;
     }
 
     
-
   } catch (err) {
-   
     
-    toast.error(err.response?.data?.message || "Error al crear técnico");
+    toast.error(err.response?.data?.message || "Error al actualizar técnico");
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
   return (
     
@@ -200,7 +196,7 @@ const onSubmit = async (dataForm) => {
 
 
      <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-    Crear Técnico
+    Actualizar Técnico
 </h1>
 
 

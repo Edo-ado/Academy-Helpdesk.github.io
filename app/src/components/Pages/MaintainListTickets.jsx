@@ -20,22 +20,20 @@ import {
 } from "../../components/ui/tooltip";
 
 import { Edit, Plus, Trash2, ArrowLeft, Eye } from "lucide-react";
-import TechnicianServices from "../../Services/TechniciansLists";
+import TicketsServices from "../../Services/TicketsLists";
 import { useState, useEffect } from "react";
 import { LoadingGrid } from "../../components/ui/custom/LoadingGrid";
 import { ErrorAlert } from "../../components/ui/custom/ErrorAlert";
 import { EmptyState } from "../../components/ui/custom/EmptyState";
 
 //Headers de la tabla
-const tecnicoColums = [
-  { key: "Usercode", label: "Código" },
-  { key: "Id", label: "Código" },
-
-  { key: "UserName", label: "Usuario" },
-  { key: "Email", label: "Correo" },
+const ticketsColum = [
+  { key: "id", label: "ID" },
+  { key: "Title", label: "Título" },
+  { key: "Category", label: "Categoria" },
 ];
 
-export default function MaintainListTechnician() {
+export default function MaintainListTickets() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -45,7 +43,7 @@ export default function MaintainListTechnician() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await TechnicianServices.getAllTechnicians();
+        const response = await TicketsServices.getAllTicketsMin();
 
         console.log(response.data);
 
@@ -65,17 +63,17 @@ export default function MaintainListTechnician() {
   }, []);
 
   const handleUpdate = (Id) => {
-    navigate(`/technicians/update/${Id}`);
+    navigate(`/tickets/update/${Id}`);
   };
 
   const handleDetail = (Id) => {
-    navigate(`/technician/${Id}`);
+    navigate(`/ticket/${Id}`);
   };
 
   const handleDelete = async (Id) => {
     console.log("ID:", Id);
 
-    const response = await TechnicianServices.getTechnicianById(Id);
+    const response = await TechnicianServices.getAllTicketsMin(Id);
 
     const category = response.data;
     console.log("Categoría:", category.data);
@@ -94,7 +92,7 @@ export default function MaintainListTechnician() {
       if (confirmReactivate) {
         await TechnicianServices.ActivateUser(Id);
       }
-      const updatedResponse = await TechnicianServices.getAllTechnicians();
+      const updatedResponse = await TicketsServices.getAllTicketsMin();
       setData(updatedResponse.data.data);
       return;
     }
@@ -108,7 +106,7 @@ export default function MaintainListTechnician() {
     }
 
     // Refrescar la lista después de la eliminación
-    const updatedResponse = await TechnicianServices.getAllTechnicians();
+    const updatedResponse = await TicketsServices.getAllTicketsMin();
     setData(updatedResponse.data.data);
   };
 
@@ -124,7 +122,7 @@ export default function MaintainListTechnician() {
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-start gap-6 mb-6 ml-4 sm:ml-8 lg:ml-16">
         <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-          Listado de técnicos
+          Listado de Tickets
         </h1>
 
         <TooltipProvider>
@@ -136,12 +134,12 @@ export default function MaintainListTechnician() {
                 size="icon"
                 className="text-[#DFA200] border-2 border-[#DFA200] rounded-xl hover:bg-[#1d173f] hover:text-white transition"
               >
-                <Link to="/technicians/create">
+                <Link to="/ticket/create">
                   <Plus className="h-4 w-4" />
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Crear técnico</TooltipContent>
+            <TooltipContent>Crear tickets</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
@@ -149,9 +147,9 @@ export default function MaintainListTechnician() {
         <Table>
           <TableHeader className="bg-primary/50">
             <TableRow className="border-b border-[#DFA200]">
-              <TableHead className="font-semibold px-8">Código</TableHead>
-              <TableHead className="font-semibold px-8">Usuario</TableHead>
-              <TableHead className="font-semibold px-8">Correo</TableHead>
+              <TableHead className="font-semibold px-8">ID</TableHead>
+              <TableHead className="font-semibold px-8">Titulo</TableHead>
+              <TableHead className="font-semibold px-8">Categoria</TableHead>
               <TableHead className="font-semibold px-8">Acciones</TableHead>
             </TableRow>
           </TableHeader>
@@ -159,7 +157,7 @@ export default function MaintainListTechnician() {
           <TableBody>
             {data.map((row) => (
               <TableRow
-                key={row.Usercode}
+                key={row.id}
                 className="border-b border-[#DFA200]"
               >
                 <TableCell className="px-10">
@@ -168,7 +166,7 @@ export default function MaintainListTechnician() {
                       row.Active == 0 ? "line-through text-gray-500" : ""
                     }
                   >
-                    {row.Usercode}
+                    {row.id}
                   </span>
                 </TableCell>
 
@@ -178,7 +176,7 @@ export default function MaintainListTechnician() {
                       row.Active == 0 ? "line-through text-gray-500" : ""
                     }
                   >
-                    {row.UserName}
+                    {row.Title}
                   </span>
                 </TableCell>
 
@@ -188,7 +186,7 @@ export default function MaintainListTechnician() {
                       row.Active == 0 ? "line-through text-gray-500" : ""
                     }
                   >
-                    {row.Email}
+                    {row.Category}
                   </span>
                 </TableCell>
 
@@ -201,7 +199,7 @@ export default function MaintainListTechnician() {
                           size="icon"
                           disabled={row.Active == 0}
                           className={row.Active == 0 ? "opacity-40 " : ""}
-                          onClick={() => handleUpdate(row.Id)}
+                          onClick={() => handleUpdate(row.id)}
                         >
                           <Edit className="h-4 w-4 text-primary" />
                         </Button>
@@ -218,7 +216,7 @@ export default function MaintainListTechnician() {
                           size="icon"
                           disabled={row.Active == 0}
                           className={row.Active == 0 ? "opacity-40 " : ""}
-                          onClick={() => handleDetail(row.Id)}
+                          onClick={() => handleDetail(row.id)}
                         >
                           <Eye className="h-4 w-4 text-blue-600" />
                         </Button>
@@ -235,7 +233,7 @@ export default function MaintainListTechnician() {
                           size="icon"
                           
                           className={row.Active == 0 ? "" : ""}
-                          onClick={() => handleDelete(row.Id)}
+                          onClick={() => handleDelete(row.id)}
                         >
                           <Trash2 className="h-4 w-4 text-destructive text-red-600 " />
                         </Button>

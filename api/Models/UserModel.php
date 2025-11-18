@@ -74,13 +74,51 @@ class UserModel
     }
 
 
+    
+public function GetDetailTechnicianById($id)
+{
+   $vSql = "SELECT 
+        u.Id,
+        i.Name as NameInsurance,
+        u.InsuranceId as idInsu,     
+        u.UserName,
+        u.Email,
+        u.Password,
+        u.Last_Login,
+        u.InstitutionId,
+        u.PositionId,
+        u.State,
+        u.Work_Charge,
+        u.Active,
+        r.Name AS Rol,
+        r.Description AS Rol_Descripcion,
+        u.Usercode
+     FROM  users u
+    INNER JOIN  roles r ON u.RoleId = r.Id
+    INNER JOIN  insurances i ON u.InsuranceId = i.Id
+    WHERE  u.Id = $id";
+
+     $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+
+    if (!empty($vResultado)) {
+
+        $vSql = "SELECT SpecialityId as Id FROM Technician_Specialities WHERE UserId = $id";
+        $especialidades = $this->enlace->ExecuteSQL($vSql, [$id]);
+
+         $vResultado[0]->Especialidades = $especialidades;
+    }
+
+    return $vResultado;
+}
+
 
 
     public function GetDetailByIdAll($id)
     {
         $vSql = "SELECT 
         u.Id,
-        i.Name as InsuranceId,
+        i.Name as NameInsurance,
+        u.InsuranceId as idInsu,     
         u.UserName,
         u.Email,
         u.Password,
@@ -128,30 +166,32 @@ VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password
         ];
 
     }
-
-
-  public function update($objeto)
+public function update($objeto)
 {
-    $sql = "UPDATE Users SET  InsuranceId = '$objeto->seguro', UserName = '$objeto->name', Email = '$objeto->email', Password = '$objeto->password',RoleId = '$objeto->idrol',
-State = " . ($objeto->state ? 'TRUE' : 'FALSE') . ",
-                Work_Charge = '$objeto->trabajocargo'
-            WHERE Id = $objeto->id";
+  $sql = "UPDATE Users SET 
+        InsuranceId = {$objeto->seguro},
+        UserName = '{$objeto->name}',
+        Email = '{$objeto->email}',
+        Password = '{$objeto->password}',
+        Work_Charge = '{$objeto->trabajocargo}'
+        WHERE Id = {$objeto->id}";
 
     $this->enlace->executeSQL_DML($sql);
 
- 
-    $sql = "DELETE FROM Technician_Specialities WHERE UserId = $objeto->id";
+    // eliminar especialidades
+    $sql = "DELETE FROM Technician_Specialities WHERE UserId = {$objeto->id}";
     $this->enlace->executeSQL_DML($sql);
 
-   
-    foreach ($objeto->especialidades as $value) {
+    // insertar nuevas
+    foreach ($objeto->especialidades as $e) {
         $sql = "INSERT INTO Technician_Specialities (UserId, SpecialityId)
-                VALUES ($objeto->id, {$value->Id})";
+                VALUES ({$objeto->id}, {$e->Id})";
         $this->enlace->executeSQL_DML($sql);
     }
 
-  return   $this->enlace->executeSQL_DML($sql);
+   return $this->GetDetailTechnicianById($objeto->id);
 }
+
 
     public function GetSeguros()
     {
