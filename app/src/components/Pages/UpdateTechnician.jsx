@@ -127,7 +127,7 @@ const removeSpeciality = (index) => {
       id: technician.Id,
       name: technician.UserName,
       email: technician.Email,
-      seguro: technician.InsuranceId, 
+      seguro: technician.idInsu, 
       password: technician.Password,
       trabajocargo: technician.Work_Charge,
       especialidades: technician.Especialidades.map(e => ({ Id: e.Id }))
