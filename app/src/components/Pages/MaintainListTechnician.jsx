@@ -65,7 +65,7 @@ export default function MaintainListTechnician() {
   }, []);
 
   const handleUpdate = (Id) => {
-    navigate(`/technicians/edit/${Id}`);
+    navigate(`/technicians/update/${Id}`);
   };
 
   const handleDetail = (Id) => {

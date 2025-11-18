@@ -7,19 +7,25 @@ const API_URL_SPECIALITIES = 'http://localhost/Academy-Helpdesk.github.io/api/Sp
 const TechniciansLists = {
   getAllTechnicians: () => axios.get(`${API_URL}/GetAllTechnicians`),
   getTechnicianById: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
+  
   GetDetailByIdAll: (id) => axios.get(`${API_URL}/GetDetailByIdAll/${id}`),
+   GetDetailTechnicianById: (id) => axios.get(`${API_URL}/GetDetailTechnicianById/${id}`),
   GetSpecialitiesInformationByUserID: (userId) => axios.get(`${API_URL_SPECIALITIES}/GetSpecialitiesInformationByUserID/${userId}`)  ,
   getSeguros: () => axios.get(`${API_URL}/GetSeguros`),
   DeleteUsers: (id) => axios.patch(`${API_URL}/DeleteUsers/${id}`),
   ActivateUser : (id) => axios.patch(`${API_URL}/ActivateUser/${id}`),
   GetAllTechniciansListActive :() => axios.get(`${API_URL}/GetAllTechniciansListActive`),
-  
- create: (data) =>
-    axios.post(`${API_URL}/create`, JSON.stringify(data), {
-      headers: {
-        "Content-Type": "application/json",
-      },
+  create: (data) => axios.post(`${API_URL}/create`, data),
+
+    
+  update(data) {
+    return axios({
+      method: 'put',
+      url: BASE_URL,
+      data: JSON.stringify(data)
+
     })
+  }
 };
 
 export default TechniciansLists;

@@ -28,8 +28,6 @@ class UserController
         }
     }
 
-
-
     //GET TECHNICIAN DETAIL BY ID
     //http://localhost/Academy-Helpdesk.github.io/api/UserController/GetDetailByIdAll/1
     public function GetDetailByIdAll($id)
@@ -38,6 +36,19 @@ class UserController
             $response = new Response();
             $Tecnico = new UserModel();
             $result = $Tecnico->GetDetailByIdAll($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+
+    public function GetDetailTechnicianById($id)
+    {
+        try {
+            $response = new Response();
+            $Tecnico = new UserModel();
+            $result = $Tecnico->GetDetailTechnicianById($id);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
