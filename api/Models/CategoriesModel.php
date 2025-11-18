@@ -66,8 +66,6 @@ WHERE Categories.Id = $id
 
     }
 
-
-
     // en proceso 
 public function DeleteCategory($id)
 {
@@ -85,6 +83,7 @@ public function ActivateCategory($id){
 public function CreateCategory($data)
 {
    
+    
    
         $slaId = intval($data->SLAId);
                 $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
