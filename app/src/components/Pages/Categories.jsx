@@ -35,6 +35,7 @@ export function Categories() {
     };
 
     fetchData();
+    
   }, []);
 
   if (loading) {
