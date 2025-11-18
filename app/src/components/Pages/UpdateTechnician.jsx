@@ -45,7 +45,6 @@ const technicianSchema = yup.object({
   email: yup.string().required("El email es requerido") .email("Formato de email no válido"),
   trabajocargo: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
  password: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
-  idrol: yup.number().required("El rol es requerido"),
 especialidades: yup
     .array()
     .of(
@@ -70,6 +69,7 @@ especialidades: yup
     setError
   } = useForm({
  defaultValues: {
+  id: "",
   name: "",
   seguro: "",
   email: "",
@@ -171,24 +171,22 @@ const onSubmit = async (dataForm) => {
   try {
 
    
-    const response = await TechniciansLists.UpdateTechnician(dataForm);
+    const response = await TechniciansLists.update(dataForm);
 
-    if (response.data?.success === true) {
+
+    if (response.data) {
       const formData = new FormData();
       formData.append("Id", response.data.data.id);
-
-
-
+      
       toast.success(`Técnico ${dataForm.name} actualizado exitosamente`);
       navigate(-1);
       return;
     }
 
     
-    
   } catch (err) {
     
-    toast.error(err.response?.data?.message || "Error al crear técnico");
+    toast.error(err.response?.data?.message || "Error al actualizar técnico");
   }
 };
 

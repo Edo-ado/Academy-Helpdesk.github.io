@@ -97,18 +97,21 @@ class UserController
 
 
 
+public function update()
+{
+    try {
+        $request = new Request();
+        $response = new Response();
+        $inputJSON = $request->getJSON();
+        $Tecnico = new UserModel();
+        $result = $Tecnico->update($inputJSON);
+        $response->toJSON($result);
 
-    public function update()
-    {
-        try {
-            $response = new Response();
-            $Tecnico = new UserModel();
-            $result = $Tecnico->update();
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
+    } catch (Exception $e) {
+        handleException($e);
     }
+}
+
 
 
     //GET Seguros

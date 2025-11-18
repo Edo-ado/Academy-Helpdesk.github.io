@@ -92,7 +92,7 @@ export default function MaintainListTickets() {
       if (confirmReactivate) {
         await TechnicianServices.ActivateUser(Id);
       }
-      const updatedResponse = await TechnicianServices.getAllTechnicians();
+      const updatedResponse = await TicketsServices.getAllTicketsMin();
       setData(updatedResponse.data.data);
       return;
     }
@@ -106,7 +106,7 @@ export default function MaintainListTickets() {
     }
 
     // Refrescar la lista después de la eliminación
-    const updatedResponse = await TechnicianServices.getAllTechnicians();
+    const updatedResponse = await TicketsServices.getAllTicketsMin();
     setData(updatedResponse.data.data);
   };
 

@@ -168,13 +168,14 @@ VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password
     }
 public function update($objeto)
 {
-    $sql = "UPDATE Users SET 
-            InsuranceId = {$objeto->seguro},
-            UserName = '{$objeto->name}',
-            Email = '{$objeto->email}',
-            Password = '{$objeto->password}',
-            Work_Charge = '{$objeto->trabajocargo}'
-            WHERE Id = {$objeto->id}";
+  $sql = "UPDATE Users SET 
+        InsuranceId = {$objeto->seguro},
+        UserName = '{$objeto->name}',
+        Email = '{$objeto->email}',
+        Password = '{$objeto->password}',
+        Work_Charge = '{$objeto->trabajocargo}'
+        WHERE Id = {$objeto->id}";
+
     $this->enlace->executeSQL_DML($sql);
 
     // eliminar especialidades
@@ -188,7 +189,7 @@ public function update($objeto)
         $this->enlace->executeSQL_DML($sql);
     }
 
-    return $objeto->id;
+   return $this->GetDetailTechnicianById($objeto->id);
 }
 
 
