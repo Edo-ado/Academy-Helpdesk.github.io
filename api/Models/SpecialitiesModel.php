@@ -10,7 +10,11 @@ class SpecialitiesModel  {
 
 
  public function GetAllSpecialities() {
-    $vSql = "SELECT * FROM specialities ORDER BY Id asc;";
+
+  
+
+    $vSql = "SELECT Id, Speciality FROM specialities;";
+
     $vResultado = $this->enlace->ExecuteSQL($vSql);
     return $vResultado;
  }
