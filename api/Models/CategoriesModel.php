@@ -112,6 +112,6 @@ public function ActivateCategory($id){
  return $this->enlace->executeSQL_DML($sql);
 }
 
-
+     
 
 }

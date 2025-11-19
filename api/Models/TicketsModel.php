@@ -14,7 +14,7 @@ class TicketsModel
         $msg = "SELECT t.id, T.Title, T.Priority, C.Name as Category 
         FROM tickets T 
         INNER JOIN 
-        categories C ON T.CategoryId = C.Id";
+        categories C ON T.CategoryId = C.Id  ORDER BY t.id DESC;";
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
     }

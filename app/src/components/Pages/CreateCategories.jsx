@@ -64,11 +64,16 @@ console.log("Tags:", ResTags.data);
     description: yup.string().required("La descripción es requerida").min(4),
 
     // Si el usuario crea un SLA nuevo
-    slaHours: yup.number().nullable(),
-    slaMinutes: yup.number().nullable(),
+    
+    slaHours: yup.number().nullable("Se necesita digitar una hora maxima").min(1),
+    slaMinutes: yup.number().nullable("Se necesita digitar una hora maxima").min(1),
 
     // Si el usuario selecciona un SLA existente
     slaId: yup.number().nullable(),
+
+
+
+
   });
 
   const {
