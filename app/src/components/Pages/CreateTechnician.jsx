@@ -122,7 +122,7 @@ const removeSpeciality = (index) => {
         
       } catch (error) {
         console.log(error)
-        if(error.name != "AbortError") setError(error.message)
+
       }
     }
     fechData()

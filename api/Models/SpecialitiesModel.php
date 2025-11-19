@@ -10,7 +10,7 @@ class SpecialitiesModel  {
 
 
  public function GetAllSpecialities() {
-    $vSql = "SELECT Id, CategoryId, Speciality FROM specialities;";
+    $vSql = "SELECT Id, Speciality FROM specialities;";
     $vResultado = $this->enlace->ExecuteSQL($vSql);
     return $vResultado;
  }
