@@ -164,8 +164,8 @@ VALUES ('$objeto->seguro', '$objeto->name', '$objeto->email', '$objeto->password
             "message" => "Técnico creado correctamente",
             "Id" => $iduser
         ];
-
     }
+    
 public function update($objeto)
 {
   $sql = "UPDATE Users SET 

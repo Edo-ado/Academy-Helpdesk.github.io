@@ -82,12 +82,6 @@ public function ActivateCategory($id){
 public function CreateCategory($data)
 {
    
-<<<<<<< HEAD
-    //insertar sus especialidades y etiquetas
-=======
->>>>>>> 2c1195f315931c3a8211523cefb9f7ac2787177c
-    
-   
         $slaId = intval($data->SLAId);
                 $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
                 VALUES ('$data->Name', $slaId, '$data->Descripcion', 1)";

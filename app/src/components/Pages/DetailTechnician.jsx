@@ -36,9 +36,7 @@ useEffect(() => {
 
         try {
           const specResponse = await TechniciansLists.GetSpecialitiesInformationByUserID(id);
-  
           setSpecialities(specResponse.data.data || []);
-
         } catch (specError) {
    
           if (specError.response && specError.response.status === 404) {

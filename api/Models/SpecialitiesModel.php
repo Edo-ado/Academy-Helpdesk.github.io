@@ -26,25 +26,22 @@ public function GetAllTags(){
     $vResultado = $this->enlace->ExecuteSQL($vSql);
     return $vResultado;
 }
-
-
- public function GetSpecialitiesInformationByUserID($id) {
+public function GetSpecialitiesInformationByUserID($id) {
     $vSql = "SELECT 
-            s.Id,
-            s.Speciality AS Name,
-             s.CategoryId,
+                s.Id,
+                s.Speciality AS Name,
+                c.Id AS CategoryId,
                 c.Name AS CategoryName,
                 ts.Active
-        FROM technician_specialities ts
-       INNER JOIN specialities s ON ts.SpecialityId = s.Id
-             INNER JOIN categories c ON s.CategoryId = c.Id
-             WHERE ts.UserId = $id";
+            FROM technician_specialities ts
+            INNER JOIN specialities s ON ts.SpecialityId = s.Id
+            LEFT JOIN category_specialities cs ON cs.SpecialityId = s.Id
+            LEFT JOIN categories c ON cs.CategoryId = c.Id
+            WHERE ts.UserId = $id";
 
-    $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+    return $this->enlace->ExecuteSQL($vSql, [$id]);
+}
 
-    return $vResultado;
-    
-   }
 
 
 
