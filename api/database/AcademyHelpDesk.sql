@@ -632,3 +632,35 @@ VALUES
 (1, 'admin_ashley', 'ashley.admin@helpdesk.com', 'admin123', 3, NOW(), NULL, NULL, TRUE, 'System Administrator', TRUE);
 
 
+
+-- Category 1: Academic Services
+INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8);
+
+-- Category 2: Student & Administrative Services
+INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
+(2, 4),
+(2, 5),
+(2, 7),
+(2, 8);
+
+-- Category 3: Technology
+INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
+(3, 9),
+(3, 10),
+(3, 11);
+
+-- Category 4: Physical Infrastructure and Maintenance
+INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
+(4, 12),
+(4, 13),
+(4, 14),
+(4, 15);
+
