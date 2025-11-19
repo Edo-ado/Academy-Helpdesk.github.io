@@ -19,7 +19,7 @@ import {  CreateCategories } from "./components/Pages/CreateCategories"
 import { Toaster } from "react-hot-toast";
 
 
-import { CreateATicket } from "./components/Pages/CreateATicket"
+import  CreateATicket  from "./components/Pages/CreateATicket"
 import MaintainListTechnician from './components/Pages/MaintainListTechnician'
 import  MaintainListCategories from './components/Pages/MaintainListCategories'
 import  MaintainListTickets from './components/Pages/MaintainListTickets'
@@ -42,9 +42,7 @@ const rutas = createBrowserRouter([
      { path: '/tickets', element: <Tickets /> },
      { path: '/ticket/:id', element: <DetailTicket /> },
      { path: '/my-tickets', element: <MyTickets /> }, 
-     { path: '/create-ticket', element: <CreateATicket /> },
-
-    
+   
 
       //Rutas de mantenimiento
 
@@ -55,8 +53,10 @@ const rutas = createBrowserRouter([
 //create
 { path: "/technicians/create", element: <CreateTechnician/> },
 { path: "/categories/create", element: <CreateCategories/> },
+{ path: "/tickets/create", element: <CreateATicket/> },
+
 //update
-  { path: "/technicians/update/:id", element: <UpdateTechnician/> },
+{ path: "/technicians/update/:id", element: <UpdateTechnician/> },
 
 
 

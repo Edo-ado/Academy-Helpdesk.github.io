@@ -22,7 +22,7 @@ class SpecialitiesModel  {
  }
 
 public function GetAllTags(){
- $vSql = "SELECT Id, CategoryId, Tag from tags;";
+ $vSql = "SELECT Id, Tag from tags;";
     $vResultado = $this->enlace->ExecuteSQL($vSql);
     return $vResultado;
 }

@@ -134,7 +134,7 @@ export default function MaintainListTickets() {
                 size="icon"
                 className="text-[#DFA200] border-2 border-[#DFA200] rounded-xl hover:bg-[#1d173f] hover:text-white transition"
               >
-                <Link to="/ticket/create">
+                <Link to="/ticket/CreateATicket">
                   <Plus className="h-4 w-4" />
                 </Link>
               </Button>

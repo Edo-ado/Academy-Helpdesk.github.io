@@ -94,18 +94,24 @@ public function ActivateCategory($id){
 }
 
     
-    //sin probar
-public function CreateCategory($data)
+ public function CreateCategory($objeto)
 {
-   
-        $slaId = intval($data->SLAId);
-                $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
-                VALUES ('$data->Name', $slaId, '$data->Descripcion', 1)";
+    $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) VALUES ('$objeto->Name', $objeto->SLAId,  '$objeto->Descripcion', 1)";
 
-            return  $this->enlace->executeSQL_DML($sql);
+    $categoryId = $this->enlace->executeSQL_DML_last($sql);
+
+    foreach ($objeto->Tags as $tagId) {
+        $sql = "INSERT INTO Category_Tags (CategoryId, TagId) VALUES ($categoryId, $tagId)";
+        $this->enlace->executeSQL_DML($sql);
+    }
+
+    foreach ($objeto->Specialities as $specId) {
+        $sql = "INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES ($categoryId, $specId)";
+        $this->enlace->executeSQL_DML($sql);
+    }
+ return $this->enlace->executeSQL_DML($sql);
+}
 
 
- 
-  }
 
 }
