@@ -97,15 +97,50 @@ public function ActivateCategory($id){
     //sin probar
 public function CreateCategory($data)
 {
-   
-        $slaId = intval($data->SLAId);
-                $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
-                VALUES ('$data->Name', $slaId, '$data->Descripcion', 1)";
+    $slaId = intval($data->SLAId);
 
-            return  $this->enlace->executeSQL_DML($sql);
+      
+        $name = isset($data->Name) ? addslashes($data->Name) : '';
+        $descripcion = isset($data->Descripcion) ? addslashes($data->Descripcion) : '';
 
+        $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) 
+                VALUES ('$name', $slaId, '$descripcion', 1);";
+    
+      
+        $categoryId = $this->enlace->executeSQL_DML_last($sql);
 
- 
+     
+        if ($categoryId && $categoryId > 0) {
+    
+            if (isset($data->Tags) && is_array($data->Tags)) {
+                foreach ($data->Tags as $tagId) {
+                    $tagId = intval($tagId);
+                    $sqlTag = "INSERT INTO Category_Tags (CategoryId, TagId) VALUES ($categoryId, $tagId);";
+                    $this->enlace->executeSQL_DML($sqlTag);
+                }
+            }
+
+       
+            if (isset($data->Specialities) && is_array($data->Specialities)) {
+                foreach ($data->Specialities as $specId) {
+                    $specId = intval($specId);
+                    $sqlSpec = "INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES ($categoryId, $specId);";
+                    $this->enlace->executeSQL_DML($sqlSpec);
+                }
+            }
+
+            return [
+                "success" => true,
+                "message" => "Categoría creada correctamente",
+                "Id" => $categoryId
+            ];
+        }
+
+        return [
+            "success" => false,
+            "message" => "No se pudo crear la categoría"
+        ];
+
   }
 
 }

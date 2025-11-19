@@ -27,18 +27,19 @@ class SLAModel
 
    public function CreateSLA($objeto)
    {
+      $maxResp = isset($objeto->MaxTimeResponse) ? intval($objeto->MaxTimeResponse) : 0;
+      $maxRes = isset($objeto->MaxTimeResolution) ? intval($objeto->MaxTimeResolution) : 0;
+
       $sql = "INSERT INTO sla (MaxTimeResponse, MaxTimeResolution)
-            VALUES ($objeto->MaxTimeResponse, $objeto->MaxTimeResolution);";
+            VALUES ($maxResp, $maxRes);";
 
-      $this->enlace->executeSQL_DML($sql, );
-
-      $iduser = $this->enlace->executeSQL_DML_last($sql);
-
+      // Ejecutar y obtener el id insertado
+      $id = $this->enlace->executeSQL_DML_last($sql);
 
       return [
          "success" => true,
-         "message" => "Técnico creado correctamente",
-         "Id" => $iduser
+         "message" => "SLA creado correctamente",
+         "id" => $id
       ];
    }
 
