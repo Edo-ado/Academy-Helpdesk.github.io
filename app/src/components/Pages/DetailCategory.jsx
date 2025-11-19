@@ -77,8 +77,9 @@ export function DetailCategory() {
   }
 
   //onvertir strings separados por comas en arrays
-  const specialities = category.Especielities ? category.Especielities.split(', ') : [];
-  const tags = category.tags ? category.tags.split(', ') : [];
+const specialities = category.Especialidades ? category.Especialidades.split(', ')  : [];
+
+const tags = category.Tags  ? category.Tags.split(', ') : [];
 
   return (
     <div className="bg-[#dff1ff] min-h-screen p-8">

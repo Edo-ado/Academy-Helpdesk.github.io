@@ -36,18 +36,34 @@ class CategoriesModel
 
 
     //nombre de la categoria, lista de etiquetas, lista de especialidades y su SLA
-    public function GetCategoryDetailsByID($id)
-    {
-        $vSql = "SELECT Categories.Name AS Categorie, SLA.MaxTimeResolution AS TiempoMaximoResolucion, SLA.MaxTimeResponse AS TiempoMaximoRespuesta, GROUP_CONCAT(DISTINCT Specialities.Speciality SEPARATOR ', ') AS Especielities, GROUP_CONCAT(DISTINCT Tags.Tag SEPARATOR ', ') AS tags           
-FROM Categories
-JOIN SLA ON Categories.SLAId = SLA.Id
-JOIN Specialities ON Specialities.CategoryId = Categories.Id
-JOIN Tags ON Tags.CategoryId = Categories.Id
-WHERE Categories.Id = $id
-";
-        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
-        return $vResultado;
-    }
+ public function GetCategoryDetailsByID($id)
+{
+    $vSql = "
+        SELECT 
+            c.Name AS Categorie,
+            c.Descripcion,
+            
+            sla.MaxTimeResolution AS TiempoMaximoResolucion,
+            sla.MaxTimeResponse AS TiempoMaximoRespuesta,
+            GROUP_CONCAT(DISTINCT s.Speciality SEPARATOR ', ') AS Especialidades,
+            GROUP_CONCAT(DISTINCT t.Tag SEPARATOR ', ') AS Tags
+        FROM Categories c
+        INNER JOIN SLA sla ON c.SLAId = sla.Id
+        LEFT JOIN Category_Specialities cs ON cs.CategoryId = c.Id
+        LEFT JOIN Specialities s ON s.Id = cs.SpecialityId
+        LEFT JOIN Category_Tags ct ON ct.CategoryId = c.Id
+        LEFT JOIN Tags t ON t.Id = ct.TagId     
+        WHERE c.Id = $id
+        GROUP BY 
+            c.Name, 
+            c.Descripcion,
+            sla.MaxTimeResolution,
+            sla.MaxTimeResponse
+    ";
+
+    $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+    return $vResultado;
+}
 
 
 
