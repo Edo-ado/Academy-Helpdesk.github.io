@@ -25,6 +25,7 @@ require_once "models/CategoriesModel.php";
 require_once "models/SLAModel.php";
 require_once "models/SpecialitiesModel.php";
 require_once "models/TicketsModel.php";
+require_once "models/CreateTicketModel.php";
 
 /***--- Agregar todos los controladores*/
 require_once "controllers/UserController.php";
@@ -32,6 +33,7 @@ require_once "controllers/CategoriesController.php";
 require_once "controllers/SLAController.php";
 require_once "controllers/SpecialitiesController.php";
 require_once "controllers/TicketsController.php";
+require_once "controllers/CreateTicketController.php";
 
 
 //Enrutador
