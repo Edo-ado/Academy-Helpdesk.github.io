@@ -644,6 +644,17 @@ INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
 (1, 7),
 (1, 8);
 
+INSERT INTO Category_Tags (CategoryId, TagId) VALUES
+(1, 1),  -- Schedules
+(1, 2),  -- Enrollments
+(1, 3),  -- Scholarships
+(1, 4),  -- Records
+(1, 5),  -- Evaluations
+(1, 6),  -- Grades
+(1, 7),  -- Certifications
+(1, 8);  -- Library
+
+
 -- Category 2: Student & Administrative Services
 INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
 (2, 4),
@@ -651,11 +662,28 @@ INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
 (2, 7),
 (2, 8);
 
+INSERT INTO Category_Tags (CategoryId, TagId) VALUES
+(2, 4),   -- Records
+(2, 9),   -- Transportation
+(2, 10),  -- Extracurricular Activities
+(2, 11),  -- Student Orientation
+(2, 12),  -- Administrative Procedures
+(2, 13);  -- Payments
+
+
 -- Category 3: Technology
 INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
 (3, 9),
 (3, 10),
 (3, 11);
+
+INSERT INTO Category_Tags (CategoryId, TagId) VALUES
+(3, 14), -- Hardware
+(3, 15), -- Software
+(3, 16), -- Connectivity
+(3, 17), -- Computer Labs
+(3, 18); -- Virtual Campus
+
 
 -- Category 4: Physical Infrastructure and Maintenance
 INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
@@ -663,4 +691,16 @@ INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES
 (4, 13),
 (4, 14),
 (4, 15);
+
+INSERT INTO Category_Tags (CategoryId, TagId) VALUES
+(4, 19), -- Classrooms
+(4, 20), -- Furniture
+(4, 21), -- Lighting
+(4, 22), -- Security
+(4, 23), -- Cleaning
+(4, 24), -- Accessibility
+(4, 25); -- Sports Areas
+
+
+
 
