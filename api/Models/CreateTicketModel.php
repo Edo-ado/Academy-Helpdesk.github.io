@@ -55,17 +55,12 @@ class CreateTicketModel
 
     public function CreateTicket($obj)
     {
-        // Espera un objeto con propiedades: Title, Description, PriorityId, UserId, TagId, CategoryId
-        $title = isset($obj->Title) ? addslashes($obj->Title) : '';
-        $description = isset($obj->Description) ? addslashes($obj->Description) : '';
-        $priorityId = isset($obj->PriorityId) ? intval($obj->PriorityId) : 0;
-        $userId = isset($obj->UserId) ? intval($obj->UserId) : 0;
-        $tagId = isset($obj->TagId) ? intval($obj->TagId) : 0;
-        $categoryId = isset($obj->CategoryId) ? intval($obj->CategoryId) : 0;
+        
+        $status = 'Pendiente';
 
         // Obtener tiempos SLA desde la categoría
         $sqlCategory = "SELECT sla.MaxTimeResponse, sla.MaxTimeResolution FROM SLA sla  
-        INNER JOIN Categories ON sla.Id = Categories.SLAId WHERE Categories.Id = $categoryId;";
+        INNER JOIN Categories ON sla.Id = Categories.SLAId WHERE Categories.Id = $obj->CategoryId;";
         $catResult = $this->enlace->executeSQL($sqlCategory);
 
         if (!$catResult || count($catResult) == 0) {
@@ -79,12 +74,12 @@ class CreateTicketModel
         $resolutionHours = intval($catResult[0]['MaxTimeResolution']);
 
         // Usar NOW() en SQL y DATE_ADD para SLA
-        $status = 'Pendiente';
+       
 
         $sql = "INSERT INTO Tickets
                 (Title, Description, PriorityId, UserId, TagId, CategoryId, CreationDate, Status, SLA_Response, SLA_Resolution, Active)
                 VALUES
-                ('{$title}', '{$description}', {$priorityId}, {$userId}, {$tagId}, {$categoryId}, NOW(), '{$status}', 
+                ($obj->Title, $obj->Description, $obj->PriorityId, $obj->UserId,$obj->TagId,$obj->CategoryId, NOW(), '{$status}', 
                  DATE_ADD(NOW(), INTERVAL {$responseHours} HOUR), DATE_ADD(NOW(), INTERVAL {$resolutionHours} HOUR), 1);";
 
         $ticketId = $this->enlace->executeSQL_DML_last($sql);
