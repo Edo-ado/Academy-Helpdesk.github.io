@@ -98,6 +98,16 @@ CREATE TABLE Users (
     FOREIGN KEY (PositionId) REFERENCES Positions(Id)
 );
 
+CREATE TABLE Priorities (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(50) NOT NULL,
+    Description VARCHAR(255),
+    Active BOOLEAN NOT NULL DEFAULT 1
+);
+
+
+
+
 CREATE TABLE Tickets (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     TechnicianId INT,
@@ -115,8 +125,9 @@ CREATE TABLE Tickets (
     Resolution_Compliance BOOLEAN,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (TechnicianId) REFERENCES Users(Id),
-    FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
-);
+    FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+    FOREIGN KEY (Priority) REFERENCES Priorities(Id)
+    );
 
 CREATE TABLE TicketHistory (
     Id INT PRIMARY KEY AUTO_INCREMENT,
@@ -222,6 +233,11 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+INSERT INTO Priorities (Name, Description, Active) VALUES
+('Baja', 'Incidencias de bajo impacto.', 1),
+('Media', 'Incidencias que afectan parcialmente al usuario.', 1),
+('Alta', 'Incidencias urgentes que impiden trabajar.', 1);
 
 
 INSERT INTO SLA (MaxTimeResponse, MaxTimeResolution, Active) VALUES
@@ -701,6 +717,8 @@ INSERT INTO Category_Tags (CategoryId, TagId) VALUES
 (4, 24), -- Accessibility
 (4, 25); -- Sports Areas
 
-
-
+INSERT INTO Users
+(InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge, Active)
+VALUES
+(1, 'Javier Milei', 'ThePowerOfFriendShip@gmail.com', 'Sored123456', 2, null, 1, TRUE, 'Usuario Cliente', TRUE);
 
