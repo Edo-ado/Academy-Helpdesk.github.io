@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost/Academy-Helpdesk.github.io/api/TicketsController';
+const API_URL_TICKETMAINTAIN = 'http://localhost/Academy-Helpdesk.github.io/api/CreateTicketController';
 
 const TicketsLists = {
  
@@ -9,10 +10,15 @@ const TicketsLists = {
   getTicketsAssignedToTechnician: (technicianId) =>  axios.get(`${API_URL}/TicketAssignedToTEC/${technicianId}`),
   getTicketsPerUser: (userId) =>  axios.get(`${API_URL}/TicketsPerUser/${userId}`),
   GetTicketById: (id) => axios.get(`${API_URL}/GetTicketById/${id}`),
-GetDailyAssignments: (date, technicianId) => axios.get(`${API_URL}/GetDailyAssignments/${date}/${technicianId}`),
-GetWeeklyAssignments: (weekStartDate, technicianId) => axios.get(`${API_URL}/GetWeeklyAssignments/${weekStartDate}/${technicianId}`),
-GetTicketHistory: (id) => axios.get(`${API_URL}/GetTicketHistory/${id}`),
-TicketsByRolAndIDUser: (id) => axios.get(`${API_URL}/TicketsByRolAndIDUser/${id}`),
+  GetDailyAssignments: (date, technicianId) => axios.get(`${API_URL}/GetDailyAssignments/${date}/${technicianId}`),
+  GetWeeklyAssignments: (weekStartDate, technicianId) => axios.get(`${API_URL}/GetWeeklyAssignments/${weekStartDate}/${technicianId}`),
+  GetTicketHistory: (id) => axios.get(`${API_URL}/GetTicketHistory/${id}`),
+  TicketsByRolAndIDUser: (id) => axios.get(`${API_URL}/TicketsByRolAndIDUser/${id}`),
+  //del otro lao
+  getAllPriorities: () => axios.get(`${API_URL_TICKETMAINTAIN}/getAllPriorities`),
+  getCategoriesByTags: (id) =>  axios.get(`${API_URL}/getCategoriesByTags/${id}`),
+  create: (data) => axios.post(`${API_URL}/create`, data),
+
 
 };
 

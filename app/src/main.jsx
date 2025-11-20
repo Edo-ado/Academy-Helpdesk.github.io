@@ -19,7 +19,7 @@ import {  CreateCategories } from "./components/Pages/CreateCategories"
 import { Toaster } from "react-hot-toast";
 
 
-import  CreateATicket  from "./components/Pages/CreateATicket"
+import {  CreateATicket  } from "./components/Pages/CreateATicket"
 import MaintainListTechnician from './components/Pages/MaintainListTechnician'
 import  MaintainListCategories from './components/Pages/MaintainListCategories'
 import  MaintainListTickets from './components/Pages/MaintainListTickets'

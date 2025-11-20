@@ -134,7 +134,8 @@ export default function MaintainListTickets() {
                 size="icon"
                 className="text-[#DFA200] border-2 border-[#DFA200] rounded-xl hover:bg-[#1d173f] hover:text-white transition"
               >
-                <Link to="/ticket/CreateATicket">
+                <Link to="/tickets/create">
+
                   <Plus className="h-4 w-4" />
                 </Link>
               </Button>
@@ -147,10 +148,10 @@ export default function MaintainListTickets() {
         <Table>
           <TableHeader className="bg-primary/50">
             <TableRow className="border-b border-[#DFA200]">
-              <TableHead className="font-semibold px-8">ID</TableHead>
-              <TableHead className="font-semibold px-8">Titulo</TableHead>
-              <TableHead className="font-semibold px-8">Categoria</TableHead>
-              <TableHead className="font-semibold px-8">Acciones</TableHead>
+              <TableHead className="font-semibold px-9">ID</TableHead>
+              <TableHead className="font-semibold px-9">Titulo</TableHead>
+              <TableHead className="font-semibold px-10">Categoria</TableHead>
+              <TableHead className="font-semibold px-4">Acciones</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -191,22 +192,7 @@ export default function MaintainListTickets() {
                 </TableCell>
 
                 <TableCell className="flex gap-1 px-18">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          disabled={row.Active == 0}
-                          className={row.Active == 0 ? "opacity-40 " : ""}
-                          onClick={() => handleUpdate(row.id)}
-                        >
-                          <Edit className="h-4 w-4 text-primary" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Actualizar</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                 
 
                   <TooltipProvider>
                     <Tooltip>

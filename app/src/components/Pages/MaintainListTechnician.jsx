@@ -149,10 +149,10 @@ export default function MaintainListTechnician() {
         <Table>
           <TableHeader className="bg-primary/50">
             <TableRow className="border-b border-[#DFA200]">
-              <TableHead className="font-semibold px-8">Código</TableHead>
-              <TableHead className="font-semibold px-8">Usuario</TableHead>
-              <TableHead className="font-semibold px-8">Correo</TableHead>
-              <TableHead className="font-semibold px-8">Acciones</TableHead>
+              <TableHead className="font-semibold px-10">Código</TableHead>
+              <TableHead className="font-semibold px-10">Usuario</TableHead>
+              <TableHead className="font-semibold px-10">Correo</TableHead>
+              <TableHead className="font-semibold px-9">Acciones</TableHead>
             </TableRow>
           </TableHeader>
 

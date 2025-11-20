@@ -16,11 +16,8 @@ const TechniciansLists = {
   ActivateUser : (id) => axios.patch(`${API_URL}/ActivateUser/${id}`),
   GetAllTechniciansListActive :() => axios.get(`${API_URL}/GetAllTechniciansListActive`),
   create: (data) => axios.post(`${API_URL}/create`, data),
-   update: (data) => axios.put(`${API_URL}/update`, data)
-
-
-
-
+  update: (data) => axios.put(`${API_URL}/update`, data),
+  
 };
 
 export default TechniciansLists;
