@@ -58,16 +58,19 @@ class CategoriesController
     }
 
 
-    public function UpdateCategoryByid($param, $param2, $param3)
+    public function UpdateCategoryByid($param)
     {
         try {
-            $response = new Response();
-            $Categories = new CategoriesModel();
-            $result = $Categories->UpdateCategoryByid($param, $param2, $param3);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
+        $request = new Request();
+        $response = new Response();
+        $inputJSON = $request->getJSON();
+        $Tecnico = new CategoriesModel();
+        $result = $Tecnico->UpdateCategoryByid($param, $inputJSON);
+        $response->toJSON($result);
+
+    } catch (Exception $e) {
+        handleException($e);
+    }
     }
 
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -21,8 +22,10 @@ import { Save, ArrowLeft } from "lucide-react";
 export function CreateCategories() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = useParams();
+  const isEdit = !!id;
 
-  // ESTADOS PARA MOSTRAR OPCIONES
+
   const [showNewSLA, setShowNewSLA] = useState(false);
   const [showExistingSLA, setShowExistingSLA] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -36,9 +39,9 @@ export function CreateCategories() {
   const [dataTags, setDataTags] = useState([]);
 
   
-  /***Listados de carga en el formulario ***/
+  //Listados de carga en el formulario 
  useEffect(() => {
-  const loadSLAList = async () => {
+ const loadSLAList = async () => {
     try {
       const response = await SLAService.getAllSLA();
       const ResEspecialidades = await SpecialitiesList.getAll();
@@ -57,6 +60,69 @@ console.log("Tags:", ResTags.data);
     }
   };
   loadSLAList();
+  // si es edición, cargar datos de la categoría una vez que las listas estén cargadas
+  if (isEdit) {
+    const loadCategoryForEdit = async () => {
+      try {
+        
+        const [basicResp, detailsResp] = await Promise.all([
+          CategoriesServices.GetCategoryById(id),
+          CategoriesServices.GetCategoryDetailsByID(id),
+        ]);
+
+        const basic = basicResp.data?.data?.[0];
+        const details = detailsResp.data?.data?.[0];
+
+        if (basic) {
+          setValue("name", basic.Name || basic.Categorie || "");
+          setValue("description", basic.Descripcion || "");
+          if (basic.SLAId) {
+            setSelectedOption("existing");
+            setShowExistingSLA(true);
+            setValue("slaId", basic.SLAId);
+          }
+        }
+
+        // Mapear especialidades y tags
+        if (details) {
+          const specialitiesNames = details.Especialidades
+            ? details.Especialidades.split(", ")
+            : [];
+          const tagsNames = details.Tags ? details.Tags.split(", ") : [];
+
+          // Usar estados si ya están cargados, si no, obtener listas directamente
+          const specialitiesSource =
+            dataSpecialities.length > 0
+              ? dataSpecialities
+              : (await SpecialitiesList.getAll()).data.data || [];
+
+          const tagsSource =
+            dataTags.length > 0
+              ? dataTags
+              : (await SpecialitiesList.GetAllTags()).data.data || [];
+
+          const specialitiesIds = specialitiesSource
+            .filter((s) => specialitiesNames.includes(s.Speciality))
+            .map((s) => s.Id);
+
+          const tagsIds = tagsSource
+            .filter((t) => tagsNames.includes(t.Tag))
+            .map((t) => t.Id);
+
+          // Si no encontramos por nombre, dejar array vacío para evitar errores
+          setValue("especialidades", specialitiesIds);
+          setValue("tags", tagsIds);
+        }
+      } catch (err) {
+        console.error("Error cargando categoría para edición:", err);
+        toast.error("No se pudieron cargar los datos de la categoría");
+      }
+    };
+
+    // Esperar un poco a que las listas se establezcan (alternativa simple)
+    // Si las listas están vacías, loadSLAList() ya las llenó, así que llamamos directo
+    loadCategoryForEdit();
+  }
 }, []);
 
   const categorySchema = yup.object({
@@ -141,15 +207,25 @@ console.log("Tags:", ResTags.data);
 
  
   try {
-      const response = await CategoriesServices.CreateCategory(formData);
-
-      if (response.data?.success === true) {
-        toast.success(`Categoría "${formData.Name}" creada exitosamente`);
-        navigate(-1);
-        return;
+      let response;
+      if (isEdit) {
+       
+        response = await CategoriesServices.UpdateCategoryByid(id, formData);
+        if (response.data?.success === true) {
+          toast.success(`Categoría "${formData.Name}" actualizada exitosamente`);
+          navigate(-1);
+          return;
+        }
+        toast.error("No se pudo actualizar la categoría");
+      } else {
+        response = await CategoriesServices.CreateCategory(formData);
+        if (response.data?.success === true) {
+          toast.success(`Categoría "${formData.Name}" creada exitosamente`);
+          navigate(-1);
+          return;
+        }
+        toast.error("No se pudo crear la categoría");
       }
-
-      toast.error("No se pudo crear la categoría");
     } catch (err) {
       toast.error(err.response?.data?.message || "Error al crear la categoría");
     }
@@ -159,7 +235,7 @@ console.log("Tags:", ResTags.data);
   return (
     <Card className="p-6 max-w-3xl mx-auto mt-16 border-2 border-[#DFA200] rounded-xl shadow-md">
       <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-        Crear Categoría
+        {isEdit ? "Actualizar Categoría" : "Crear Categoría"}
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
