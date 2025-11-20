@@ -26,35 +26,33 @@ import { Card } from "../../components/ui/card";
 import { CustomInputField } from "../../components/ui/custom/custom-input-field";
 import { CustomSelect } from "../../components/ui/custom/custom-select";
 import { CustomMultiSelect } from "../../components/ui/custom/custom-multiple-select";
-import { SpecialityForm } from "../../components/ui/SpecialityForm";  
-
-
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
 
 
-export default function CreateATicket() {
+export function CreateATicket() {
 
 const navigate = useNavigate();
 const location = useLocation();
+//watch es utilizado para saber qué etiqueta seleccionó el usuario, y hacer el llamado al backend
 
 
 
-
+  const [dataPriorities, setDataPriorities] = useState([]);
   const [dataSpecialities, setDataSpecialities] = useState([]);
-  const [dataSeguros, setDataSeguros] = useState([]);
-
+  const [dataTags, setDataTags] = useState([]);
+  const [dataCategory, setDataCategory] = useState(null);
 
  /*** Esquema de validación Yup ***/
-const technicianSchema = yup.object({
-  name: yup.string().required("El nombre completo es requerido").min(2, "Debe tener al menos 2 caracteres"),
-  seguro: yup.number()
+const ticketSchema = yup.object({
+  id: yup.string().required("El nombre completo es requerido").min(2, "Debe tener al menos 2 caracteres"),
+  CategoryId: yup.number()
     .typeError("Debe seleccionar un seguro").required("El seguro es requerido").positive("Valor inválido"),
-  email: yup.string().required("El email es requerido") .email("Formato de email no válido"),
-  trabajocargo: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
- password: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
-  idrol: yup.number().required("El rol es requerido"),
-especialidades: yup
+  Title: yup.string().required("El email es requerido") .email("Formato de email no válido"),
+  Description: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
+ Priority: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
+  TicketStartDate: yup.number().required("El rol es requerido"),
+State: yup
     .array()
     .of(
       yup.object({
@@ -69,57 +67,51 @@ especialidades: yup
 });
 
   /*** React Hook Form ***/
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+const { control, handleSubmit, register, watch, setValue, formState:{ errors } } = useForm({
+
  defaultValues: {
-  name: "",
-  seguro: "",
-  email: "",
-  password: "",
-  idrol: 1, 
-  trabajocargo: "",
-  especialidades: [], 
+  id: "",
+  CategoryId: "",
+  Title: "",
+  Description: "",
+  Priority: "",
+  TicketStartDate: "", 
+  State: ""
 }
 ,
 
-    resolver:yupResolver(technicianSchema),
+    resolver:yupResolver(ticketSchema),
   });
 
-  //Acciones para la gestión del array de especialidades
+const tagsSelected = watch("tags");
 
-
-const { fields, append, remove } = useFieldArray({
-  control,
-  name: "especialidades",
-});
-
-
-const addNewSpeciality = () => {
-   append({ Id: null });
-};
-
-const removeSpeciality = (index) => {
-  if (fields.length > 1) remove(index);
-};
 
 
   /***Listados de carga en el formulario ***/
   useEffect(()=>{
     const fechData=async()=>{
       try {
-        //Lista de especialidades
+        //Lista de especialidades, prioridades y etiquetas
         const specialitiesRes= await SpecialitiesList.getAll()
-        //Lista de seguros
-        const segurosRes= await TechniciansLists.getSeguros()
-        //Lista de tecnicos
+        const PrioriRes = await TicketsLists.getAllPriorities();
+        const ResTags = await SpecialitiesList.GetAllTags();
         
-        // s la petición es exitosa, se guardan los datos 
+        //los datos se guardarán
         setDataSpecialities(specialitiesRes.data.data || []); 
-        setDataSeguros(segurosRes.data.data || []); 
+        setDataPriorities(PrioriRes.data.data || []); 
+        setDataTags(ResTags.data.data || []);
 
+        //tomaré el primer tag seleccionado
+        if (tagsSelected.length> 0) {
+          
+        var firstTagId = tagsSelected[0];
+        const CatRes = await TicketsLists.getCategoriesByTags(firstTagId);
+         
+        const category = CatRes.data.data[0];
+         setDataCategory(category);
+         setValue("categoriaId", category.Id);    
+
+        }
         
       } catch (error) {
         console.log(error)
@@ -127,26 +119,30 @@ const removeSpeciality = (index) => {
       }
     }
     fechData()
-  },[])
+  },[tagsSelected])
 
 
 /*** Submit ***/
 
 const onSubmit = async (dataForm) => {
 
-  const ids = dataForm.especialidades.map(e => e.Id);
-  const hayRepetidos = new Set(ids).size !== ids.length;
 
-  if (hayRepetidos) {
-    toast.error("No se puede seleccionar especialidades repetidas");
-    return;
-  }
 
   try {
-    const response = await TechniciansLists.create(dataForm);
+
+  const body = {
+    Title: dataForm.name,
+    Description: dataForm.descripcion,
+    Priority: dataForm.prioridad,
+    CategoryId: dataForm.CategoryId,
+    State: "Pendiente",
+    iduser: dataForm.iduser,
+  };
+
+    const response = await TicketsLists.create(body);
 
     if (response.data?.success === true) {
-      toast.success(`Técnico ${dataForm.name} creado exitosamente`);
+      toast.success(`Ticket ${dataForm.name} creado exitosamente`);
       navigate(-1);
       return;
     }
@@ -156,7 +152,7 @@ const onSubmit = async (dataForm) => {
   } catch (err) {
    
     
-    toast.error(err.response?.data?.message || "Error al crear técnico");
+    toast.error(err.response?.data?.message || "Error al crear ticket");
   }
 };
 
@@ -169,13 +165,13 @@ const onSubmit = async (dataForm) => {
 
 
      <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-    Crear Técnico
+    Crear Ticket
 </h1>
 
 
   <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
     
-    {/* Nombre completo y correo */}
+    {/* Ntitulo */}
     <div className="grid sm:grid-cols-2 gap-4 ">
       <Controller
         name="name"
@@ -183,118 +179,121 @@ const onSubmit = async (dataForm) => {
         render={({ field }) => (
           <CustomInputField
             {...field}
-            label="Nombre completo"
-            placeholder="Su nombre completo"
+            label="Titulo"
+            placeholder="Titulo del Ticket"
             error={errors.name?.message}
           />
         )}
       />
 
-      <Controller
-        name="email"
-        control={control}
-        render={({ field }) => (
-          <CustomInputField
-            {...field}
-            label="Correo electrónico"
-            placeholder="technician@Helpdesk.com"
-            error={errors.email?.message}
-          />
-        )}
-      />
+
+<Controller
+  name="estado"
+  control={control}
+  defaultValue="Pendiente"
+  render={({ field }) => (
+    <CustomInputField
+      {...field}
+      label="Estado"
+      placeholder="Pendiente"
+      disabled={true}
+    />
+  )}
+/>
+
+
     </div>
 
-    {/* Contraseña y seguro */}
-    <div className="grid sm:grid-cols-2 gap-4">
-      <Controller
-        name="password"
-        control={control}
-        render={({ field }) => (
-          <CustomInputField
-            {...field}
-            type="password"
-            label="Contraseña"
-            placeholder="********"
-            error={errors.password?.message}
-          />
-        )}
-      />
 
-      <Controller
-        name="seguro"
+
+
+  <Controller
+  name="descripcion"
+  control={control}
+  render={({ field }) => (
+    <CustomInputField
+      {...field}
+      as="textarea"
+      label="Descripción"
+      placeholder="Describa su incidencia..."
+      error={errors.descripcion?.message}
+      className="min-h-[120px]"  
+    />
+  )}
+/>
+
+
+   
+
+    {/* prioridad */}
+    <div className="grid sm:grid-cols-2 gap-4">
+     
+   <Controller
+        name="prioridad"
         control={control}
         render={({ field }) => (
           <CustomSelect
             field={field}
-            data={dataSeguros}
-            label="Seguro médico"
+            data={dataPriorities}
+            label="Prioridad"
             getOptionLabel={(item) => `${item.Name}`}
             getOptionValue={(item) => item.Id}
             error={errors.seguro?.message}
           />
         )}
       />
-
       
-    </div>
 
-    {/* Cargo*/}
-    <div className="grid sm:grid-cols-2 gap-4">
-      <Controller
-        name="trabajocargo"
-        control={control}
-        render={({ field }) => (
-          <CustomInputField
-            {...field}
-            label="Cargo de trabajo"
-            placeholder="Accountant"
-            error={errors.trabajocargo?.message}
-          />
-        )}
+    {/* fecha*/}
+      
+  <Controller
+    name="fecha_creacion"
+    control={control}
+    defaultValue={new Date().toISOString().split("T")[0]} 
+    render={({ field }) => (
+      <CustomInputField
+        {...field}
+        type="date"
+        label="Fecha de creación"
+        disabled={true}               
+        error={errors.fecha_creacion?.message}
       />
-
-
-
-    </div>
-
-    {/* Especialidades (useFieldArray) */}
-    <div>
-      <div className="flex items-center justify-between">
-        <Label className="block mb-1 text-sm font-medium">Especialidades</Label> {errors.especialidades && ( <p className="text-red-500 text-xs mt-1">
-        {errors.especialidades.message}
-      </p>
     )}
-
-
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button type="button" size="icon" onClick={addNewSpeciality}
-              className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Agregar especialidad</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-
-      <div className="space-y-4 mt-3">
-        {fields.map((field, index) => (
-          <SpecialityForm
-            key={field.Id}
-            index={index}
-            control={control}
-            data={dataSpecialities}
-            onRemove={removeSpeciality}
-            disableRemoveButton={fields.length === 1}
-            error={errors}
-          />
-        ))}
-      </div>
+  />
     </div>
+                      
+          <Controller
+            name="tags"
+            control={control}
+            render={({ field }) =>
+              <CustomMultiSelect field={field} data={dataTags}
+                label="Etiquetas"
+                getOptionLabel={(item) => item.Tag}
+               getOptionValue={(item) => item.Id}
 
+                placeholder="Seleccione etiquetas" 
+                error={errors.tags?.message}/>}
+          />
+
+          <Controller
+            name="categoriaNombre"
+            control={control}
+            render={({ field }) => (
+              <CustomInputField
+                {...field}
+                label="Categoría asignada"
+                placeholder="Seleccione una etiqueta"
+                disabled={true}
+              />
+            )}
+          />
+
+
+      <input type="hidden" {...register("categoriaId")} />
+
+
+
+       
     <div className="flex justify-between gap-4 mt-6">
 
 <Button
