@@ -55,6 +55,9 @@ const rutas = createBrowserRouter([
 { path: "/categories/create", element: <CreateCategories/> },
 { path: "/tickets/create", element: <CreateATicket/> },
 
+// Editar categoría
+{ path: "/category/edit/:id", element: <CreateCategories/> },
+
 //update
 { path: "/technicians/update/:id", element: <UpdateTechnician/> },
 

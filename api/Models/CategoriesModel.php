@@ -8,37 +8,30 @@ class CategoriesModel
     {
         $this->enlace = new MySqlConnect();
     }
-
-
     public function GetAllCategoriesListActive()
     {
         $vSql = "SELECT * FROM categories c where c.Active =1 ORDER BY id desc;";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
-
-
     public function GetAllCategories()
     {
         $vSql = "SELECT * FROM categories  ORDER BY id desc;";
         $vResultado = $this->enlace->ExecuteSQL($vSql);
         return $vResultado;
     }
-
     public function GetCategoryById($id)
-{
-    $sql = "SELECT * FROM categories WHERE id = $id;";
-    // Aquí SÍ usamos correctamente ExecuteSQL
-    $result = $this->enlace->executeSQL($sql, "asoc");
+    {
+        $sql = "SELECT * FROM categories WHERE id = $id;";
+        // Aquí SÍ usamos correctamente ExecuteSQL
+        $result = $this->enlace->executeSQL($sql, "asoc");
 
-    return $result;
-}
-
-
+        return $result;
+    }
     //nombre de la categoria, lista de etiquetas, lista de especialidades y su SLA
- public function GetCategoryDetailsByID($id)
-{
-    $vSql = "
+    public function GetCategoryDetailsByID($id)
+    {
+        $vSql = "
         SELECT 
             c.Name AS Categorie,
             c.Descripcion,
@@ -61,57 +54,82 @@ class CategoriesModel
             sla.MaxTimeResponse
     ";
 
-    $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
-    return $vResultado;
-}
+        $vResultado = $this->enlace->ExecuteSQL($vSql, [$id]);
+        return $vResultado;
+    }
 
-
-
-    //sin probar
-    public function UpdateCategoryByid($id, $arrayData, $slaId)
+    // Actualiza una categoría y sus relaciones (tags y especialidades)
+    public function UpdateCategoryByid($id, $obj)
     {
-
-        $sql = "UPDATE categories SET Name = $arrayData.Name, SLAId = $slaId, Descripcion = $arrayData.Descripcion WHERE id = $id;";
-
-        $sqlresult = $this->enlace->ExecuteSQL($sql, [$id]);
+        $id = intval($id);
 
 
-        return $sqlresult;
+
+        $sql = "UPDATE Categories SET Name = '{$obj->Name}', Descripcion = '{$obj->Descripcion}', SLAId = {$obj->SLAId} WHERE Id = {$id};";
+        $this->enlace->executeSQL_DML($sql);
+
+        // Eliminar relaciones existentes de tags y especialidades
+        $sql = "DELETE FROM Category_Tags WHERE CategoryId = {$id};";
+        $this->enlace->executeSQL_DML($sql);
+
+        $sql = "DELETE FROM Category_Specialities WHERE CategoryId = {$id};";
+        $this->enlace->executeSQL_DML($sql);
+
+        // Insertar nuevas relaciones de tags
+
+        foreach ($obj->Tags as $tagId) {
+            $tagInt = intval($tagId);
+            $sql = "INSERT INTO Category_Tags (CategoryId, TagId) VALUES ({$id}, {$tagInt});";
+            $this->enlace->executeSQL_DML($sql);
+        }
 
 
+        // Insertar nuevas relaciones de especialidades
+        {
+            foreach ($obj->Specialities as $specId) {
+                $specInt = intval($specId);
+                $sql = "INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES ({$id}, {$specInt});";
+                $this->enlace->executeSQL_DML($sql);
+            }
+
+
+            // Devolver la categoría actualizada
+            return $this->GetCategoryById($id);
+        }
     }
 
     // en proceso 
-public function DeleteCategory($id)
-{
-    $sql = "UPDATE categories SET Active = 0 WHERE id = $id;";
-    return $this->enlace->executeSQL_DML($sql);
-}
-
-public function ActivateCategory($id){
-    $sql = "UPDATE categories SET Active = 1  WHERE id = $id"; 
-    return $this->enlace->executeSQL_DML($sql);
-}
-
-    
- public function CreateCategory($objeto)
-{
-    $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) VALUES ('$objeto->Name', $objeto->SLAId,  '$objeto->Descripcion', 1)";
-
-    $categoryId = $this->enlace->executeSQL_DML_last($sql);
-
-    foreach ($objeto->Tags as $tagId) {
-        $sql = "INSERT INTO Category_Tags (CategoryId, TagId) VALUES ($categoryId, $tagId)";
-        $this->enlace->executeSQL_DML($sql);
+    public function DeleteCategory($id)
+    {
+        $sql = "UPDATE categories SET Active = 0 WHERE id = $id;";
+        return $this->enlace->executeSQL_DML($sql);
     }
 
-    foreach ($objeto->Specialities as $specId) {
-        $sql = "INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES ($categoryId, $specId)";
-        $this->enlace->executeSQL_DML($sql);
+    public function ActivateCategory($id)
+    {
+        $sql = "UPDATE categories SET Active = 1  WHERE id = $id";
+        return $this->enlace->executeSQL_DML($sql);
     }
- return $this->enlace->executeSQL_DML($sql);
-}
 
-     
+
+    public function CreateCategory($objeto)
+    {
+        $sql = "INSERT INTO Categories (Name, SLAId, Descripcion, Active) VALUES ('$objeto->Name', $objeto->SLAId,  '$objeto->Descripcion', 1)";
+
+        $categoryId = $this->enlace->executeSQL_DML_last($sql);
+
+        foreach ($objeto->Tags as $tagId) {
+            $sql = "INSERT INTO Category_Tags (CategoryId, TagId) VALUES ($categoryId, $tagId)";
+            $this->enlace->executeSQL_DML($sql);
+        }
+
+        foreach ($objeto->Specialities as $specId) {
+            $sql = "INSERT INTO Category_Specialities (CategoryId, SpecialityId) VALUES ($categoryId, $specId)";
+            $this->enlace->executeSQL_DML($sql);
+        }
+        return $this->enlace->executeSQL_DML($sql);
+    }
+
+
 
 }
