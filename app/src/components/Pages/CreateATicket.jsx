@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast";
 
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 
-//servicios tecnicos, especialidades, seguros
+//servicios tecnicos, especialidades
 import TechniciansLists from "../../Services/TechniciansLists";
 import SpecialitiesList from "../../Services/SpecialitiesList";
 import TicketsLists from "../../Services/TicketsLists";
@@ -39,45 +39,35 @@ const location = useLocation();
 
 
   const [dataPriorities, setDataPriorities] = useState([]);
-  const [dataSpecialities, setDataSpecialities] = useState([]);
   const [dataTags, setDataTags] = useState([]);
   const [dataCategory, setDataCategory] = useState(null);
 
  /*** Esquema de validación Yup ***/
 const ticketSchema = yup.object({
-  id: yup.string().required("El nombre completo es requerido").min(2, "Debe tener al menos 2 caracteres"),
-  CategoryId: yup.number()
-    .typeError("Debe seleccionar un seguro").required("El seguro es requerido").positive("Valor inválido"),
-  Title: yup.string().required("El email es requerido") .email("Formato de email no válido"),
-  Description: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
- Priority: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
-  TicketStartDate: yup.number().required("El rol es requerido"),
-State: yup
-    .array()
-    .of(
-      yup.object({
-        Id: yup
-          .number()
-          .typeError("Debe seleccionar una especialidad")
-          .required("La especialidad es requerida"),
-      })
-    )
-    .min(1, "Debe seleccionar al menos una especialidad"),
-    
+  title: yup.string().required("El título es requerido"),
+  descripcion: yup.string().required("La descripción es requerida"),
+  prioridad: yup.number().typeError("Debe seleccionar una prioridad").required("La prioridad es requerida"),
+  fecha_creacion: yup.string().required(),
+  estado: yup.string().required(),
+ tags: yup.number().required("La etiqueta es requerida"),
+
+  categoriaId: yup.number().nullable(),
 });
 
   /*** React Hook Form ***/
 const { control, handleSubmit, register, watch, setValue, formState:{ errors } } = useForm({
 
- defaultValues: {
-  id: "",
-  CategoryId: "",
-  Title: "",
-  Description: "",
-  Priority: "",
-  TicketStartDate: "", 
-  State: ""
+defaultValues: {
+  title: "",
+  descripcion: "",
+  categoriaNombre: "",
+  prioridad: "",
+  fecha_creacion: new Date().toISOString().split("T")[0],
+  estado: "Pendiente",
+  tags: "",
+  categoriaId: null
 }
+
 ,
 
     resolver:yupResolver(ticketSchema),
@@ -87,29 +77,36 @@ const tagsSelected = watch("tags");
 
 
 
+
+
   /***Listados de carga en el formulario ***/
   useEffect(()=>{
     const fechData=async()=>{
       try {
-        //Lista de especialidades, prioridades y etiquetas
-        const specialitiesRes= await SpecialitiesList.getAll()
+        //Lista deprioridades y etiquetas
         const PrioriRes = await TicketsLists.getAllPriorities();
         const ResTags = await SpecialitiesList.GetAllTags();
         
         //los datos se guardarán
-        setDataSpecialities(specialitiesRes.data.data || []); 
+     
         setDataPriorities(PrioriRes.data.data || []); 
         setDataTags(ResTags.data.data || []);
 
         //tomaré el primer tag seleccionado
-        if (tagsSelected.length> 0) {
+        if (tagsSelected !== "") {
           
-        var firstTagId = tagsSelected[0];
+        var firstTagId = tagsSelected;
         const CatRes = await TicketsLists.getCategoriesByTags(firstTagId);
          
         const category = CatRes.data.data[0];
          setDataCategory(category);
          setValue("categoriaId", category.Id);    
+         setValue("categoriaNombre", category.Name);
+
+        }else{
+           setDataCategory(null);
+           setValue("categoriaId", null);
+           setValue("categoriaNombre",null);
 
         }
         
@@ -130,19 +127,21 @@ const onSubmit = async (dataForm) => {
 
   try {
 
-  const body = {
-    Title: dataForm.name,
-    Description: dataForm.descripcion,
-    Priority: dataForm.prioridad,
-    CategoryId: dataForm.CategoryId,
-    State: "Pendiente",
-    iduser: dataForm.iduser,
-  };
+const body = {
+  Title: dataForm.title,
+  Description: dataForm.descripcion,
+  PriorityId: dataForm.prioridad,
+  CategoryId: dataForm.categoriaId,
+  UserId: 17
+};
 
-    const response = await TicketsLists.create(body);
+
+console.log("categoriaId:", dataForm.categoriaId)
+
+    const response = await TicketsLists.createticket(body);
 
     if (response.data?.success === true) {
-      toast.success(`Ticket ${dataForm.name} creado exitosamente`);
+      toast.success(`Ticket creado exitosamente`);
       navigate(-1);
       return;
     }
@@ -174,14 +173,14 @@ const onSubmit = async (dataForm) => {
     {/* Ntitulo */}
     <div className="grid sm:grid-cols-2 gap-4 ">
       <Controller
-        name="name"
+        name="title"
         control={control}
         render={({ field }) => (
           <CustomInputField
             {...field}
             label="Titulo"
             placeholder="Titulo del Ticket"
-            error={errors.name?.message}
+            error={errors.title?.message}
           />
         )}
       />
@@ -238,7 +237,7 @@ const onSubmit = async (dataForm) => {
             label="Prioridad"
             getOptionLabel={(item) => `${item.Name}`}
             getOptionValue={(item) => item.Id}
-            error={errors.seguro?.message}
+            error={errors.prioridad?.message}
           />
         )}
       />
@@ -262,31 +261,28 @@ const onSubmit = async (dataForm) => {
   />
     </div>
                       
-          <Controller
-            name="tags"
-            control={control}
-            render={({ field }) =>
-              <CustomMultiSelect field={field} data={dataTags}
-                label="Etiquetas"
-                getOptionLabel={(item) => item.Tag}
-               getOptionValue={(item) => item.Id}
+      <Controller
+  name="tags"
+  control={control}
+  render={({ field }) => (
+    <CustomSelect
+      field={field}
+      data={dataTags}
+      label="Etiqueta"
+      getOptionLabel={(item) => item.Tag}
+      getOptionValue={(item) => item.Id}
+      placeholder="Seleccione una etiqueta"
+      error={errors.tags?.message}
+    />
+  )}
+/>
 
-                placeholder="Seleccione etiquetas" 
-                error={errors.tags?.message}/>}
-          />
+    <CustomInputField
+  label="Categoría asignada"
+  value={dataCategory ? dataCategory.Name : ""}
+  disabled={true}
+/>
 
-          <Controller
-            name="categoriaNombre"
-            control={control}
-            render={({ field }) => (
-              <CustomInputField
-                {...field}
-                label="Categoría asignada"
-                placeholder="Seleccione una etiqueta"
-                disabled={true}
-              />
-            )}
-          />
 
 
       <input type="hidden" {...register("categoriaId")} />

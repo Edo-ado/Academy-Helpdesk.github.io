@@ -1,6 +1,17 @@
 <?php
 class CreateTicketController
 {
+
+
+			public function index()
+		{
+			$response = new Response();
+			$response->toJSON([
+				"success" => true,
+				"message" => "CreateTicketController funcionando"
+			]);
+		}
+
 	// Obtener todas las tags activas
 	// GET /CreateTicketController/bringTags
 	public function bringTags()
@@ -31,19 +42,25 @@ class CreateTicketController
 
 	// Crear ticket
 	// POST /CreateTicketController  (body: JSON con Title, Description, PriorityId, UserId, TagId, CategoryId)
-	public function create()
-	{
-		try {
-			$request = new Request();
-			$response = new Response();
-			$inputJSON = $request->getJSON();
-			$model = new CreateTicketModel();
-			$result = $model->CreateTicket($inputJSON);
-			$response->toJSON($result);
-		} catch (Exception $e) {
-			handleException($e);
-		}
-	}
+public function createticket()
+{
+    try {
+
+        $request = new Request();
+        $response = new Response();
+        $inputJSON = $request->getJSON();
+
+        $model = new CreateTicketModel();
+        $result = $model->createticket($inputJSON);
+
+   
+        $response->toJSON($result);
+
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
 
 	// Eliminar (desactivar) ticket
 	// DELETE /CreateTicketController/DeleteTicket/{id}

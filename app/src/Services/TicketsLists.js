@@ -14,10 +14,11 @@ const TicketsLists = {
   GetWeeklyAssignments: (weekStartDate, technicianId) => axios.get(`${API_URL}/GetWeeklyAssignments/${weekStartDate}/${technicianId}`),
   GetTicketHistory: (id) => axios.get(`${API_URL}/GetTicketHistory/${id}`),
   TicketsByRolAndIDUser: (id) => axios.get(`${API_URL}/TicketsByRolAndIDUser/${id}`),
+
   //del otro lao
   getAllPriorities: () => axios.get(`${API_URL_TICKETMAINTAIN}/getAllPriorities`),
-  getCategoriesByTags: (id) =>  axios.get(`${API_URL}/getCategoriesByTags/${id}`),
-  create: (data) => axios.post(`${API_URL}/create`, data),
+  getCategoriesByTags: (id) =>  axios.get(`${API_URL_TICKETMAINTAIN}/getCategoriesByTags/${id}`),
+  createticket: (data) => axios.post(`${API_URL_TICKETMAINTAIN}/createticket`,data)
 
 
 };
