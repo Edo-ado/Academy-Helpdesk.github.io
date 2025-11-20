@@ -59,4 +59,20 @@ class CreateTicketController
 		}
 	}
 
+	public function getAllPriorities(){
+		try {
+			$response = new Response();
+                $Tickets = new CreateTicketModel();
+                $result = $Tickets->getAllPriorities();
+                $response->toJSON($result);
+		} catch (Exception $e) {
+			//thr                handleException($e);ow $th;
+		}
+	}
 }
+
+
+
+
+
+

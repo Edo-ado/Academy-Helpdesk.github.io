@@ -84,7 +84,7 @@ class CreateTicketModel
 
         $ticketId = $this->enlace->executeSQL_DML_last($sql);
 
-        if ($ticketId && $ticketId > 0) {
+        if ($ticketId  > 0) {
             return [
                 "success" => true,
                 "message" => "Ticket creado correctamente",
@@ -96,6 +96,14 @@ class CreateTicketModel
             "success" => false,
             "message" => "No se pudo crear el ticket"
         ];
+    }
+
+
+    public function getAllPriorities()
+    {
+        $sql = "SELECT * FROM Priorities WHERE Active = 1;";
+        $result = $this->enlace->executeSQL($sql, "asoc");
+        return $result;
     }
 
 }
