@@ -108,6 +108,8 @@ public function GetTicketById($id) {
                 t.State,
                 t.Ticket_Start_Date,
                 t.Ticket_End_Date,
+                t.Ticket_Response_SLA,
+                t.Ticket_Resolution_SLA,
                 c.Name AS Category,
                 u.UserName AS Cliente,
                 tech.UserName AS Tecnico,
