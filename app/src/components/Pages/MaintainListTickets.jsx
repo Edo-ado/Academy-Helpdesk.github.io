@@ -97,13 +97,6 @@ export default function MaintainListTickets() {
       return;
     }
 
-    const confirmDelete = window.confirm(
-      "¿Seguro que deseas eliminar esta categoría?"
-    );
-
-    if (confirmDelete) {
-      await TechnicianServices.DeleteUsers(Id);
-    }
 
     // Refrescar la lista después de la eliminación
     const updatedResponse = await TicketsServices.getAllTicketsMin();
@@ -151,7 +144,7 @@ export default function MaintainListTickets() {
               <TableHead className="font-semibold px-9">ID</TableHead>
               <TableHead className="font-semibold px-9">Titulo</TableHead>
               <TableHead className="font-semibold px-10">Categoria</TableHead>
-              <TableHead className="font-semibold px-4">Acciones</TableHead>
+              <TableHead className="font-semibold px-0">Acciones</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -211,22 +204,7 @@ export default function MaintainListTickets() {
                     </Tooltip>
                   </TooltipProvider>
 
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          
-                          className={row.Active == 0 ? "" : ""}
-                          onClick={() => handleDelete(row.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive text-red-600 " />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Eliminar</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+               
                 </TableCell>
               </TableRow>
             ))}
