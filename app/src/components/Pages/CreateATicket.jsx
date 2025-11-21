@@ -34,7 +34,6 @@ export function CreateATicket() {
 
 const navigate = useNavigate();
 const location = useLocation();
-//watch es utilizado para saber qué etiqueta seleccionó el usuario, y hacer el llamado al backend
 
 
 
@@ -72,6 +71,8 @@ defaultValues: {
 
     resolver:yupResolver(ticketSchema),
   });
+
+  //watch es utilizado para saber qué etiqueta seleccionó el usuario, y hacer el llamado al backend
 
 const tagsSelected = watch("tags");
 
@@ -282,10 +283,7 @@ console.log("categoriaId:", dataForm.categoriaId)
   value={dataCategory ? dataCategory.Name : ""}
   disabled={true}
 />
-
-
-
-      <input type="hidden" {...register("categoriaId")} />
+ <input type="hidden" {...register("categoriaId")} />
 
 
 

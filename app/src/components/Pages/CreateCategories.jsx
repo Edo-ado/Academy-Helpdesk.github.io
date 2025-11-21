@@ -52,7 +52,7 @@ export function CreateCategories() {
       setDataTags(ResTags.data.data || []);
 
       console.log("Especialidades:", ResEspecialidades.data);
-console.log("Tags:", ResTags.data);
+      console.log("Tags:", ResTags.data);
 
     } catch (err) {
       console.error('Error completo:', err); 
@@ -125,22 +125,18 @@ console.log("Tags:", ResTags.data);
   }
 }, []);
 
-  const categorySchema = yup.object({
-    name: yup.string().required("El nombre es requerido").min(2),
-    description: yup.string().required("La descripción es requerida").min(4),
+const categorySchema = yup.object({
+  name: yup.string().required("El nombre es requerido").min(2),
+  description: yup.string().required("La descripción es requerida").min(4),
 
-    // Si el usuario crea un SLA nuevo
-    
-    slaHours: yup.number().nullable("Se necesita digitar una hora maxima").min(1),
-    slaMinutes: yup.number().nullable("Se necesita digitar una hora maxima").min(1),
+  especialidades: yup
+    .array()
+    .min(1, "Debe seleccionar al menos una especialidad"),
 
-    // Si el usuario selecciona un SLA existente
-    slaId: yup.number().nullable(),
-
-
-
-
-  });
+  tags: yup
+    .array()
+    .min(1, "Debe seleccionar al menos una etiqueta")
+});
 
   const {
     control,
@@ -168,6 +164,32 @@ console.log("Tags:", ResTags.data);
   // validaciones para la creacion de la categoría
   const onSubmit = async (SlaData) => {
   let slaIdToUse = null;
+
+if (!selectedOption) {
+  toast.error("Debes seleccionar si usarás un SLA nuevo o uno existente");
+  return;
+}
+
+if (selectedOption === "new") {
+ 
+  if (!SlaData.slaHours || SlaData.slaHours <= 0) {
+    toast.error("Tiempo de respuesta (horas) debe ser mayor a 0");
+    return;
+  }
+
+  if (!SlaData.slaMinutes || SlaData.slaMinutes <= SlaData.slaHours) {
+    toast.error("Tiempo de resolución debe ser mayor que el tiempo de respuesta");
+    return;
+  }
+}
+
+if (selectedOption === "existing") {
+  
+  if (!SlaData.slaId) {
+    toast.error("Debes seleccionar un SLA existente");
+    return;
+  }
+}
 
  
   if (selectedOption === "new") {
@@ -361,7 +383,7 @@ console.log("Tags:", ResTags.data);
                 <CustomInputField
                   {...field}
                   type="number"
-                  label="Horas maxima para resolución"
+                  label="Hora maxima para resolución"
                   placeholder="Ej: 30"
                   error={errors.slaMinutes?.message}
                 />
