@@ -83,6 +83,8 @@ useEffect(() => {
         Category: t.Category || "Sin categoría",
         technician: t.Tecnico || "Sin asignar",
         client: t.Cliente || "Desconocido",
+        Ticket_Response_SLA: t.Ticket_Response_SLA || null,
+       Ticket_Resolution_SLA: t.Ticket_Resolution_SLA || null,
         comments,
         ratings,
         evidences
@@ -399,6 +401,54 @@ return (
           </div>
         )}
       </div>
+
+        {/* SLARESPUESTA Y SLA RESOLUCION*/}
+
+<div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-purple-600 mb-6">
+
+  <div className="flex items-center gap-2 mb-6">
+    <span className="text-purple-500 text-2xl">
+      <FontAwesomeIcon icon={faCalendarDays} />
+    </span>
+    <h2 className="text-2xl font-bold text-gray-900">Resolución y Respuesta SLA</h2>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    {/* Respuesta SLA */}
+    <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-green-600">
+      <p className="font-semibold text-gray-700 mb-2">
+        <FontAwesomeIcon icon={faClock} /> Respuesta SLA
+      </p>
+      <p className="text-gray-900 font-medium">
+        {formatDate(ticket.Ticket_Response_SLA)}
+      </p>
+    </div>
+
+    {/* Resolución SLA */}
+    <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-green-600">
+      <p className="font-semibold text-gray-700 mb-2">
+        <FontAwesomeIcon icon={faClock} /> Resolución SLA
+      </p>
+      <p className="text-gray-900 font-medium">
+        {formatDate(ticket.Ticket_Resolution_SLA)}
+      </p>
+    </div>
+
+    {/* Duración total */}
+    {duration !== null && (
+      <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg text-center border-2 border-blue-200 col-span-2">
+        <p className="text-gray-600 text-sm mb-1">
+          <FontAwesomeIcon icon={faStopwatch} /> Duración Total
+        </p>
+        <p className="text-gray-900 font-bold text-lg">
+          {duration} {duration === 1 ? "día" : "días"}
+        </p>
+      </div>
+    )}
+  </div>
+</div>
+
 
       {/* COMENTARIOS*/}
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600 mb-6">

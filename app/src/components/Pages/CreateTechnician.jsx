@@ -83,7 +83,6 @@ especialidades: yup
   especialidades: [], 
 }
 ,
-
     resolver:yupResolver(technicianSchema),
   });
 
