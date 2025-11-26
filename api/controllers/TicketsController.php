@@ -35,7 +35,6 @@ class TicketsController
 
     //TicketsPerUser
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/TicketsPerUser/1
-
     public function TicketsPerUser($param)
     {
         try {

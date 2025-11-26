@@ -77,7 +77,7 @@ AND t.State <> 'Cerrado';";
     public function TicketsPerUser($id)
     {
         $msg = "SELECT 
-    t.Id AS TicketId,
+      t.Id AS TicketId,
     t.Title,
     t.Description,
     t.Priority,
@@ -95,10 +95,10 @@ INNER JOIN Categories c ON t.CategoryId = c.Id
 WHERE ut.UserId = $id
 ORDER BY t.Id DESC;";
 
-
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
     }
+    
 public function GetTicketById($id) {
     $sql = "SELECT 
                 t.Id AS TicketId,
@@ -115,17 +115,34 @@ public function GetTicketById($id) {
                 tech.UserName AS Tecnico,
                 tc.Id AS CommentId,
                 tc.CommentText,
-                tc.CommentDate
+                tc.CommentDate,
+                arc.Id AS EvidenceId,
+                arc.Image AS EvidencePath,
+                arc.UploadDate AS EvidenceDate
             FROM Tickets t
             LEFT JOIN UserTickets ut ON ut.TicketId = t.Id
             LEFT JOIN Users u ON ut.UserId = u.Id
             LEFT JOIN Users tech ON t.TechnicianId = tech.Id
             LEFT JOIN Categories c ON t.CategoryId = c.Id
             LEFT JOIN TicketComments tc ON tc.TicketId = t.Id
-            WHERE t.Id = $id;";
+            LEFT JOIN Archivador arc ON arc.TicketId = t.Id
+            WHERE t.Id = $id";
 
-    return $this->enlace->ExecuteSQL($sql);
+    $result = $this->enlace->ExecuteSQL($sql);
+
+    
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/app/public/";
+
+
+    foreach ($result as $row) {
+        if (!empty($row->EvidencePath)) {
+            $row->EvidencePath = $baseUrl . $row->EvidencePath;
+        }
+    }
+
+    return $result;
 }
+
 
 public function GetTicketHistory($ticketId)
 {
@@ -188,7 +205,18 @@ public function GetWeeklyAssignments($technicianId, $date)
 }
 
 
+//a ver por varas
 
+public function insertHistory($obj) {
+    $sql = "INSERT INTO TicketHistory   (TicketId, Last_State, Actual_State, UserAtCharge, Comment, ImagePath)  VALUES ({$obj->TicketId}, '{$obj->Last_State}', '{$obj->Actual_State}',  {$obj->UserAtCharge}, '{$obj->Comment}', '{$obj->ImagePath}')";
+
+    return $this->enlace->executeSQL_DML_last($sql);
+}
+
+public function getHistoryByTicket($ticketId) {
+    $sql = "SELECT * FROM TicketHistory WHERE TicketId = $ticketId ORDER BY Update_Date DESC";
+    return $this->enlace->executeSQL($sql);
+}
 
 
 }

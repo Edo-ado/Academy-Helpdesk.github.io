@@ -10,6 +10,8 @@ CREATE TABLE Roles (
     Active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+
+
 CREATE TABLE Insurances (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(100),
@@ -145,7 +147,7 @@ CREATE TABLE Archivador (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     HistoryTicketId INT,
     TicketId INT,
-    Image BLOB,
+    Image VARCHAR(255),
     UploadDate DATETIME,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (HistoryTicketId) REFERENCES TicketHistory(Id),
@@ -215,6 +217,18 @@ CREATE TABLE UserTickets (
     FOREIGN KEY (UserId) REFERENCES Users(Id),
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
 );
+
+
+CREATE TABLE TicketComments (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    TicketId INT NOT NULL,
+    UserId INT NOT NULL,
+    CommentText TEXT NOT NULL,
+    CommentDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (TicketId) REFERENCES Tickets(Id),
+    FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
 
 DELIMITER $$
 
@@ -403,6 +417,14 @@ INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Tic
 (5, 2, 'Problema con beca estudiantil', 'No aparece mi beca en el sistema', 3, DATE_SUB(NOW(), INTERVAL 30 DAY), DATE_SUB(NOW(), INTERVAL 25 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 30 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 30 DAY), INTERVAL 72 HOUR), TRUE, TRUE),
 (14, 4, 'Silla rota en biblioteca', 'Silla del puesto 23 está dañada', 1, DATE_SUB(NOW(), INTERVAL 28 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY), 'Cerrado', 432000, DATE_ADD(DATE_SUB(NOW(), INTERVAL 28 DAY), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 28 DAY), INTERVAL 72 HOUR), TRUE, TRUE);
 
+INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, Ticket_End_Date, State, Ticket_Response_SLA, Ticket_Resolution_SLA) VALUES
+(14, 4, 'Se meo un chiquillo', 'Aula 3 piso 15', 3, DATE_SUB(NOW(), INTERVAL 1 HOUR), null, 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 24 HOUR)),
+(14, 4, 'Se Cayo el porton', 'Se cayo el porton', 1, DATE_SUB(NOW(), INTERVAL 1 HOUR), null, 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 48 HOUR)),
+(14, 4, 'Adriana Salteeee', 'Enrique', 2, DATE_SUB(NOW(), INTERVAL 5 HOUR), null, 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 72 HOUR)),
+(14, 4, 'Watajai', 'Ok Mañana 💜', 1, DATE_SUB(NOW(), INTERVAL 4 HOUR), DATE_ADD(NOW(), INTERVAL 5 HOUR), 'Resuelto', DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 48 HOUR)),
+(14, 4, 'Sybau', 'Filamento ', 1, DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_ADD(NOW(), INTERVAL 6 HOUR), 'Cerrado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 48 HOUR));
+
+
 -- ========================================
 -- RELACIÓN USUARIOS - TICKETS
 -- ========================================
@@ -530,28 +552,9 @@ INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, UserAtCharge, Upd
 -- ========================================
 
 -- Evidencias para diferentes estados del historial
-INSERT INTO Archivador (HistoryTicketId, TicketId, UploadDate) VALUES
+INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate) VALUES
 -- Tickets En Proceso (evidencias al iniciar trabajo)
-(9, 12, DATE_SUB(NOW(), INTERVAL 3 DAY)),
-(12, 13, DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(15, 14, DATE_SUB(NOW(), INTERVAL 4 DAY)),
-(18, 15, DATE_SUB(NOW(), INTERVAL 1 DAY)),
-(21, 16, DATE_SUB(NOW(), INTERVAL 6 HOUR)),
--- Tickets Resueltos (evidencias de solución)
-(25, 17, DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(29, 18, DATE_SUB(NOW(), INTERVAL 1 DAY)),
-(33, 19, DATE_SUB(NOW(), INTERVAL 3 DAY)),
-(37, 20, DATE_SUB(NOW(), INTERVAL 12 DAY)),
--- Tickets Cerrados (evidencias históricas)
-(41, 21, DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(46, 22, DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(51, 23, DATE_SUB(NOW(), INTERVAL 7 DAY)),
-(56, 24, DATE_SUB(NOW(), INTERVAL 15 DAY)),
-(61, 25, DATE_SUB(NOW(), INTERVAL 20 DAY)),
-(66, 26, DATE_SUB(NOW(), INTERVAL 18 DAY)),
-(71, 27, DATE_SUB(NOW(), INTERVAL 25 DAY)),
-(76, 28, DATE_SUB(NOW(), INTERVAL 23 DAY));
-
+(15, 14, 'pared-fea.png', DATE_SUB(NOW(), INTERVAL 4 DAY));
 -- ========================================
 -- ASIGNACIONES
 -- ========================================
@@ -602,16 +605,6 @@ INSERT INTO Ratings (TicketId, UserId, Rating, Comment, Rating_Date) VALUES
 
 
 
-CREATE TABLE TicketComments (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    TicketId INT NOT NULL,
-    UserId INT NOT NULL,
-    CommentText TEXT NOT NULL,
-    CommentDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (TicketId) REFERENCES Tickets(Id),
-    FOREIGN KEY (UserId) REFERENCES Users(Id)
-);
-
 
 INSERT INTO TicketComments (TicketId, UserId, CommentText, CommentDate)
 VALUES
@@ -626,13 +619,6 @@ VALUES
 (8, 8, 'El problema se debe a permisos de usuario, ya corregido.', '2025-10-30 11:00:00'),
 (9, 3, 'Falta documentación adjunta del usuario.', '2025-10-30 12:15:00');
 
-
-INSERT INTO Tickets (TechnicianId, CategoryId, Title, Description, Priority, Ticket_Start_Date, Ticket_End_Date, State, Ticket_Response_SLA, Ticket_Resolution_SLA) VALUES
-(14, 4, 'Se meo un chiquillo', 'Aula 3 piso 15', 3, DATE_SUB(NOW(), INTERVAL 1 HOUR), null, 'Pendiente', DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 1 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 1 HOUR), INTERVAL 24 HOUR)),
-(14, 4, 'Se Cayo el porton', 'Se cayo el porton', 1, DATE_SUB(NOW(), INTERVAL 1 HOUR), null, 'Asignado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 3 HOUR), INTERVAL 48 HOUR)),
-(14, 4, 'Adriana Salteeee', 'Enrique', 2, DATE_SUB(NOW(), INTERVAL 5 HOUR), null, 'En Proceso', DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 6 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 5 HOUR), INTERVAL 72 HOUR)),
-(14, 4, 'Watajai', 'Ok Mañana 💜', 1, DATE_SUB(NOW(), INTERVAL 4 HOUR), DATE_ADD(NOW(), INTERVAL 5 HOUR), 'Resuelto', DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 4 HOUR), INTERVAL 48 HOUR)),
-(14, 4, 'Sybau', 'Filamento ', 1, DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_ADD(NOW(), INTERVAL 6 HOUR), 'Cerrado', DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 4 HOUR), DATE_ADD(DATE_SUB(NOW(), INTERVAL 2 HOUR), INTERVAL 48 HOUR));
 
 
 INSERT INTO UserTickets (UserId, TicketId) values

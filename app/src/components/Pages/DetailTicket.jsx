@@ -31,7 +31,7 @@ export function DetailTicket() {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ 
 useEffect(() => {
   const fetchTicketDetail = async () => {
     try {
@@ -65,12 +65,17 @@ useEffect(() => {
           date: r.Rating_Date
         }));
 
-      const evidences = rows
-        .filter(r => r.EvidencePath)
-        .map(r => ({
-          id: r.EvidenceId || Math.random(),
-          path: r.EvidencePath
-        }));
+     const evidences = rows
+  .filter(r => r.EvidencePath)
+  .map(r => {
+    console.log("EVIDENCE PATH:", r.EvidencePath); // ← aquí sí funciona
+
+    return {
+      id: r.EvidenceId || Math.random(),
+      path: r.EvidencePath
+    };
+  });
+
 
       const mappedTicket = {
         ticketId: t.TicketId || "N/A",
@@ -435,17 +440,7 @@ return (
       </p>
     </div>
 
-    {/* Duración total */}
-    {duration !== null && (
-      <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg text-center border-2 border-blue-200 col-span-2">
-        <p className="text-gray-600 text-sm mb-1">
-          <FontAwesomeIcon icon={faStopwatch} /> Duración Total
-        </p>
-        <p className="text-gray-900 font-bold text-lg">
-          {duration} {duration === 1 ? "día" : "días"}
-        </p>
-      </div>
-    )}
+
   </div>
 </div>
 
@@ -508,11 +503,12 @@ return (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {ticket.evidences.map((e) => (
               <div key={e.id} className="rounded-lg overflow-hidden shadow-md">
-                <img
-                  src={e.path}
-                  alt={`Evidencia ${e.id}`}
-                  className="object-cover w-full h-48 hover:scale-105 transition-transform"
-                />
+                             <img 
+  src={e.path} 
+  alt="Evidencia"
+  className="object-cover w-full h-48"
+/>
+
               </div>
             ))}
           </div>
