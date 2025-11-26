@@ -144,17 +144,39 @@ public function GetTicketById($id) {
 }
 
 
-public function GetTicketHistory($ticketId)
-{
+//un getHistoryByTicket, parqa obtener el historial del ticket y sus evidencias vinculadas desde archivo...
+
+
+public function getHistoryByTicket($ticketId) {
     $sql = "SELECT 
-                Id AS ArchivoId,
-                TicketId,
-                Image AS Archivo,
-                UploadDate
-            FROM Archivador
-            WHERE TicketId = $ticketId";
-    $vResultado = $this->enlace->ExecuteSQL($sql);
-    return $vResultado;
+                h.Id AS HistoryId,
+                h.TicketId,
+                h.Last_State,
+                h.Actual_State,
+                h.Observation,
+                h.UserAtCharge,
+                u.UserName AS UserName,
+                h.Update_Date,
+             a.Id AS EvidenceId,
+             a.Image AS EvidencePath,
+             a.UploadDate AS EvidenceDate
+            FROM TicketHistory h
+            LEFT JOIN Users u ON h.UserAtCharge = u.Id
+            LEFT JOIN Archivador a ON a.HistoryTicketId = h.Id
+            WHERE h.TicketId = $ticketId
+            ORDER BY h.Update_Date DESC";
+    
+    $result = $this->enlace->ExecuteSQL($sql);
+
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/app/public/";
+
+    foreach ($result as $row) {
+        if (!empty($row->EvidencePath)) {
+            $row->EvidencePath = $baseUrl . $row->EvidencePath;
+        }
+    }
+
+    return $result;
 }
 
 
@@ -226,10 +248,6 @@ public function insertHistory($obj) {
 }
 
 
-public function getHistoryByTicket($ticketId) {
-    $sql = "SELECT * FROM TicketHistory WHERE TicketId = $ticketId ORDER BY Update_Date DESC";
-    return $this->enlace->executeSQL($sql);
-}
 
 
 }

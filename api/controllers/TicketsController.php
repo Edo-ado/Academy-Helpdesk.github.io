@@ -63,11 +63,11 @@ class TicketsController
 
     //http://localhost/Academy-Helpdesk.github.io/api/TicketsController/GetTicketHistory/28
 
-    public function GetTicketHistory($id){
+    public function getHistoryByTicket($id){
         try {
             $response = new Response();
             $Tickets = new TicketsModel();
-            $result = $Tickets->GetTicketHistory($id);
+            $result = $Tickets->getHistoryByTicket($id);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
