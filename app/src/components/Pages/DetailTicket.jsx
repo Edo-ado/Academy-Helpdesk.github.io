@@ -319,6 +319,7 @@ return (
             </span>
           </div>
         </div>
+        
 
         {/* Descripción */}
         <div className="mb-6 bg-gray-50 p-6 rounded-lg">

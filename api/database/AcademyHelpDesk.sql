@@ -133,21 +133,24 @@ CREATE TABLE Tickets (
 
 CREATE TABLE TicketHistory (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    TicketId INT,
+TicketId INT NOT NULL,
     Last_State VARCHAR(50),
-    Actual_State VARCHAR(50),
+    Actual_State VARCHAR(50) NOT NULL,
+    Observation TEXT,
     UserAtCharge INT,
-    Update_Date DATETIME,
+    Update_Date DATETIME DEFAULT CURRENT_TIMESTAMP,,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id),
     FOREIGN KEY (UserAtCharge) REFERENCES Users(Id)
 );
 
+
+
 CREATE TABLE Archivador (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    HistoryTicketId INT,
-    TicketId INT,
-    Image VARCHAR(255),
+    HistoryTicketId INT NOT NULL,
+    TicketId INT NOT NULL,
+    Image VARCHAR(255) NOT NULL,
     UploadDate DATETIME,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (HistoryTicketId) REFERENCES TicketHistory(Id),

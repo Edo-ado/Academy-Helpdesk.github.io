@@ -208,10 +208,23 @@ public function GetWeeklyAssignments($technicianId, $date)
 //a ver por varas
 
 public function insertHistory($obj) {
-    $sql = "INSERT INTO TicketHistory   (TicketId, Last_State, Actual_State, UserAtCharge, Comment, ImagePath)  VALUES ({$obj->TicketId}, '{$obj->Last_State}', '{$obj->Actual_State}',  {$obj->UserAtCharge}, '{$obj->Comment}', '{$obj->ImagePath}')";
 
-    return $this->enlace->executeSQL_DML_last($sql);
+    $sql = "INSERT INTO TicketHistory
+            (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date) VALUES ( {$obj->TicketId}, '{$obj->Last_State}', '{$obj->Actual_State}',  '{$obj->Observation}', {$obj->UserAtCharge}, NOW() )";
+
+    $historyId = $this->enlace->executeSQL_DML_last($sql);
+
+  
+    if (!empty($obj->Images) && is_array($obj->Images)) {
+        foreach ($obj->Images as $imgPath) {
+            $sqlImg = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate)VALUES ($historyId, {$obj->TicketId}, '$imgPath', NOW())";
+            $this->enlace->executeSQL_DML($sqlImg);
+        }
+    }
+
+    return $historyId;
 }
+
 
 public function getHistoryByTicket($ticketId) {
     $sql = "SELECT * FROM TicketHistory WHERE TicketId = $ticketId ORDER BY Update_Date DESC";
