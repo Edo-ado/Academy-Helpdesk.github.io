@@ -110,6 +110,22 @@ class TicketsController
           }
         
     }
+
+public function ChangeState()
+{
+    try {
+        $response = new Response();
+        $Tickets = new TicketsModel();
+        $data = json_decode(file_get_contents("php://input"));
+        $result = $Tickets->ChangeState($data);
+        $response->toJSON($result);
+
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
+
 }
 
 

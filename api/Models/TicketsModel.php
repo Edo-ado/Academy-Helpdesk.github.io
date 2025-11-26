@@ -228,26 +228,27 @@ public function GetWeeklyAssignments($technicianId, $date)
 
 
 //a ver por varas
+public function ChangeState($obj)
+{
+    
+    $sqlHistory = "INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date) VALUES ( {$obj->TicketId},  (SELECT State FROM Tickets WHERE Id = {$obj->TicketId}), '{$obj->NewState}', '{$obj->Comment}', {$obj->UserId}, NOW() )";
 
-public function insertHistory($obj) {
 
-    $sql = "INSERT INTO TicketHistory
-            (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date) VALUES ( {$obj->TicketId}, '{$obj->Last_State}', '{$obj->Actual_State}',  '{$obj->Observation}', {$obj->UserAtCharge}, NOW() )";
+    $historyId = $this->enlace->executeSQL_DML_last($sqlHistory);
 
-    $historyId = $this->enlace->executeSQL_DML_last($sql);
 
-  
-    if (!empty($obj->Images) && is_array($obj->Images)) {
-        foreach ($obj->Images as $imgPath) {
-            $sqlImg = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate)VALUES ($historyId, {$obj->TicketId}, '$imgPath', NOW())";
+    if (!empty($obj->Images)) {
+        foreach ($obj->Images as $img) {
+            $sqlImg = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate) VALUES ($historyId, {$obj->TicketId}, '$img', NOW())";
             $this->enlace->executeSQL_DML($sqlImg);
         }
     }
+  
+    $sqlUpdate = "UPDATE Tickets SET State = '{$obj->NewState}' WHERE Id = {$obj->TicketId}";
+    $this->enlace->executeSQL_DML($sqlUpdate);
 
-    return $historyId;
+       return ["success" => true];
 }
-
-
 
 
 }
