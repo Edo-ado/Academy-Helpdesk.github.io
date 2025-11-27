@@ -77,7 +77,7 @@ export function MyTickets() {
 
 const handleTicketClick = (ticket) => {
   console.log('Navegando al detalle del ticket:', ticket);
-  navigate(`/ticket/${ticket.TicketId}`); 
+  navigate(`/my-tickets/${ticket.TicketId}`); 
 };
 
   if (!selectedUser.Id) {

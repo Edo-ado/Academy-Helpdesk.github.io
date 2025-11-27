@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate, useLocation} from "react-router-dom";
 
 
-
 import { toast } from "react-hot-toast";
 
 
@@ -48,8 +47,7 @@ const ticketSchema = yup.object({
   prioridad: yup.number().typeError("Debe seleccionar una prioridad").required("La prioridad es requerida"),
   fecha_creacion: yup.string().required(),
   estado: yup.string().required(),
- tags: yup.number().required("La etiqueta es requerida"),
-
+  tags: yup.number().required("La etiqueta es requerida"),
   categoriaId: yup.number().nullable(),
 });
 

@@ -24,6 +24,8 @@ import MaintainListTechnician from './components/Pages/MaintainListTechnician'
 import  MaintainListCategories from './components/Pages/MaintainListCategories'
 import  MaintainListTickets from './components/Pages/MaintainListTickets'
 import { UpdateTechnician } from "./components/Pages/UpdateTechnician"
+import { TrazabilidadTicket } from "./components/Pages/TrazabilidadTicket"
+
 
 
 // Crear las rutas
@@ -42,7 +44,10 @@ const rutas = createBrowserRouter([
      { path: '/tickets', element: <Tickets /> },
      { path: '/ticket/:id', element: <DetailTicket /> },
      { path: '/my-tickets', element: <MyTickets /> }, 
+     //trazabilidadticket
+     { path: '/my-tickets/:id', element: <TrazabilidadTicket /> }, 
    
+
 
       //Rutas de mantenimiento
 
