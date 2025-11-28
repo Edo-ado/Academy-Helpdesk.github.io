@@ -19,6 +19,8 @@ class TicketsModel
         return $vResultado;
     }
 
+
+//Necesita cambio a nueva estructura en el estado
     public function TicketsByRolAndIDUser($id){
          $msg = "SELECT 
     u.Id AS UserId,
@@ -49,6 +51,8 @@ ORDER BY t.Ticket_Start_Date DESC;
 
     }
 
+
+    //Necesita cambio a nueva estructura en el estado
     public function TicketAssignedToTEC($id)
     {
     $msg = "SELECT 
@@ -74,6 +78,8 @@ AND t.State <> 'Cerrado';";
         return $vResultado;
     }
 
+
+    //Necesita cambio a nueva estructura en el estado
     public function TicketsPerUser($id)
     {
         $msg = "SELECT 
@@ -99,6 +105,8 @@ ORDER BY t.Id DESC;";
         return $vResultado;
     }
     
+
+    //Necesita cambio a nueva estructura en el estado
 public function GetTicketById($id) {
     $sql = "SELECT 
                 t.Id AS TicketId,
@@ -177,7 +185,7 @@ public function getHistoryByTicket($ticketId) {
     }
 
     return $result;
-}
+} 
 
 
 public function GetDailyAssignments($id, $date)
