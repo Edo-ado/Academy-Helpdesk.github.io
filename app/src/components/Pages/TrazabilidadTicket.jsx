@@ -35,11 +35,11 @@ export function TrazabilidadTicket() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
-    const [file, setFile] = useState(null);
+  const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
- 
+  const [fechaHora, setFechaHora] = useState("");
 
 
   
@@ -98,11 +98,10 @@ useEffect(() => {
   const fetchTicketDetail = async () => {
     try {
       const response = await TicketLists.GetTicketById(id);
-      console.log("Detalle del ticket:", response.data);
-
-      if (!response.data || !response.data.data || response.data.data.length === 0) {
-        throw new Error("No se encontraron datos del ticket");
-      }
+    
+      const resp = await TicketLists.GetHoraFecha();
+       setFechaHora(resp.data.data[0].FechaHoraActual);
+  
 
       const rows = response.data.data;
       const t = rows[0];
@@ -130,8 +129,7 @@ useEffect(() => {
      const evidences = rows
   .filter(r => r.EvidencePath)
   .map(r => {
-    console.log("EVIDENCE PATH:", r.EvidencePath); // ← aquí sí funciona
-
+  
     return {
       id: r.EvidenceId || Math.random(),
       path: r.EvidencePath
@@ -151,7 +149,7 @@ useEffect(() => {
         technician: t.Tecnico || "Sin asignar",
         client: t.Cliente || "Desconocido",
         Ticket_Response_SLA: t.Ticket_Response_SLA || null,
-       Ticket_Resolution_SLA: t.Ticket_Resolution_SLA || null,
+        Ticket_Resolution_SLA: t.Ticket_Resolution_SLA || null,
         comments,
         ratings,
         evidences
@@ -174,6 +172,8 @@ useEffect(() => {
     setLoading(false);
   }
 }, [id]);
+   
+const fechaHoraLocal = fechaHora ? fechaHora.replace(" ", "T").slice(0, 16) : "";
 
 
   const getPriorityConfig = (priority) => {
@@ -213,6 +213,8 @@ useEffect(() => {
         };
     }
   };
+  
+
 
   const getStateConfig = (state) => {
     // Manejar tanto números como strings
@@ -261,26 +263,7 @@ useEffect(() => {
     };
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "No especificada";
-    
-    try {
-      const date = new Date(dateString);
-      // Verificar si la fecha es válida
-      if (isNaN(date.getTime())) return "Fecha inválida";
-      
-      return date.toLocaleString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (error) {
-      console.error("Error formateando fecha:", error);
-      return "Fecha inválida";
-    }
-  };
+
 
 
   if (loading) {
@@ -312,9 +295,23 @@ useEffect(() => {
     );
   }
 
+  
 
-  const priorityConfig = getPriorityConfig(ticket.priority);
   const stateConfig = getStateConfig(ticket.state);
+
+const getNextState = (currentState) => {
+  switch (currentState) {
+    case "Pendiente": return "Asignado";
+    case "Asignado": return "En Proceso";
+    case "En Proceso": return "Resuelto";
+    case "Resuelto": return "Cerrado";
+    case "Cerrado": return "Ya está cerrado...";
+    default: return "Desconocido";
+  }
+};
+
+const nextState = getNextState(ticket.state);
+ const priorityConfig = getPriorityConfig(ticket.priority);
 
 
 return (
@@ -404,6 +401,53 @@ return (
       </div>
 
 
+      {/* COMENTARIOS*/}
+      <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600 mb-6">
+        <div className="flex items-center gap-2 mb-6">
+          <FontAwesomeIcon icon={faComments} className="text-blue-500 text-2xl" />
+          <h2 className="text-2xl font-bold text-gray-900">Comentarios</h2>
+        </div>
+
+        {ticket.comments?.length > 0 ? (
+          <div className="space-y-4">
+            {ticket.comments.map((c) => (
+              <div key={c.id} className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <p className="text-gray-900 font-medium">{c.text}</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Por {c.user} — {formatDate(c.date)}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 italic">No hay comentarios registrados.</p>
+        )}
+      </div>
+
+      {/* VALORACIONES*/}
+      <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-yellow-500 mb-6">
+        <div className="flex items-center gap-2 mb-6">
+          <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-2xl" />
+          <h2 className="text-2xl font-bold text-gray-900">Valoraciones</h2>
+        </div>
+
+        {ticket.ratings?.length > 0 ? (
+          <div className="space-y-4">
+            {ticket.ratings.map((r) => (
+              <div key={r.id} className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                <p className="text-lg font-semibold text-yellow-700"> <FontAwesomeIcon icon={faStar} />  {r.rating}/5</p>
+                <p className="text-gray-900">{r.comment || "Sin comentario adicional."}</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Por {r.user} — {formatDate(r.date)}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 italic">No hay valoraciones disponibles.</p>
+        )}
+      </div>
+
      
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500 mb-6">
         <div className="flex items-center gap-2 mb-6">
@@ -430,119 +474,118 @@ return (
       </div>
 
 
-    {/* a partir de aqui es el mantenimiento de trazabilidad de ticket*/}
+{/* a partir de aqui es el mantenimiento de trazabilidad de ticket */}
 <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-800">
 
-  <div className="flex items-center gap-2 mb-6">
-  <span className="text-purple-500 text-2xl">
-<FontAwesomeIcon icon={faTicket} className="text-blue-600 text-2xl" />
-
-</span>
-
+  <div className="flex items-center gap-3 mb-6">
+    <FontAwesomeIcon icon={faTicket} className="text-blue-600 text-2xl" />
     <h2 className="text-2xl font-bold text-gray-900">Trazabilidad del Ticket</h2>
   </div>
- <span className={`inline-block ${stateConfig.color} px-4 py-2 rounded-full text-sm font-semibold`}>
-              Estado Actual: {stateConfig.icon} {stateConfig.label}
-            </span>
-<span className={`inline-block ${stateConfig.color} px-4 py-2 rounded-full text-sm font-semibold`}>
-              Estado a Actualizar: {stateConfig.icon} {stateConfig.label}
-            </span>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-
-  <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-    <div className="grid sm:grid-cols-2 gap-4 ">
-              
-<div className="mb-4">
-  <label className="block mb-1 text-sm font-medium">Fecha y hora de creación</label>
-  <input
-    type="datetime-local"
-    defaultValue={(() => {
-      const now = new Date();
-      const offset = now.getTimezoneOffset() * 60000;
-      const localTime = new Date(now - offset);
-      return localTime.toISOString().slice(0, 16);
-    })()}
-    disabled={true}
-    className="w-full rounded-xl border border-gray-300 shadow-sm text-base p-2"
-  />
-</div>
-
-
-
-    {/* usuario responsable*/}
-      
-      <div className="mb-2">
-  <div className="flex items-center gap-1 mb-1">
-    <span className="text-blue-600 text-xl">
-      <FontAwesomeIcon icon={faUser} />
+  {/* estado */}
+  <div className="flex flex-wrap gap-2 mb-6">
+    <span className={`inline-block ${stateConfig.color} px-4 py-2 rounded-full text-sm font-semibold  `}>
+      Estado Actual: {stateConfig.label}
     </span>
-    <p className="font-semibold text-gray-700">Usuario responsable</p>
+
+
+<span className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+  Estado a Actualizar: {nextState}
+</span>
+
   </div>
-  <p className="text-gray-900 font-normal">
-    {ticket.client}
-  </p>
-</div>
 
+  {/* form*/}
+  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <div className="grid sm:grid-cols-2 gap-6">
+      <div>
+        <label className="block mb-1 text-sm font-medium">Fecha y hora del registro</label>
+        <input
+          type="datetime-local"
+          value={fechaHoraLocal}
+          readOnly
+          className="w-full rounded-xl border border-gray-300 shadow-sm text-base p-2 bg-gray-100"
+        />
+      </div>
 
+      {/* responsalbe*/}
+      <div>
+        <label className="block mb-1 text-sm font-medium flex items-center gap-2">
+          <FontAwesomeIcon icon={faUser} className="text-blue-600" />
+          Usuario responsable
+        </label>
+        <div className="p-2 px-4 rounded-xl border border-gray-300 bg-gray-50 text-gray-900">
+          {ticket.client}
+        </div>
+      </div>
 
     </div>
 
-   {/* obser */}
-        <Controller
-          name="observacion"
-          control={control}
-          render={({ field }) => (
-            <CustomInputField
-              {...field}
-              label="Observación"
-              placeholder="Escriba su observación..."
-              error={errors.description?.message}
-            />
-          )}
-        />
-
-        {/* Imagen */}
-        <div className="mb-6">
-        
-          <div
-            className="relative w-56 h-56 border-2 border-dashed border-muted/50 rounded-lg flex items-center justify-center cursor-pointer overflow-hidden hover:border-primary transition-colors"
-            onClick={() => document.getElementById("image").click()}
-          >
-            {!fileURL && (
-              <div className="text-center px-4">
-                <p className="text-sm text-muted-foreground">Haz clic o arrastra una imagen</p>
-                <p className="text-xs text-muted-foreground">(jpg, png, máximo 5MB)</p>
-              </div>
-            )}
-            {fileURL && (
-              <img
-                src={fileURL}
-                alt="preview"
-                className="w-full h-full object-contain rounded-lg shadow-sm"
-              />
-            )}
-          </div>
-            
-          <input
-            type="file"
-            id="image"
-            className="hidden"
-            accept="image/*"
-            onChange={handleChangeImage}
+    {/* OBSERVACIÓN */}
+    <div>
+      <Controller
+        name="observacion"
+        control={control}
+        render={({ field }) => (
+          <CustomInputField
+            {...field}
+            label="Observación"
+            placeholder="Escriba una descripción del cambio..."
+            error={errors.observacion?.message}
           />
-        </div>
+        )}
+      />
+    </div>
 
-<Button
-  type="submit"
-  className="flex-1 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046]">
-  <Save className="w-4 h-4" />
-  Guardar
-</Button>
- </form>
-  </div>
+    {/* IMAGEN */}
+    <div className="flex flex-col items-start">
+      <label className="mb-2 text-sm font-medium">Evidencia</label>
+
+      <div
+        className="relative w-56 h-56 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center cursor-pointer overflow-hidden hover:border-blue-500 transition"
+        onClick={() => document.getElementById("image").click()}
+      >
+        {!fileURL && (
+          <div className="text-center px-4 text-gray-500">
+            <p>Haz clic o arrastra una imagen aquí</p>
+            <p className="text-xs">(jpg, png, máximo 5MB)</p>
+          </div>
+        )}
+
+        {fileURL && (
+          <img
+            src={fileURL}
+            alt="preview"
+            className="w-full h-full object-contain rounded-lg shadow-sm"
+          />
+        )}
+      </div>
+
+      <input
+        type="file"
+        id="image"
+        className="hidden"
+        accept="image/*"
+        onChange={handleChangeImage}
+      />
+    </div>
+
+    {/* BOTÓN */}
+    <div className="flex justify-end">
+      <Button
+        type="submit"
+        className="px-6 py-3 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046] flex items-center gap-2"
+      >
+        <Save className="w-4 h-4" />
+        Actualizar Estado
+      </Button>
+    </div>
+
+  </form>
+
 </div>
+
+
     </div> 
 
   </div>

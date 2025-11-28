@@ -126,6 +126,21 @@ public function ChangeState()
 }
 
 
+public function GetHoraFecha()
+{
+    try {
+        $response = new Response();
+        $Tickets = new TicketsModel();
+        $result = $Tickets->GetHoraFecha(); 
+        $response->toJSON($result);
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
+
+
+
 }
 
 
