@@ -10,5 +10,6 @@ class ImagenList {
             }
         })
     } 
+    
 }
 export default new ImagenList()

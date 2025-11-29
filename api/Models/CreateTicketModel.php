@@ -75,11 +75,6 @@ class CreateTicketModel
         $responseHours = intval($catResult[0]['MaxTimeResponse']);
         $resolutionHours = intval($catResult[0]['MaxTimeResolution']);
 
-    
-
-
-
-
              $status = 'Pendiente';
 
         $sql = "INSERT INTO Tickets
@@ -89,8 +84,13 @@ class CreateTicketModel
                  DATE_ADD(NOW(), INTERVAL {$responseHours} HOUR), DATE_ADD(NOW(), INTERVAL {$resolutionHours} HOUR), 1);";
 
         $ticketId = $this->enlace->executeSQL_DML_last($sql);
+//para darle un historial
+       $sqlHistory = "
+    INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date)
+    VALUES ($ticketId, NULL, 'Pendiente', 'Ticket creado', NULL, NOW())";
+    $this->enlace->executeSQL_DML($sqlHistory);
 
-       
+
         if ($ticketId  > 0) {
             if (isset($obj->UserId) && intval($obj->UserId) > 0) {
                 $idUser = intval($obj->UserId);

@@ -15,7 +15,7 @@ const TicketsLists = {
   getHistoryByTicket: (id) => axios.get(`${API_URL}/getHistoryByTicket/${id}`),
   TicketsByRolAndIDUser: (id) => axios.get(`${API_URL}/TicketsByRolAndIDUser/${id}`),
   GetHoraFecha:  () => axios.get(`${API_URL}/GetHoraFecha`),
-  changeState: (data) => axios.post(`${API_URL}/ChangeState`, data),
+  ChangeState: (id) => axios.post(`${API_URL}/ChangeState`, id),
   //del otro lao
   getAllPriorities: () => axios.get(`${API_URL_TICKETMAINTAIN}/getAllPriorities`),
   getCategoriesByTags: (id) =>  axios.get(`${API_URL_TICKETMAINTAIN}/getCategoriesByTags/${id}`),

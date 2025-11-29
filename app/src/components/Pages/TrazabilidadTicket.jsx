@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TicketLists from "../../Services/TicketsLists";
+import ImageService from "../../Services/ImagenList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -8,6 +9,10 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { Button } from "../../components/ui/button";
 import { CustomInputField } from "../../components/ui/custom/custom-input-field";
 import { Plus, Save, ArrowLeft } from "lucide-react";
+import { useUser } from '../../context/UserContext';
+import ComponentCardCronology from "../ui/ComponentCardCronology";
+
+import { toast } from "react-hot-toast";
 
 import { faArrowLeft,
   faTicket,
@@ -35,9 +40,11 @@ export function TrazabilidadTicket() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
+  const [history, setHistory] = useState([]);
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
   const [loading, setLoading] = useState(true);
+    const { selectedUser } = useUser();
   const [error, setError] = useState(null);
   const [fechaHora, setFechaHora] = useState("");
 
@@ -45,11 +52,8 @@ export function TrazabilidadTicket() {
   
    /*** Esquema de validación Yup ***/
   const TicketSchemaTrazabilidad = yup.object({
-    responsableuser: yup.string().required("La descripción es requerida"),
-    estadoanterior: yup.number().typeError("Debe seleccionar una prioridad").required("La prioridad es requerida"),
-    nuevoestado: yup.string().required(),
-    observacion: yup.string().required(),
-    imagen: yup.number().required("La etiqueta es requerida"),
+ observacion: yup.string().nullable(),
+  imagen: yup.mixed().nullable()
   });
   
 
@@ -64,34 +68,25 @@ defaultValues: {
   fecha_creacion: new Date().toISOString().split("T")[0],
   estado: "Pendiente",
   tags: "",
-  categoriaId: null
+  categoriaId: null,
+  responsableuser: null,
+  observacion: "",
 }, resolver:yupResolver(TicketSchemaTrazabilidad), });
 
 
-const onSubmit = async (dataForm) => {
-
-console.log("categoriaId:", dataForm.categoriaId)
-
-    const response = await TicketsLists.createticket(body);
-
-    if (response.data?.success === true) {
-      toast.success(`Ticket creado exitosamente`);
-      navigate(-1);
-      return;
-    }
-
-    
-};
 
 
  /*** Manejo de imagen ***/
-  const handleChangeImage = (e) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setFileURL(URL.createObjectURL(selectedFile));
-    }
-  };
+const handleChangeImage = (e) => {
+  const selectedFile = e.target.files?.[0];
+  if (selectedFile) {
+    setFile(selectedFile);
+    setFileURL(URL.createObjectURL(selectedFile));
+    setValue("imagen", selectedFile);
+  } else {
+    setValue("imagen", null);
+  }
+};
 
 
 useEffect(() => {
@@ -101,7 +96,14 @@ useEffect(() => {
     
       const resp = await TicketLists.GetHoraFecha();
        setFechaHora(resp.data.data[0].FechaHoraActual);
-  
+   
+     const result = await TicketLists.getHistoryByTicket(id);
+    let historyData = [];
+
+if (Array.isArray(result.data.data)) {
+  historyData = result.data.data;
+}
+setHistory(historyData);
 
       const rows = response.data.data;
       const t = rows[0];
@@ -175,6 +177,31 @@ useEffect(() => {
    
 const fechaHoraLocal = fechaHora ? fechaHora.replace(" ", "T").slice(0, 16) : "";
 
+const onSubmit = async (dataForm) => {
+
+const payload = {
+    TicketId: id,
+    NewState: nextState,
+    Comment: dataForm.observacion,
+    UserId: selectedUser.Id, //user a cargo (luego cambiamos esto vdd importante!!)
+
+  };
+
+  if (ticket.state == "Cerrado") {
+     toast.error(`El flujo del ticket ya está cerrado`);
+    return null;
+  }
+
+    const response = await TicketLists.ChangeState(payload);
+ 
+  
+    if (response.data?.success === true) {
+      toast.success(`Estado del Ticket actualizado exitosamente`);
+      return;
+    }
+
+    
+};
 
   const getPriorityConfig = (priority) => {
     const priorityNum = parseInt(priority, 10);
@@ -305,17 +332,25 @@ const getNextState = (currentState) => {
     case "Asignado": return "En Proceso";
     case "En Proceso": return "Resuelto";
     case "Resuelto": return "Cerrado";
-    case "Cerrado": return "Ya está cerrado...";
-    default: return "Desconocido";
+    case "Cerrado": return "Flujo del ticket Cerrado"; 
+    default: return null;
   }
 };
+
 
 const nextState = getNextState(ticket.state);
  const priorityConfig = getPriorityConfig(ticket.priority);
 
 
+if (ticket.state === "Cerrado") {
+
+}
+
+
+
 return (
-  <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
+<div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-10 pb-24">
+
     <div className="max-w-4xl mx-auto">
       <button
         onClick={() => navigate(-1)}
@@ -473,13 +508,35 @@ return (
         )}
       </div>
 
+ {/* CRONOLOGIA FLUJO ESTADO DEL TICKET */}  
+<ComponentCardCronology history={history} />
+
+{history.length === 0 && (
+  <div className="text-center py-10">
+    <p className="text-gray-500 italic text-lg">
+      Aún no se ha registrado ningún movimiento en este ticket.
+    </p>
+
+    <div className="mt-4 flex justify-center">
+      <div className="w-32 h-32 opacity-40">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/992/992651.png"
+          alt="no-history"
+          className="object-contain w-full h-full"
+        />
+      </div>
+    </div>
+  </div>
+)}
+  
+
 
 {/* a partir de aqui es el mantenimiento de trazabilidad de ticket */}
 <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-800">
 
   <div className="flex items-center gap-3 mb-6">
     <FontAwesomeIcon icon={faTicket} className="text-blue-600 text-2xl" />
-    <h2 className="text-2xl font-bold text-gray-900">Trazabilidad del Ticket</h2>
+    <h2 className="text-2xl font-bold text-gray-900">Actualizar Estado del Ticket</h2>
   </div>
 
   {/* estado */}
@@ -561,13 +618,15 @@ return (
         )}
       </div>
 
-      <input
+          <input
         type="file"
         id="image"
         className="hidden"
         accept="image/*"
+        {...register("imagen")}
         onChange={handleChangeImage}
       />
+
     </div>
 
     {/* BOTÓN */}
@@ -584,6 +643,8 @@ return (
   </form>
 
 </div>
+
+
 
 
     </div> 
