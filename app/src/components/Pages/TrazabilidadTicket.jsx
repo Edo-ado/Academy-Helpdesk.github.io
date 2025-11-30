@@ -181,7 +181,7 @@ const onSubmit = async (dataForm) => {
 
 const payload = {
     TicketId: id,
-    NewState: nextState,
+    NewState: nextState,  
     Comment: dataForm.observacion,
     UserId: selectedUser.Id, //user a cargo (luego cambiamos esto vdd importante!!)
 
@@ -193,12 +193,29 @@ const payload = {
   }
 
     const response = await TicketLists.ChangeState(payload);
- 
-  
-    if (response.data?.success === true) {
-      toast.success(`Estado del Ticket actualizado exitosamente`);
-      return;
+
+
+if (response.data?.success) {
+const historyId = response.data.data.historyId;
+
+
+    if (file) {
+        const formData = new FormData();
+   
+        formData.append("file", file);
+        formData.append("ticket_id", id);
+        formData.append("history_id", historyId);
+
+        const imgResponse = await ImageService.uploadEvidence(formData);
+
+        if (imgResponse.data.success) {
+            toast.success("Evidencia adjuntada");
+        }
     }
+
+    toast.success("Estado del ticket actualizado");
+}
+
 
     
 };
@@ -449,7 +466,7 @@ return (
               <div key={c.id} className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-400">
                 <p className="text-gray-900 font-medium">{c.text}</p>
                 <p className="text-sm text-gray-600 mt-1">
-                  Por {c.user} — {formatDate(c.date)}
+                  Por {c.user} — {c.date}
                 </p>
               </div>
             ))}
@@ -459,54 +476,7 @@ return (
         )}
       </div>
 
-      {/* VALORACIONES*/}
-      <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-yellow-500 mb-6">
-        <div className="flex items-center gap-2 mb-6">
-          <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-2xl" />
-          <h2 className="text-2xl font-bold text-gray-900">Valoraciones</h2>
-        </div>
-
-        {ticket.ratings?.length > 0 ? (
-          <div className="space-y-4">
-            {ticket.ratings.map((r) => (
-              <div key={r.id} className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
-                <p className="text-lg font-semibold text-yellow-700"> <FontAwesomeIcon icon={faStar} />  {r.rating}/5</p>
-                <p className="text-gray-900">{r.comment || "Sin comentario adicional."}</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Por {r.user} — {formatDate(r.date)}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 italic">No hay valoraciones disponibles.</p>
-        )}
-      </div>
-
-     
-      <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500 mb-6">
-        <div className="flex items-center gap-2 mb-6">
-          <FontAwesomeIcon icon={faCamera} className="text-green-500 text-2xl" />
-          <h2 className="text-2xl font-bold text-gray-900">Evidencias</h2>
-        </div>
-
-        {ticket.evidences?.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {ticket.evidences.map((e) => (
-              <div key={e.id} className="rounded-lg overflow-hidden shadow-md">
-                             <img 
-                  src={e.path} 
-                  alt="Evidencia"
-                  className="object-cover w-full h-48"
-                />
-
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 italic">No hay evidencias registradas.</p>
-        )}
-      </div>
+  
 
  {/* CRONOLOGIA FLUJO ESTADO DEL TICKET */}  
 <ComponentCardCronology history={history} />

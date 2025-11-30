@@ -139,7 +139,7 @@ public function GetTicketById($id) {
     $result = $this->enlace->ExecuteSQL($sql);
 
     
-    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/app/public/";
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
 
 
     foreach ($result as $row) {
@@ -176,7 +176,7 @@ public function getHistoryByTicket($ticketId) {
     
     $result = $this->enlace->ExecuteSQL($sql);
 
-    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/app/public/";
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
 
     foreach ($result as $row) {
         if (!empty($row->EvidencePath)) {
@@ -246,21 +246,14 @@ public function ChangeState($obj)
 
 
     $historyId = $this->enlace->executeSQL_DML_last($sqlHistory);
-
-
-    if (!empty($obj->Images)) {
-        foreach ($obj->Images as $img) {
-            $sqlImg = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate) VALUES ($historyId, {$obj->TicketId}, '$img', NOW())";
-            $this->enlace->executeSQL_DML($sqlImg);
-        }
-    }
   
     $sqlUpdate = "UPDATE Tickets SET State = '{$obj->NewState}' WHERE Id = {$obj->TicketId}";
     $this->enlace->executeSQL_DML($sqlUpdate);
 
        return [
     "success" => true,
-    "historyId" => $historyId
+    "historyId" => $historyId,
+    "TicketId" => $obj->TicketId
 ];
 }
 
