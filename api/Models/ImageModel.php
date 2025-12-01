@@ -10,9 +10,7 @@ class ImageModel
     {
         $this->enlace = new MySqlConnect();
     }
-
-    //SUBIR EVIDENCIA PARA UN TICKET
-    public function uploadEvidence($object)
+public function uploadEvidence($object)
     {
         $file = $object['file'];
         $ticket_id = $object['ticket_id'];
@@ -20,40 +18,24 @@ class ImageModel
 
         $fileName = $file['name'];
         $tempPath = $file['tmp_name'];
-        $fileSize = $file['size'];
-        $fileError = $file['error'];
 
-        if (!empty($fileName)) {
+        $fileExt = explode('.', $fileName);
+        $fileActExt = strtolower(end($fileExt));
 
-            $fileExt = explode('.', $fileName);
-            $fileActExt = strtolower(end($fileExt));
+        $newFileName = "evidence-" . uniqid() . "." . $fileActExt;
+        $uploadPath = "C:/xampp/htdocs/Academy-Helpdesk.github.io/api/uploads/" . $newFileName;
 
-            $fileName = "evidence-" . uniqid() . "." . $fileActExt;
-
-            //Validar extensión
-            if (in_array($fileActExt, $this->valid_extensions)) {
-
-                //Validar tamaño
-                if ($fileSize < 5000000 && $fileError == 0) {
-
-                    //Subir al servidor
-                    if (move_uploaded_file($tempPath, $this->upload_path . $fileName)) {
-
-                        //Guardar en la base de datos
-                        $sql = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate)
-                                VALUES ($history_id, $ticket_id, '$fileName', NOW())";
-
-                        $vResultado = $this->enlace->executeSQL_DML($sql);
-
-                        if ($vResultado > 0) {
-                            return 'Imagen creada';
-                        }
-
-                        return false;
-                    }
-                }
+        if (move_uploaded_file($tempPath, $uploadPath)) {
+            $sql = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate)
+                    VALUES ($history_id, $ticket_id, '$newFileName', NOW())";
+            $resultado = $this->enlace->executeSQL_DML($sql);
+            
+            if (!empty($resultado)) {
+                return ["success" => true, "message" => "Imagen creada"];
             }
         }
+
+        return ["success" => false, "message" => "Error"];
     }
 
     // OBTENER UNA EVIDENCIA DE UN TICKET (solo la primera)

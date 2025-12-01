@@ -14,7 +14,7 @@ import TechniciansLists from "../../Services/TechniciansLists";
 import SpecialitiesList from "../../Services/SpecialitiesList";
 import TicketsLists from "../../Services/TicketsLists";
 import { data } from "autoprefixer";
-
+import { useUser } from '../../context/UserContext';
 //Componentes UI
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -35,7 +35,7 @@ const navigate = useNavigate();
 const location = useLocation();
 
 
-
+    const { selectedUser } = useUser();
   const [dataPriorities, setDataPriorities] = useState([]);
   const [dataTags, setDataTags] = useState([]);
   const [dataCategory, setDataCategory] = useState(null);
@@ -131,7 +131,7 @@ const body = {
   Description: dataForm.descripcion,
   PriorityId: dataForm.prioridad,
   CategoryId: dataForm.categoriaId,
-  UserId: 17
+  UserId: selectedUser.Id
 };
 
 

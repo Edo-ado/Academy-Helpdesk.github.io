@@ -199,26 +199,7 @@ useEffect(() => {
     };
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "No especificada";
-    
-    try {
-      const date = new Date(dateString);
-      // Verificar si la fecha es válida
-      if (isNaN(date.getTime())) return "Fecha inválida";
-      
-      return date.toLocaleString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (error) {
-      console.error("Error formateando fecha:", error);
-      return "Fecha inválida";
-    }
-  };
+
 
   const calculateDuration = (startDate, endDate) => {
     if (!startDate || !endDate) return null;
@@ -386,14 +367,14 @@ return (
           <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600">
             <p className="font-semibold text-gray-700 mb-2"> <FontAwesomeIcon icon={faClock} /> Fecha de Inicio</p>
             <p className="text-gray-900 font-medium">
-              {formatDate(ticket.startDate)}
+              {ticket.startDate}
             </p>
           </div>
 
           <div className={`${ticket.endDate ? 'bg-purple-50 border-purple-600' : 'bg-gray-50 border-gray-300'} p-6 rounded-lg border-l-4`}>
             <p className="font-semibold text-gray-700 mb-2"> <FontAwesomeIcon icon={faAlarmClock} /> Fecha de Finalización</p>
             <p className={`font-medium ${ticket.endDate ? 'text-gray-900' : 'text-gray-500 italic'}`}>
-              {formatDate(ticket.endDate)}
+              {ticket.endDate}
             </p>
           </div>
         </div>
@@ -427,7 +408,7 @@ return (
         <FontAwesomeIcon icon={faClock} /> Respuesta SLA
       </p>
       <p className="text-gray-900 font-medium">
-        {formatDate(ticket.Ticket_Response_SLA)}
+        {ticket.Ticket_Response_SLA}
       </p>
     </div>
 
@@ -437,7 +418,7 @@ return (
         <FontAwesomeIcon icon={faClock} /> Resolución SLA
       </p>
       <p className="text-gray-900 font-medium">
-        {formatDate(ticket.Ticket_Resolution_SLA)}
+        {ticket.Ticket_Resolution_SLA}
       </p>
     </div>
 
@@ -459,7 +440,7 @@ return (
               <div key={c.id} className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-400">
                 <p className="text-gray-900 font-medium">{c.text}</p>
                 <p className="text-sm text-gray-600 mt-1">
-                  Por {c.user} — {formatDate(c.date)}
+                  Por {c.user} — {c.date}
                 </p>
               </div>
             ))}
@@ -483,7 +464,7 @@ return (
                 <p className="text-lg font-semibold text-yellow-700"> <FontAwesomeIcon icon={faStar} />  {r.rating}/5</p>
                 <p className="text-gray-900">{r.comment || "Sin comentario adicional."}</p>
                 <p className="text-sm text-gray-600 mt-1">
-                  Por {r.user} — {formatDate(r.date)}
+                  Por {r.user} — {r.date}
                 </p>
               </div>
             ))}

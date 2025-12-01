@@ -68,6 +68,7 @@ class TicketsController
             $response = new Response();
             $Tickets = new TicketsModel();
             $result = $Tickets->getHistoryByTicket($id);
+            
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);

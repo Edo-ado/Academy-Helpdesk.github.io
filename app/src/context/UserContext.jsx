@@ -5,6 +5,8 @@ import Users from '../Services/Users';
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
+
+    const storedUser = localStorage.getItem("selectedUser");
   const [selectedUser, setSelectedUser] = useState({
     Id: null,
     UserName: "Guest",
@@ -14,6 +16,11 @@ export function UserProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+    useEffect(() => {
+    localStorage.setItem("selectedUser", JSON.stringify(selectedUser));
+  }, [selectedUser]);
+
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -139,7 +139,7 @@ public function GetTicketById($id) {
     $result = $this->enlace->ExecuteSQL($sql);
 
     
-    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/app/public/";
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
 
 
     foreach ($result as $row) {
@@ -176,7 +176,7 @@ public function getHistoryByTicket($ticketId) {
     
     $result = $this->enlace->ExecuteSQL($sql);
 
-    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/app/public/";
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
 
     foreach ($result as $row) {
         if (!empty($row->EvidencePath)) {
@@ -187,7 +187,7 @@ public function getHistoryByTicket($ticketId) {
     return $result;
 } 
 
-
+//para tecnico
 public function GetDailyAssignments($id, $date)
 {
     $sql = "SELECT
@@ -200,12 +200,14 @@ public function GetDailyAssignments($id, $date)
     INNER JOIN Categories c ON t.CategoryId = c.Id
     WHERE t.TechnicianId = $id
       AND DATE(t.Ticket_Start_Date) = '$date'
+       AND t.State <> 'Pendiente'
     ORDER BY t.Ticket_Start_Date ASC";
 
     $vResultado = $this->enlace->ExecuteSQL($sql);
     return $vResultado;
 }
 
+//para tecnico
 public function GetWeeklyAssignments($technicianId, $date)
 {
     $baseDate = date('Y-m-d', strtotime($date));
@@ -228,6 +230,7 @@ public function GetWeeklyAssignments($technicianId, $date)
             INNER JOIN Categories c ON t.CategoryId = c.Id
             WHERE t.TechnicianId = $technicianId
               AND DATE(t.Ticket_Start_Date) BETWEEN '$startOfWeek' AND '$endOfWeek'
+               AND t.State <> 'Pendiente'
             ORDER BY t.Ticket_Start_Date ASC;";
 
     $vResultado = $this->enlace->ExecuteSQL($sql);
@@ -243,20 +246,29 @@ public function ChangeState($obj)
 
 
     $historyId = $this->enlace->executeSQL_DML_last($sqlHistory);
-
-
-    if (!empty($obj->Images)) {
-        foreach ($obj->Images as $img) {
-            $sqlImg = "INSERT INTO Archivador (HistoryTicketId, TicketId, Image, UploadDate) VALUES ($historyId, {$obj->TicketId}, '$img', NOW())";
-            $this->enlace->executeSQL_DML($sqlImg);
-        }
-    }
   
     $sqlUpdate = "UPDATE Tickets SET State = '{$obj->NewState}' WHERE Id = {$obj->TicketId}";
     $this->enlace->executeSQL_DML($sqlUpdate);
 
-       return ["success" => true];
+       return [
+    "success" => true,
+    "historyId" => $historyId,
+    "TicketId" => $obj->TicketId
+];
 }
+
+
+public function GetHoraFecha()
+
+{
+
+$msg = "SELECT NOW() AS FechaHoraActual;";
+
+$vResultado = $this->enlace->ExecuteSQL($msg);
+
+ return $vResultado;
+
+ }
 
 
 }
