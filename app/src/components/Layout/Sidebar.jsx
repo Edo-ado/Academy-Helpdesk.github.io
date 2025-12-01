@@ -82,7 +82,19 @@ export const Sidebar = () => {
             <FontAwesomeIcon icon={faTicket} />
             <span>All Tickets</span>
           </Link>
+
+
+
+            <Link to="/tickets" className={TailwinButton}>
+            <FontAwesomeIcon icon={faTicket} />
+            <span>Asignacion de tickets</span>
+          </Link>
+          
         </nav>
+
+
+
+        
 
         {/* Settings */}
         <div className="p-6 border-t border-blue-800">

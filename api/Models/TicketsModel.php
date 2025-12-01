@@ -20,9 +20,10 @@ class TicketsModel
     }
 
 
-//Necesita cambio a nueva estructura en el estado
-    public function TicketsByRolAndIDUser($id){
-         $msg = "SELECT 
+    //Necesita cambio a nueva estructura en el estado
+    public function TicketsByRolAndIDUser($id)
+    {
+        $msg = "SELECT 
     u.Id AS UserId,
     u.UserName,
     r.Name AS RoleName,
@@ -47,15 +48,13 @@ ORDER BY t.Ticket_Start_Date DESC;
 
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
-        
-
     }
 
 
     //Necesita cambio a nueva estructura en el estado
     public function TicketAssignedToTEC($id)
     {
-    $msg = "SELECT 
+        $msg = "SELECT 
     t.Id AS TicketId,
     t.Title,
     t.Description,
@@ -104,11 +103,12 @@ ORDER BY t.Id DESC;";
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
     }
-    
+
 
     //Necesita cambio a nueva estructura en el estado
-public function GetTicketById($id) {
-    $sql = "SELECT 
+    public function GetTicketById($id)
+    {
+        $sql = "SELECT 
                 t.Id AS TicketId,
                 t.Title,
                 t.Description,
@@ -136,27 +136,28 @@ public function GetTicketById($id) {
             LEFT JOIN Archivador arc ON arc.TicketId = t.Id
             WHERE t.Id = $id";
 
-    $result = $this->enlace->ExecuteSQL($sql);
-
-    
-    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
+        $result = $this->enlace->ExecuteSQL($sql);
 
 
-    foreach ($result as $row) {
-        if (!empty($row->EvidencePath)) {
-            $row->EvidencePath = $baseUrl . $row->EvidencePath;
+        $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
+
+
+        foreach ($result as $row) {
+            if (!empty($row->EvidencePath)) {
+                $row->EvidencePath = $baseUrl . $row->EvidencePath;
+            }
         }
+
+        return $result;
     }
 
-    return $result;
-}
+
+    //un getHistoryByTicket, parqa obtener el historial del ticket y sus evidencias vinculadas desde archivo...
 
 
-//un getHistoryByTicket, parqa obtener el historial del ticket y sus evidencias vinculadas desde archivo...
-
-
-public function getHistoryByTicket($ticketId) {
-    $sql = "SELECT 
+    public function getHistoryByTicket($ticketId)
+    {
+        $sql = "SELECT 
                 h.Id AS HistoryId,
                 h.TicketId,
                 h.Last_State,
@@ -173,24 +174,24 @@ public function getHistoryByTicket($ticketId) {
             LEFT JOIN Archivador a ON a.HistoryTicketId = h.Id
             WHERE h.TicketId = $ticketId
             ORDER BY h.Update_Date DESC";
-    
-    $result = $this->enlace->ExecuteSQL($sql);
 
-    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
+        $result = $this->enlace->ExecuteSQL($sql);
 
-    foreach ($result as $row) {
-        if (!empty($row->EvidencePath)) {
-            $row->EvidencePath = $baseUrl . $row->EvidencePath;
+        $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
+
+        foreach ($result as $row) {
+            if (!empty($row->EvidencePath)) {
+                $row->EvidencePath = $baseUrl . $row->EvidencePath;
+            }
         }
+
+        return $result;
     }
 
-    return $result;
-} 
-
-//para tecnico
-public function GetDailyAssignments($id, $date)
-{
-    $sql = "SELECT
+    //para tecnico
+    public function GetDailyAssignments($id, $date)
+    {
+        $sql = "SELECT
         t.Id AS TicketId,
         c.Name AS Category,
         t.State,
@@ -203,20 +204,20 @@ public function GetDailyAssignments($id, $date)
        AND t.State <> 'Pendiente'
     ORDER BY t.Ticket_Start_Date ASC";
 
-    $vResultado = $this->enlace->ExecuteSQL($sql);
-    return $vResultado;
-}
+        $vResultado = $this->enlace->ExecuteSQL($sql);
+        return $vResultado;
+    }
 
-//para tecnico
-public function GetWeeklyAssignments($technicianId, $date)
-{
-    $baseDate = date('Y-m-d', strtotime($date));
+    //para tecnico
+    public function GetWeeklyAssignments($technicianId, $date)
+    {
+        $baseDate = date('Y-m-d', strtotime($date));
 
-    // Calcular lunes y domingo de esa semana
-    $startOfWeek = date('Y-m-d', strtotime('monday this week', strtotime($baseDate)));
-    $endOfWeek   = date('Y-m-d', strtotime('sunday this week', strtotime($baseDate)));
+        // Calcular lunes y domingo de esa semana
+        $startOfWeek = date('Y-m-d', strtotime('monday this week', strtotime($baseDate)));
+        $endOfWeek   = date('Y-m-d', strtotime('sunday this week', strtotime($baseDate)));
 
-    $sql = "SELECT 
+        $sql = "SELECT 
                 t.Id AS TicketId,
                 t.Title,
                 t.Description,
@@ -233,42 +234,39 @@ public function GetWeeklyAssignments($technicianId, $date)
                AND t.State <> 'Pendiente'
             ORDER BY t.Ticket_Start_Date ASC;";
 
-    $vResultado = $this->enlace->ExecuteSQL($sql);
-    return $vResultado;
-}
+        $vResultado = $this->enlace->ExecuteSQL($sql);
+        return $vResultado;
+    }
 
 
-//a ver por varas
-public function ChangeState($obj)
-{
-    
-    $sqlHistory = "INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date) VALUES ( {$obj->TicketId},  (SELECT State FROM Tickets WHERE Id = {$obj->TicketId}), '{$obj->NewState}', '{$obj->Comment}', {$obj->UserId}, NOW() )";
+    //a ver por varas
+    public function ChangeState($obj)
+    {
+
+        $sqlHistory = "INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date) VALUES ( {$obj->TicketId},  (SELECT State FROM Tickets WHERE Id = {$obj->TicketId}), '{$obj->NewState}', '{$obj->Comment}', {$obj->UserId}, NOW() )";
 
 
-    $historyId = $this->enlace->executeSQL_DML_last($sqlHistory);
-  
-    $sqlUpdate = "UPDATE Tickets SET State = '{$obj->NewState}' WHERE Id = {$obj->TicketId}";
-    $this->enlace->executeSQL_DML($sqlUpdate);
+        $historyId = $this->enlace->executeSQL_DML_last($sqlHistory);
 
-       return [
-    "success" => true,
-    "historyId" => $historyId,
-    "TicketId" => $obj->TicketId
-];
-}
+        $sqlUpdate = "UPDATE Tickets SET State = '{$obj->NewState}' WHERE Id = {$obj->TicketId}";
+        $this->enlace->executeSQL_DML($sqlUpdate);
 
-
-public function GetHoraFecha()
-
-{
-
-$msg = "SELECT NOW() AS FechaHoraActual;";
-
-$vResultado = $this->enlace->ExecuteSQL($msg);
-
- return $vResultado;
-
- }
+        return [
+            "success" => true,
+            "historyId" => $historyId,
+            "TicketId" => $obj->TicketId
+        ];
+    }
 
 
+    public function GetHoraFecha()
+
+    {
+
+        $msg = "SELECT NOW() AS FechaHoraActual;";
+
+        $vResultado = $this->enlace->ExecuteSQL($msg);
+
+        return $vResultado;
+    }
 }
