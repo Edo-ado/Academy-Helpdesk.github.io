@@ -26,7 +26,7 @@ import  MaintainListCategories from './components/Pages/MaintainListCategories'
 import  MaintainListTickets from './components/Pages/MaintainListTickets'
 import { UpdateTechnician } from "./components/Pages/UpdateTechnician"
 import { TrazabilidadTicket } from "./components/Pages/TrazabilidadTicket"
-
+import { Notifications } from "./components/Pages/Notifications"
 
 
 // Crear las rutas
@@ -69,7 +69,13 @@ const rutas = createBrowserRouter([
 
 //update
 { path: "/technicians/update/:id", element: <UpdateTechnician/> },
+//notis
+   { path: '/notifications', element: <Notifications /> },
 
+  
+  
+  
+  
 
 
 

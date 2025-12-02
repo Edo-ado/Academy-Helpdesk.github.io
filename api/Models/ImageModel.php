@@ -10,6 +10,7 @@ class ImageModel
     {
         $this->enlace = new MySqlConnect();
     }
+    
 public function uploadEvidence($object)
     {
         $file = $object['file'];

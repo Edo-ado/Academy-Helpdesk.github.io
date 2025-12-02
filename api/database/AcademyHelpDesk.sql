@@ -710,3 +710,7 @@ INSERT INTO Users
 VALUES
 (1, 'Javier Milei', 'ThePowerOfFriendShip@gmail.com', 'Sored123456', 2, null, 1, TRUE, 'Usuario Cliente', TRUE);
 
+ALTER TABLE `dbacademyhelpdesk`.`notifications` 
+ADD COLUMN `TriggeredByUserId` INT(11) NULL DEFAULT NULL AFTER `Active`,
+ADD COLUMN `EventType` VARCHAR(45) NULL DEFAULT NULL AFTER `TriggeredByUserId`;
+

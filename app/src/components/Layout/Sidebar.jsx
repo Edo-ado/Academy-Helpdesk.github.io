@@ -1,13 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assets/LogoTrans.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faUserCog, faList, faTicketAlt, faUser, faTicket, faCog, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faUserCog, faList, faTicketAlt, faUser, faTicket, faCog, faBars, faTimes , faBell} from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import NotificationService from "../../Services/NotificationServices";
+
+import { useUser } from "../../context/UserContext";
+
 
 const TailwinButton = "flex items-center gap-3 text-white hover:bg-blue-900 px-4 py-3 rounded-full transition transform hover:translate-x-1";
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  
+
+const { selectedUser } = useUser();
+
+ useEffect(() => {
+
+ if (!selectedUser.Id) return;
+
+  
+
+const fetchData = async () => {
+
+try {
+
+ const res = await NotificationService.GetCountNotificationsByIDUser(selectedUser.Id);
+
+setUnreadCount( res.data.data?.[0].Total);
+
+ //  setunreadCount(res.data.Total)
+
+  } finally {
+
+setLoading(false);
+
+ }
+};
+ fetchData();
+ }, [selectedUser.Id]);
+
+  
 
   return (
     <>
@@ -70,6 +108,27 @@ export const Sidebar = () => {
               <FontAwesomeIcon icon={faTicketAlt} />
               <span>My Tickets</span>
             </Link>
+
+ <Link to="/notifications" className={`${TailwinButton} relative`}>
+
+  <FontAwesomeIcon icon={faBell} />
+
+{unreadCount > 0 && (
+
+  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+
+{unreadCount}
+
+ </span>
+
+)}
+
+<span className="ml-2">Notifications</span>
+
+ </Link>
+
+
+
             <Link to="/profile" className={TailwinButton}>
               <FontAwesomeIcon icon={faUser} />
               <span>Profile</span>
