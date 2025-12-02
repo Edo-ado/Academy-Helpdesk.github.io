@@ -85,7 +85,7 @@ setLoading(false);
         <nav className="flex-1 p-6 overflow-auto">
           <section aria-labelledby="create-tickets" className="space-y-2">
 
-            <Link to="/create-ticket" className={TailwinButton}>
+            <Link to="/tickets/create" className={TailwinButton}>
               <FontAwesomeIcon icon={faPlus} />
               <span>Create a Ticket</span>
             </Link>

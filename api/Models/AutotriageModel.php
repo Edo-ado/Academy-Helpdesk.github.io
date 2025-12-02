@@ -169,10 +169,6 @@ class AutoTriageModel
     }
 
 
-
-
-
-
     
     //asignacion manual de ticket  FALTA DE HACER
 
