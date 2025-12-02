@@ -1,5 +1,5 @@
 <?php
-class AutoTriageModel
+class AutotriageModel
     {
     public $enlace;
 

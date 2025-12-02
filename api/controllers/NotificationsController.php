@@ -78,6 +78,28 @@ class NotificationsController
 }
 
 
+ public function UpdateNotificacionIsRead($id)
+    {
+        try {
+            $response = new Response();
+            $NOTI = new NotificationsModel();
+            $result = $NOTI->UpdateNotificacionIsRead($id);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+    }
+
+    public function UpdateNotificacionAllIsRead($iduser){
+       try {
+            $response = new Response();
+            $NOTI = new NotificationsModel();
+            $result = $NOTI->UpdateNotificacionAllIsRead($iduser);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+}
 
 
 }

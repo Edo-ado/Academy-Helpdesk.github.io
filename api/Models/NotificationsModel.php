@@ -58,13 +58,26 @@ public function GetNotificationsByIDUser($iduser){
 }
 
 
- public function UpdateNotificacionFlowTicketIsReadTechnician($id){
+ public function UpdateNotificacionIsRead($id){
+                    $vSql = "UPDATE Notifications
+                    SET Is_Read = 1
+                    WHERE Id = $id;  
+                    ";
 
- }
+    $vResultado = $this->enlace->executeSQL_DML($vSql);
+    return $vResultado;
+}
+ 
 
-  public function UpdateNotificacionFlowTicketIsReadClient($id){
+public function UpdateNotificacionAllIsRead($iduser) {
+    $sql = "UPDATE Notifications
+            SET Is_Read = 1
+            WHERE UserId = $iduser
+            AND Is_Read = 0
+            AND Active = 1";
 
- }
+    return $this->enlace->executeSQL_DML($sql);
+}
 
 
 
