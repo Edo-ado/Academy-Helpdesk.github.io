@@ -85,7 +85,7 @@ export const Sidebar = () => {
 
 
 
-            <Link to="/tickets" className={TailwinButton}>
+            <Link to="/AutotriagePage" className={TailwinButton}>
             <FontAwesomeIcon icon={faTicket} />
             <span>Asignacion de tickets</span>
           </Link>
@@ -96,7 +96,7 @@ export const Sidebar = () => {
 
         
 
-        {/* Settings */}
+    
         <div className="p-6 border-t border-blue-800">
           <Link to="/settings" className="flex items-center gap-3 text-yellow-400 hover:bg-blue-900 px-4 py-3 rounded-full transition transform hover:translate-x-1">
             <FontAwesomeIcon icon={faCog} />
