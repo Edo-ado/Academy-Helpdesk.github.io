@@ -125,6 +125,7 @@ CREATE TABLE Tickets (
     Ticket_Resolution_SLA DATETIME,
     Response_Compliance BOOLEAN,
     Resolution_Compliance BOOLEAN,
+    
     Active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (TechnicianId) REFERENCES Users(Id),
     FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
@@ -133,7 +134,7 @@ CREATE TABLE Tickets (
 
 CREATE TABLE TicketHistory (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    TicketId INT NOT NULL,
+TicketId INT NOT NULL,
     Last_State VARCHAR(50),
     Actual_State VARCHAR(50) NOT NULL,
     Observation TEXT,
@@ -143,6 +144,7 @@ CREATE TABLE TicketHistory (
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id),
     FOREIGN KEY (UserAtCharge) REFERENCES Users(Id)
 );
+
 
 
 CREATE TABLE Archivador (
@@ -201,15 +203,15 @@ CREATE TABLE Notifications (
     FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
 );
 
-CREATE TABLE AutoTriage (
-    IdAT INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(100) NOT NULL,
-    ConditionAT VARCHAR(255) NOT NULL,
-    Action VARCHAR(255) NOT NULL,
-    DateCreation DATETIME DEFAULT CURRENT_TIMESTAMP,
-    IdCategories INT NOT NULL,
+CREATE TABLE Autotriage (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    CategoryId INT NOT NULL,
+    PriorityMin INT DEFAULT NULL,       -- NULL = todas las prioridades
+    SpecialityId INT NOT NULL,
     Active BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (IdCategories) REFERENCES Categories(Id)
+    RuleOrder INT NOT NULL DEFAULT 1,   -- orden de ejecución de reglas
+    CONSTRAINT fk_autotriage_category FOREIGN KEY (CategoryId) REFERENCES Categories(Id),
+    CONSTRAINT fk_autotriage_speciality FOREIGN KEY (SpecialityId) REFERENCES Specialities(Id)
 );
 
 CREATE TABLE UserTickets (
@@ -709,4 +711,12 @@ INSERT INTO Users
 (InsuranceId, UserName, Email, Password, RoleId, Last_Login, InstitutionId, State, Work_Charge, Active)
 VALUES
 (1, 'Javier Milei', 'ThePowerOfFriendShip@gmail.com', 'Sored123456', 2, null, 1, TRUE, 'Usuario Cliente', TRUE);
+
+
+INSERT INTO Autotriage (CategoryId, PriorityMin, SpecialityId, RuleOrder, Active)
+VALUES
+    (1, 2, 1, 1, TRUE),   -- R1: Hardware, prioridad >= Media (2), Soporte Hardware
+    (2, NULL, 2, 2, TRUE),-- R2: Redes, todas las prioridades, especialidad Redes
+    (3, NULL, 3, 3, TRUE);-- R3: Soporte Usuario Final, todas, Helpdesk
+
 
