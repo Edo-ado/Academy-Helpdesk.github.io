@@ -720,3 +720,7 @@ VALUES
     (3, NULL, 3, 3, TRUE);-- R3: Soporte Usuario Final, todas, Helpdesk
 
 
+ALTER TABLE `dbacademyhelpdesk`.`notifications` 
+ADD COLUMN `TriggeredByUserId` INT(11) NULL DEFAULT NULL AFTER `Active`,
+ADD COLUMN `EventType` VARCHAR(45) NULL DEFAULT NULL AFTER `TriggeredByUserId`;
+

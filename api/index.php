@@ -28,6 +28,7 @@ require_once "Models/TicketsModel.php";
 require_once "Models/CreateTicketModel.php";
 require_once "Models/AutoTriageModel.php";
 require_once "Models/ImageModel.php";
+require_once "Models/NotificationsModel.php";
 
 
 /***--- Agregar todos los controladores*/
@@ -39,6 +40,7 @@ require_once "controllers/TicketsController.php";
 require_once "controllers/CreateTicketController.php";
 require_once "controllers/ImageController.php";
 require_once "controllers/AutoTriageController.php";
+require_once "controllers/NotificationsController.php";
 
 //Enrutador
 require_once "routes/RoutesController.php";

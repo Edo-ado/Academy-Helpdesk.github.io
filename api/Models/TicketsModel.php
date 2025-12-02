@@ -120,6 +120,7 @@ ORDER BY t.Id DESC;";
                 t.Ticket_Resolution_SLA,
                 c.Name AS Category,
                 u.UserName AS Cliente,
+                u.Id as IdCliente,
                 tech.UserName AS Tecnico,
                 tc.Id AS CommentId,
                 tc.CommentText,

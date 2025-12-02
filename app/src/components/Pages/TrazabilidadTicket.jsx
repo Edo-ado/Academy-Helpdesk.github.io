@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TicketLists from "../../Services/TicketsLists";
 import ImageService from "../../Services/ImagenList";
+import NotificationsService from "../../Services/NotificationServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -47,6 +48,8 @@ export function TrazabilidadTicket() {
     const { selectedUser } = useUser();
   const [error, setError] = useState(null);
   const [fechaHora, setFechaHora] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
 
   
@@ -138,6 +141,9 @@ setHistory(historyData);
     };
   });
 
+  const ticketDetail = response.data.data[0];
+const clientId = ticketDetail.IdCliente;
+
 
       const mappedTicket = {
         ticketId: t.TicketId || "N/A",
@@ -152,10 +158,12 @@ setHistory(historyData);
         client: t.Cliente || "Desconocido",
         Ticket_Response_SLA: t.Ticket_Response_SLA || null,
         Ticket_Resolution_SLA: t.Ticket_Resolution_SLA || null,
+         IdCliente: clientId,
         comments,
         ratings,
         evidences
       };
+      
 
       console.log("Mapped ticket:", mappedTicket);
       setTicket(mappedTicket);
@@ -191,8 +199,9 @@ const payload = {
      toast.error(`El flujo del ticket ya está cerrado`);
     return null;
   }
-
+setIsSubmitting(true);
     const response = await TicketLists.ChangeState(payload);
+
 
 
 if (response.data?.success) {
@@ -212,9 +221,22 @@ const historyId = response.data.data.historyId;
             toast.success("Evidencia adjuntada");
         }
     }
+    //notificaciones, enviar
+    await NotificationsService.InsertNotificationClienteFlowTicket(selectedUser.Id, id, ticket.IdCliente);
+    await NotificationsService.InsertNotificationTechnicianFlowTicket(selectedUser.Id, id);
 
+ 
     toast.success("Estado del ticket actualizado");
-}
+
+
+
+setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  } else {
+    setIsSubmitting(false); 
+  }
+
 
 
     
@@ -603,6 +625,7 @@ return (
     <div className="flex justify-end">
       <Button
         type="submit"
+          disabled={isSubmitting}
         className="px-6 py-3 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046] flex items-center gap-2"
       >
         <Save className="w-4 h-4" />

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
+import { useEffect } from "react";
 import { useUser } from "../../context/UserContext";
+import NotificationService from "../../Services/NotificationServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBell,
   faChevronDown,
   faUserCircle,
   faUserGear,
@@ -12,9 +13,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export function Header() {
-  const { selectedUser, setSelectedUser, users, loading, error } = useUser();
+  const { selectedUser, setSelectedUser, users, error } = useUser();
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [openMantMenu, setOpenMantMenu] = useState(false);
+    const [notifCount, setNotifCount] = useState(0); 
+      const [loading, setLoading] = useState(true);
+
 
   const handleSelectUser = (user) => {
     setSelectedUser({
@@ -26,6 +30,24 @@ export function Header() {
     console.log("Usuario seleccionado:", user.Id);
   };
 
+
+  useEffect(() => {
+    if (!selectedUser?.Id) return;
+
+    const fetchData = async () => {
+      try {
+        const res = await NotificationService.GetCountNotificationsByIDUser(selectedUser.Id);
+      setNotifCount(res.data.data || 0);
+        console.log("Response:", res.data); 
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedUser?.Id]);
+
+
   const mantItems = [
     { href: "/mantenimiento/tecnicos", title: "Técnicos", icon: faUserGear },
     { href: "/mantenimiento/tickets", title: "Tickets", icon: faTicket },
@@ -36,13 +58,8 @@ export function Header() {
     },
   ];
   return (
-    <header className="bg-[#0a1e4a] text-white shadow-lg sticky top-0 z-50 border-b-4 border-[#DFA200]">
-<div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 pl-16 lg:pl-6">
-
-
-        <button className="hover:text-[#DFA200] transition">
-          <FontAwesomeIcon icon={faBell} className="text-xl" />
-        </button>
+ <header className="bg-[#0a1e4a] text-white shadow-lg sticky top-0 z-50 border-b-4 border-[#DFA200]">
+ <div className="max-w-7xl mx-auto flex justify-end items-center px-6 py-3">
 
         <div className="flex items-center gap-6 relative">
           <div className="relative">
@@ -103,34 +120,28 @@ export function Header() {
               />
             </button>
 
-            {openUserMenu && (
-<div className="absolute right-0 mt-2 w-52 bg-white text-gray-800  border border-gray-200 rounded-xl shadow-lg  max-h-60 overflow-y-auto z-20">
-                {loading ? (
-                  <p className="px-4 py-2 text-sm text-gray-400">Cargando...</p>
-                ) : error ? (
-                  <p className="px-4 py-2 text-sm text-red-500">{error}</p>
-                ) : users.length > 0 ? (
-                  users.map((user) => (
-                    <button
-                      key={user.Id}
-                      onClick={() => handleSelectUser(user)}
-                      className={`w-full text-left px-4 py-2 hover:bg-[#f5f7ff] transition ${
-                        selectedUser.Id === user.Id ? "bg-gray-50" : ""
-                      }`}
-                    >
-                      <p className="text-sm font-medium text-gray-900">
-                        {user.UserName}
-                      </p>
-                      <p className="text-xs text-gray-500">{user.Rol}</p>
-                    </button>
-                  ))
-                ) : (
-                  <p className="px-4 py-2 text-sm text-gray-400">
-                    Sin usuarios
-                  </p>
-                )}
-              </div>
-            )}
+           {openUserMenu && (
+  <div className="absolute right-0 mt-2 w-52 bg-white text-gray-800 border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto z-20">
+    {error ? (
+      <p className="px-4 py-2 text-sm text-red-500">{error}</p>
+    ) : users.length > 0 ? (
+      users.map((user) => (
+        <button
+          key={user.Id}
+          onClick={() => handleSelectUser(user)}
+          className={`w-full text-left px-4 py-2 hover:bg-[#f5f7ff] transition ${
+            selectedUser.Id === user.Id ? "bg-gray-50" : ""
+          }`}
+        >
+          <p className="text-sm font-medium text-gray-900">{user.UserName}</p>
+          <p className="text-xs text-gray-500">{user.Rol}</p>
+        </button>
+      ))
+    ) : (
+      <p className="px-4 py-2 text-sm text-gray-400">Sin usuarios</p>
+    )}
+  </div>
+)}
           </div>
         </div>
       </div>
