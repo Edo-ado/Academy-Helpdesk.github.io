@@ -12,8 +12,18 @@ class Response
 
     public function toJSON($response = [], $message = "")
     {
-        // Caso éxito
-        if (!empty($response)) {
+        // Caso: respuesta explícita vacía -> retornar éxito con data vacía
+        if ($response === []) {
+            $json = [
+                "success" => true,
+                "status"  => 200,
+                "message" => $message ?: "Solicitud exitosa - sin resultados",
+                "data"    => []
+            ];
+            $this->status = 200;
+
+        // Caso éxito con contenido
+        } elseif (!empty($response)) {
             $json = [
                 "success" => true,
                 "status"  => 200,
@@ -22,8 +32,8 @@ class Response
             ];
             $this->status = 200;
 
-            // Caso sin resultados 
-        } elseif ($response === [] || $response === null) {
+        // Caso sin datos (null) -> 404
+        } elseif ($response === null) {
             $json = [
                 "success" => false,
                 "status"  => 404,
@@ -35,7 +45,7 @@ class Response
             ];
             $this->status = 404;
 
-            // Caso error interno
+        // Caso error interno
         } else {
             $json = [
                 "success" => false,

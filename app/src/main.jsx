@@ -15,6 +15,7 @@ import { DetailTicket } from "./components/Pages/DetailTicket"
 import { MyTickets } from "./components/Assignments/MyTickets"
 import {  CreateTechnician } from "./components/Pages/CreateTechnician"
 import {  CreateCategories } from "./components/Pages/CreateCategories" 
+import  AutotriagePage  from "./components/Pages/AutotriagePage"
 
 import { Toaster } from "react-hot-toast";
 
@@ -46,6 +47,9 @@ const rutas = createBrowserRouter([
      { path: '/my-tickets', element: <MyTickets /> }, 
      //trazabilidadticket
      { path: '/my-tickets/:id', element: <TrazabilidadTicket /> }, 
+
+      //Autotriage
+      {path: '/AutotriagePage', element: <AutotriagePage />},
    
 
 

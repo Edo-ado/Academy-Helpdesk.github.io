@@ -20,13 +20,15 @@ require_once "controllers/core/Response.php";
 require_once "middleware/AuthMiddleware.php";
 
 /***--- Agregar todos los modelos*/
-require_once "models/UserModel.php";
-require_once "models/CategoriesModel.php";
-require_once "models/SLAModel.php";
-require_once "models/SpecialitiesModel.php";
-require_once "models/TicketsModel.php";
-require_once "models/CreateTicketModel.php";
-require_once "models/ImageModel.php";
+require_once "Models/UserModel.php";
+require_once "Models/CategoriesModel.php";
+require_once "Models/SLAModel.php";
+require_once "Models/SpecialitiesModel.php";
+require_once "Models/TicketsModel.php";
+require_once "Models/CreateTicketModel.php";
+require_once "Models/AutoTriageModel.php";
+require_once "Models/ImageModel.php";
+
 
 /***--- Agregar todos los controladores*/
 require_once "controllers/UserController.php";
@@ -36,6 +38,7 @@ require_once "controllers/SpecialitiesController.php";
 require_once "controllers/TicketsController.php";
 require_once "controllers/CreateTicketController.php";
 require_once "controllers/ImageController.php";
+require_once "controllers/AutoTriageController.php";
 
 //Enrutador
 require_once "routes/RoutesController.php";
