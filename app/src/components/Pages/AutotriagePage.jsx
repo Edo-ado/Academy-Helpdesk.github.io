@@ -51,12 +51,16 @@ export default function AutotriagePage() {
           regla = reglaRes.data[0];
         } else if (reglaRes.data && Array.isArray(reglaRes.data.data)) {
           regla = reglaRes.data.data[0];
-        }
+        } 
+
+
+      
 
         // Si hay regla, el ticket es apto para autotriage
         if (regla) {
-          // Calcular puntaje y horas restantes
-          const horasRestantes = calcularHorasRestantes(ticket.Ticket_Resolution_SLA);
+          // Calcular puntaje y horas restantes     
+
+           const horasRestantes = calcularHorasRestantes(ticket.Ticket_Resolution_SLA);
           const puntaje = (ticket.Priority * 1000) - horasRestantes;
 
           // Agregar info de la regla y puntaje al ticket
@@ -83,9 +87,19 @@ export default function AutotriagePage() {
     
     setTicketsAuto(ticketsAptos);
 
+
+
+
+
+
   } catch (error) {
-    console.error(" Error cargando tickets automáticos:", error);
+
+ if (error.response && error.response.status === 404) {
+
+     console.warn("No hay tickets pendientes.");
     setTicketsAuto([]);
+
+ }
   } finally {
     setLoading(false);
   }
@@ -97,6 +111,68 @@ export default function AutotriagePage() {
   const cargarTicketsManual = async () => {
     setLoading(true);
  
+    try {
+      // 1. Obtener TODOS los tickets pendientes
+      const res = await AutoTriageList.GetAllPendingTickets();
+      let todosPendientes = [];
+      if (Array.isArray(res.data)) {
+        todosPendientes = res.data;
+      } else if (res.data && Array.isArray(res.data.data)) {
+        todosPendientes = res.data.data;
+      }
+      console.log(" Todos los tickets pendientes:", todosPendientes);
+      // 2. Filtrar solo los que NO tienen regla de autotriage
+      const ticketsManualTemp = [];
+      const tecnicosTemp = {};
+      for (const ticket of todosPendientes) {
+        try {
+          // Verificar si existe regla aplicable para este ticket
+          const reglaRes = await AutoTriageList.GetApplicableRuleForTicket(
+            ticket.CategoryId,
+            ticket.PriorityId
+          );
+          let regla = null;
+          if (Array.isArray(reglaRes.data)) {
+            regla = reglaRes.data[0];
+          } else if (reglaRes.data && Array.isArray(reglaRes.data.data)) {
+            regla = reglaRes.data.data[0];
+          }
+          // Si NO hay regla, el ticket requiere asignación manual
+          if (!regla) {
+            ticketsManualTemp.push(ticket);
+            // Obtener técnicos disponibles para este ticket
+            const tecnicosRes = await AutoTriageList.GetTechniciansByCategory(ticket.CategoryId);
+            let listaTecnicos = [];
+            if (Array.isArray(tecnicosRes.data)) {
+              listaTecnicos = tecnicosRes.data;
+            } else if (tecnicosRes.data && Array.isArray(tecnicosRes.data.data)) {
+              listaTecnicos = tecnicosRes.data.data;
+            }
+            tecnicosTemp[ticket.TicketId] = listaTecnicos;
+            console.log(` Ticket ${ticket.TicketId} requiere asignación manual. Técnicos disponibles:`, listaTecnicos);
+          } else {
+            console.log(` Ticket ${ticket.TicketId} tiene regla de autotriage (para automático)`);
+          }
+        } catch (error) {
+          console.error(`Error verificando ticket ${ticket.TicketId}:`, error);
+        }
+      }
+      console.log(" Tickets para asignación manual:", ticketsManualTemp);
+      setTicketsManual(ticketsManualTemp);
+      setTecnicosDisponibles(tecnicosTemp);
+    } catch (error) {
+
+ if (error.response && error.response.status === 404) {
+
+     console.warn("No hay tickets pendientes.");
+      setTicketsManual([]);
+
+       }
+    } finally {
+      setLoading(false);
+    }
+    
+    
      
     
   };
@@ -187,6 +263,10 @@ export default function AutotriagePage() {
       console.log("Respuesta de asignación automática:", insertar);
 
 
+             await cargarTicketsManual();
+        await cargarTicketsAuto();
+
+
      
 
     } catch (error) {
@@ -209,10 +289,17 @@ export default function AutotriagePage() {
       
       // Obtener información del técnico seleccionado
       const tecnicos = tecnicosDisponibles[ticketId] || [];
-      const tecnicoSeleccionado = tecnicos.find(t => t.TechnicianId === parseInt(techId));
+      const techIdNumber = parseInt(techId);
+      
+      console.log("techId recibido:", techId, "convertido a:", techIdNumber);
+      console.log("Técnicos disponibles:", tecnicos);
+      
+      const tecnicoSeleccionado = tecnicos.find(t => t.TechnicianId === techIdNumber);
+
+      console.log("Técnico seleccionado para asignación manual:", tecnicoSeleccionado);
 
       if (!tecnicoSeleccionado) {
-        alert("Técnico no encontrado");
+        alert("Técnico no encontrado. Verificar que el ID coincida.");
         setLoading(false);
         return;
       }
@@ -225,27 +312,33 @@ export default function AutotriagePage() {
         `Carga actual: ${tecnicoSeleccionado.CurrentTicketCount} tickets`;
 
       // Asignar ticket manualmente
-      const response = await AutoTriageList.ManualAssignTicket({
-        TicketId: ticketId,
-        TechnicianId: parseInt(techId),
-        Remarks: remarks
+      const actualizacion = await AutoTriageList.UpdateTicket({
+        TicketId: ticket.TicketId,
+        TechnicianId: tecnicoSeleccionado.TechnicianId,
+      });
+
+      const insertar = await AutoTriageList.InsertsTicket({
+        TicketId: ticket.TicketId,
+        TechnicianId: tecnicoSeleccionado.TechnicianId,
+        Remarks: `Asignación manual por el Administrador.`,
+        Method: "AutoTriage"
       });
 
       let success = false;
       let message = "";
       
-      if (response?.data?.success) {
+      if (insertar?.data?.success) {
         success = true;
-      } else if (Array.isArray(response?.data) && response.data.length > 0 && response.data[0].success) {
+      } else if (Array.isArray(insertar?.data) && insertar.data.length > 0 && insertar.data[0].success) {
         success = true;
-      } else if (response?.data?.result?.success) {
+      } else if (insertar?.data?.result?.success) {
         success = true;
       }
       
-      if (response?.data?.message) {
-        message = response.data.message;
-      } else if (response?.data?.result?.message) {
-        message = response.data.result.message;
+      if (insertar?.data?.message) {
+        message = insertar.data.message;
+      } else if (insertar?.data?.result?.message) {
+        message = insertar.data.result.message;
       }
 
       if (success) {
@@ -481,6 +574,7 @@ export default function AutotriagePage() {
                         className="w-full border-2 border-red-400 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                       >
                         <option value="default">-- Seleccione un técnico --</option>
+
                         {(tecnicosDisponibles[t.TicketId] || []).map((tec) => (
                           <option key={tec.TechnicianId} value={tec.TechnicianId}>
                             {tec.UserName} ({tec.CurrentTicketCount} tickets) - {tec.Specialities}
