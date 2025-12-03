@@ -17,120 +17,86 @@ export default function AutotriagePage() {
 
   
 
-  const cargarTicketsAuto = async () => {
-    setLoading(true);
-    try {
-      const res = await AutoTriageList.GetPendingTicketsForAutoTriage();
-      console.log("Respuesta completa:", res);
-      console.log("Datos:", res.data);
-      
-      // Ajustar según la estructura de tu respuesta
-      let tickets = [];
-      
-      if (Array.isArray(res.data)) {
-        tickets = res.data;
-      } else if (res.data && Array.isArray(res.data.data)) {
-        tickets = res.data.data;
-      } else if (res.data && res.data.result && Array.isArray(res.data.result)) {
-        tickets = res.data.result;
-      }
-      
-      console.log("Tickets procesados:", tickets);
-      
-      // Calcular puntaje para cada ticket
-      const ticketsConPuntaje = tickets.map(ticket => {
-        const horasRestantes = calcularHorasRestantes(ticket.Ticket_Resolution_SLA);
-        const puntaje = (ticket.Priority * 1000) - horasRestantes;
-        
-        return {
-          ...ticket,
-          HorasRestantes: horasRestantes,
-          Puntaje: puntaje
-        };
-      });
-
-      // Ordenar por puntaje descendente
-      ticketsConPuntaje.sort((a, b) => b.Puntaje - a.Puntaje);
-      
-      setTicketsAuto(ticketsConPuntaje);
-    } catch (e) {
-      console.error("Error cargando tickets automáticos:", e);
-      console.error("Respuesta del error:", e.response);
-      setTicketsAuto([]);
-    } finally {
-      setLoading(false);
+ const cargarTicketsAuto = async () => {
+  setLoading(true);
+  try {
+    // 1. Obtener TODOS los tickets pendientes
+    const res = await AutoTriageList.GetAllPendingTickets();
+    
+    // Extraer los tickets de la respuesta
+    let todosPendientes = [];
+    if (Array.isArray(res.data)) {
+      todosPendientes = res.data;
+    } else if (res.data && Array.isArray(res.data.data)) {
+      todosPendientes = res.data.data;
     }
-  };
 
+    console.log(" Todos los tickets pendientes:", todosPendientes);
 
+    // 2. Filtrar solo los que tienen regla de autotriage
+    const ticketsAptos = [];
+
+    for (const ticket of todosPendientes) {
+      try {
+        // Verificar si existe regla aplicable para este ticket
+        const reglaRes = await AutoTriageList.GetApplicableRuleForTicket(
+          ticket.CategoryId,
+          ticket.PriorityId
+        );
+
+        let regla = null;
+        if (Array.isArray(reglaRes.data)) {
+          regla = reglaRes.data[0];
+        } else if (reglaRes.data && Array.isArray(reglaRes.data.data)) {
+          regla = reglaRes.data.data[0];
+        }
+
+        // Si hay regla, el ticket es apto para autotriage
+        if (regla) {
+          // Calcular puntaje y horas restantes
+          const horasRestantes = calcularHorasRestantes(ticket.Ticket_Resolution_SLA);
+          const puntaje = (ticket.Priority * 1000) - horasRestantes;
+
+          // Agregar info de la regla y puntaje al ticket
+          ticketsAptos.push({
+            ...ticket,
+            Regla: regla,
+            HorasRestantes: horasRestantes,
+            Puntaje: puntaje
+          });
+
+          console.log(` Ticket ${ticket.TicketId} SÍ tiene regla: R${regla.RuleOrder}`);
+        } else {
+          console.log(` Ticket ${ticket.TicketId} NO tiene regla (para manual)`);
+        }
+      } catch (error) {
+        console.error(`Error verificando ticket ${ticket.TicketId}:`, error);
+      }
+    }
+
+    // 3. Ordenar por puntaje descendente (mayor prioridad primero)
+    ticketsAptos.sort((a, b) => b.Puntaje - a.Puntaje);
+
+    console.log(" Tickets aptos para autotriage:", ticketsAptos);
+    
+    setTicketsAuto(ticketsAptos);
+
+  } catch (error) {
+    console.error(" Error cargando tickets automáticos:", error);
+    setTicketsAuto([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   //DA ERROR
 
   const cargarTicketsManual = async () => {
     setLoading(true);
-    try {
-      // Obtener todos los tickets pendientes
-      const res = await AutoTriageList.GetPendingTicketsForAutoTriage();
-      
-      let todosPendientes = [];
-      if (Array.isArray(res.data)) {
-        todosPendientes = res.data;
-      } else if (res.data && Array.isArray(res.data.data)) {
-        todosPendientes = res.data.data;
-      } else if (res.data && res.data.result && Array.isArray(res.data.result)) {
-        todosPendientes = res.data.result;
-      }
-      
-      // Filtrar tickets que NO cumplen con autotriage
-      const ticketsParaManual = [];
-      const mapTecnicos = {};
-
-      for (const ticket of todosPendientes) {
-        try {
-          // Verificar si existe regla de autotriage para este ticket
-          const reglaRes = await AutoTriageList.GetApplicableRuleForTicket(
-            ticket.CategoryId, 
-            ticket.Priority
-          );
-          
-          let regla = null;
-          if (Array.isArray(reglaRes.data)) {
-            regla = reglaRes.data;
-          } else if (reglaRes.data && Array.isArray(reglaRes.data.data)) {
-            regla = reglaRes.data.data;
-          } else if (reglaRes.data && reglaRes.data.result && Array.isArray(reglaRes.data.result)) {
-            regla = reglaRes.data.result;
-          }
-          
-          // Si NO hay regla aplicable, es para asignación manual
-          if (!regla || regla.length === 0) {
-            ticketsParaManual.push(ticket);
-            
-            // Obtener técnicos disponibles para esta categoría
-            const infoRes = await AutoTriageList.GetManualAssignmentInfo(ticket.TicketId);
-            const info = infoRes?.data;
-            
-            if (info?.success && info?.availableTechnicians) {
-              mapTecnicos[ticket.TicketId] = info.availableTechnicians;
-            } else if (Array.isArray(info)) {
-              mapTecnicos[ticket.TicketId] = info;
-            }
-          }
-        } catch (e) {
-          console.error(`Error procesando ticket ${ticket.TicketId}:`, e);
-        }
-      }
-
-      setTicketsManual(ticketsParaManual);
-      setTecnicosDisponibles(mapTecnicos);
-
-    } catch (error) {
-      console.error("Error cargando tickets manuales:", error);
-      setTicketsManual([]);
-    } finally {
-      setLoading(false);
-    }
+ 
+     
+    
   };
 
  
@@ -150,26 +116,29 @@ export default function AutotriagePage() {
     try {
       setLoading(true);
       
+     
+      
       // Obtener regla aplicable
       const reglaRes = await AutoTriageList.GetApplicableRuleForTicket(
         ticket.CategoryId,
         ticket.Priority
       );
-      
+
       let regla = null;
       if (Array.isArray(reglaRes.data)) {
         regla = reglaRes.data[0];
       } else if (reglaRes.data && Array.isArray(reglaRes.data.data)) {
         regla = reglaRes.data.data[0];
-      } else if (reglaRes.data && reglaRes.data.result && Array.isArray(reglaRes.data.result)) {
-        regla = reglaRes.data.result[0];
-      }
-      
+      } 
       if (!regla) {
         alert("No se encontró regla de autotriage para este ticket");
         setLoading(false);
         return;
       }
+      console.log("Regla aplicable encontrada:", regla);
+
+    
+ 
 
       // Obtener técnicos con la especialidad requerida
       const tecnicosRes = await AutoTriageList.GetTechniciansBySpeciality(regla.SpecialityId);
@@ -179,9 +148,9 @@ export default function AutotriagePage() {
         listaTecnicos = tecnicosRes.data;
       } else if (tecnicosRes.data && Array.isArray(tecnicosRes.data.data)) {
         listaTecnicos = tecnicosRes.data.data;
-      } else if (tecnicosRes.data && tecnicosRes.data.result && Array.isArray(tecnicosRes.data.result)) {
-        listaTecnicos = tecnicosRes.data.result;
       }
+
+        console.log("Técnicos obtenidos para autotriage:", listaTecnicos);
 
       if (listaTecnicos.length === 0) {
         alert("No hay técnicos disponibles con la especialidad requerida");
@@ -194,20 +163,8 @@ export default function AutotriagePage() {
         (prev.CurrentTicketCount < current.CurrentTicketCount) ? prev : current
       );
 
-      // Crear observación detallada
-      const remarks = `Asignación automática mediante regla R${regla.RuleOrder}. ` +
-        `Categoría: ${ticket.CategoryName}, Prioridad: ${ticket.PriorityName}, ` +
-        `Especialidad requerida: ${regla.SpecialityName}, ` +
-        `Puntaje calculado: ${ticket.Puntaje.toFixed(2)}, ` +
-        `Horas restantes SLA: ${ticket.HorasRestantes.toFixed(2)}h`;
 
-      // Asignar ticket
-      const assignRes = await AutoTriageList.AssignTicketToTechnician({
-        TicketId: ticket.TicketId,
-        TechnicianId: tecnicoSeleccionado.TechnicianId,
-        Remarks: remarks,
-        Method: "Automático"
-      });
+
 
       if (assignRes?.data) {
         alert(`Ticket asignado automáticamente a ${tecnicoSeleccionado.UserName}`);

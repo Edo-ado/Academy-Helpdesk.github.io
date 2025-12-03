@@ -1,69 +1,34 @@
-// src/services/AutoTriageList.js
 import axios from 'axios';
 
 const API_URL = 'http://localhost/Academy-Helpdesk.github.io/api/AutoTriageController';
 
 const AutoTriageList = {
-    // Obtener todas las reglas de AutoTriage
-    getAllAutoTriageRules: () => axios.get(`${API_URL}`),
+    // Obtener TODOS los tickets pendientes
+    GetAllPendingTickets: () => 
+        axios.get(`${API_URL}/GetAllPendingTickets`),
     
-    // Obtener todas las reglas activas
-    GetAllAutoTriageRulesActive: () => axios.get(`${API_URL}/GetAllAutoTriageRulesActive`),
-    
-    // Obtener regla por ID
-    GetAutoTriageRuleById: (id) => axios.get(`${API_URL}/get/${id}`),
-    
-    // Obtener detalles completos de una regla
-    GetAutoTriageRuleDetailsByID: (id) => axios.get(`${API_URL}/details/${id}`),
-    
-    // Actualizar regla de AutoTriage
-    UpdateAutoTriageRuleById: (id, data) => axios.put(`${API_URL}/UpdateAutoTriageRuleById/${id}`, data),
-    
-    // Crear nueva regla de AutoTriage
-    CreateAutoTriageRule: (data) => 
-        axios.post(`${API_URL}/CreateAutoTriageRule`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
+    // Obtener regla aplicable
+    GetApplicableRuleForTicket: (categoryId, priorityId) => 
+        axios.post(`${API_URL}/GetApplicableRuleForTicket`, {
+            CategoryId: categoryId,
+            PriorityId: priorityId
         }),
-    
-    // Desactivar regla de AutoTriage
-    DeleteAutoTriageRule: (id) => axios.patch(`${API_URL}/DeleteAutoTriageRule/${id}`),
-    
-    // Activar regla de AutoTriage
-    ActivateAutoTriageRule: (id) => axios.patch(`${API_URL}/ActivateAutoTriageRule/${id}`),
-    
-    // Obtener tickets pendientes para asignación automática
-    GetPendingTicketsForAutoTriage: () => axios.get(`${API_URL}/GetPendingTicketsForAutoTriage`),
     
     // Obtener técnicos por especialidad
-    GetTechniciansBySpeciality: (specialityId) => axios.get(`${API_URL}/GetTechniciansBySpeciality/${specialityId}`),
+    GetTechniciansBySpeciality: (specialityId) => 
+        axios.get(`${API_URL}/GetTechniciansBySpeciality/${specialityId}`),
     
-    // Obtener regla aplicable para un ticket específico
-    GetApplicableRuleForTicket: (categoryId, priorityId) => 
-        axios.get(`${API_URL}/GetApplicableRuleForTicket/${categoryId}/${priorityId}`),
+    // Obtener técnicos por categoría
+    GetTechniciansByCategory: (categoryId) => 
+        axios.get(`${API_URL}/GetTechniciansByCategory/${categoryId}`),
     
-    // Asignar ticket a técnico (automático)
+    // Asignar ticket
+    AssignTicket: (data) => 
+        axios.post(`${API_URL}/AssignTicket`, data),
+
+    // Asignar ticket a técnico específico
     AssignTicketToTechnician: (data) => 
-        axios.post(`${API_URL}/AssignTicketToTechnician`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }),
-    
-    // Asignación manual de ticket
-    ManualAssignTicket: (data) => 
-        axios.post(`${API_URL}/ManualAssignTicket`, data, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }),
-    
-    // Obtener información para asignación manual
-    GetManualAssignmentInfo: (ticketId) => axios.get(`${API_URL}/GetManualAssignmentInfo/${ticketId}`),
-    
-    // Obtener todos los técnicos con su carga de trabajo
-    GetAllTechniciansWithWorkload: () => axios.get(`${API_URL}/GetAllTechniciansWithWorkload`),
+        axios.post(`${API_URL}/AssignTicketToTechnician`, data),
 };
 
 export default AutoTriageList;
