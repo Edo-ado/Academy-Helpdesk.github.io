@@ -7,6 +7,7 @@ const Notification = {
 InsertNotificationTechnicianFlowTicket: (triggeredUserId, ticketId, LastStateTicket, ActualStateTicket) =>  axios.post(`${API_URL}/InsertNotificationTechnicianFlowTicket`, {   triggeredUserId,  ticketId,  LastStateTicket,    ActualStateTicket }),
 InsertNotificationAssignTicketTechnician: (triggeredUserId, ticketId) =>  axios.patch(`${API_URL}/InsertNotificationAssignTicketTechnician/${triggeredUserId}/${ticketId}`),
 
+
  InsertNotificationClienteFlowTicket: (triggeredUserId, ticketId, clientId, LastStateTicket, ActualStateTicket) =>   axios.post(`${API_URL}/InsertNotificationClienteFlowTicket`, {
    triggeredUserId, ticketId, clientId, LastStateTicket,  ActualStateTicket   }),
 

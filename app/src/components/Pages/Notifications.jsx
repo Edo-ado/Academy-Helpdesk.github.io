@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import NotificationService from "../../Services/NotificationServices";
 import { useUser } from "../../context/UserContext";
+import toast from "react-hot-toast";
 
 export function Notifications() {
   const { selectedUser } = useUser();
@@ -36,9 +37,15 @@ export function Notifications() {
 
 async function marcarTodas() {
   try {
+
+     const not = await NotificationService.GetCountNotificationsByIDUser(selectedUser.Id);
+        if (not.data.data[0].Total == 0) {
+          toast.success("Todas las notificaciones están leídas");
+        }
     await NotificationService.UpdateNotificacionAllIsRead(selectedUser.Id);
     const res = await NotificationService.GetNotificationsByIDUser(selectedUser.Id);
-    setNotifications(res.data.data);
+        setNotifications(res.data.data);
+    
   } catch (err) {
     console.error(err);
   }
@@ -54,12 +61,32 @@ async function marcarComoLeida(id) {
   }
 }
 
+const getTipoEvento = (eventType) => {
+  switch (eventType) {
+    case "CAMBIO_ESTADO_TICKET":
+      return "TK";
+    case "ASIGNACION_TICKET":
+      return "ASG";
+    case "LOGIN_USER":
+      return "LG";
+    default:
+      return "OK";
+  }
+};
+
   return (
     <div className="min-h-screen w-full bg-[#dff1ff] flex justify-center">
       <div className="w-full bg-white min-h-screen">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4">
           <h1 className="text-lg font-bold text-[#0a1e4a]">Notificaciones</h1>
+           <button
+                      className="mt-2 px-3 py-1 rounded-full text-slate-900 border border-[#DFA200] text-[#DFA200]  font-semibold
+                                hover:bg-[#0a1e4a] hover:text-white transition"
+                      onClick={() => marcarTodas()}
+                    >
+                      Marcar todas las notificaciones pendientes como leídas
+                    </button>
         </div>
 
         {/* Lista */}
@@ -86,7 +113,7 @@ async function marcarComoLeida(id) {
               >
                 {/* Icono */}
                 <div className="w-8 h-8 rounded-full bg-[#0a1e4a] text-white font-sans flex items-center justify-center">
-                  {n.EventType === "CAMBIO_ESTADO_TICKET" ? "TK" : "OK"}
+                  {getTipoEvento(n.EventType)}
                 </div>
 
                 <div className="flex-1">
