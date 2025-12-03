@@ -119,7 +119,7 @@ const getTipoEvento = (eventType) => {
                 <div className="flex-1">
                   <p className="font-sans text-gray-800">{n.Message}</p>
 
-             {n.TicketId && (
+             {n.TicketId &&  n.EventType == "CAMBIO_ESTADO_TICKET" &&  (
                 <div className="mt-1">
                   <p className="font-sans text-[#c2983d]">
                     Ticket #{n.TicketId}
