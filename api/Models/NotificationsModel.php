@@ -9,25 +9,49 @@ class NotificationsModel  {
     }
 
 
-public function InsertNotificationTechnicianFlowTicket($triggeredUserId, $ticketId) {
+public function InsertNotificationTechnicianFlowTicket($triggeredUserId, $ticketId, $LastStateTicket, $ActualStateTicket) {
     $sqlTechnician = "INSERT INTO Notifications 
-                        (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) 
+                        (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType, LastStateTicket, ActualStateTicket) 
                       VALUES 
-                        ($triggeredUserId, $ticketId, 'El estado de su ticket a cargo ha sido actualizado', 0, NOW(), 1, $triggeredUserId, 'CAMBIO_ESTADO_TICKET')";
+                        ($triggeredUserId, $ticketId, 'El estado de su ticket a cargo ha sido actualizado', 0, NOW(), 1, $triggeredUserId, 'CAMBIO_ESTADO_TICKET', '$LastStateTicket' , '$ActualStateTicket')";
 
     $vResultado = $this->enlace->executeSQL_DML($sqlTechnician);
     return $vResultado;
 }
 
-public function InsertNotificationClienteFlowTicket($triggeredUserId, $ticketId, $clientId) {
+public function InsertNotificationAssignTicketTechnician($triggeredUserId, $ticketId) {
+    $sqlTechnician = "INSERT INTO Notifications 
+                        (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) 
+                      VALUES 
+                        ($triggeredUserId, $ticketId, 'El ticket $ticketId se te ha sido asignado', 0, NOW(), 1, $triggeredUserId, 'ASIGNACION_TICKET')";
+
+    $vResultado = $this->enlace->executeSQL_DML($sqlTechnician);
+    return $vResultado;
+}
+
+
+
+public function InsertNotificationClienteFlowTicket($triggeredUserId, $ticketId, $clientId, $LastStateTicket, $ActualStateTicket) {
     $sqlClient = "INSERT INTO Notifications 
-                    (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) 
+                    (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType, LastStateTicket, ActualStateTicket) 
                   VALUES 
-                    ($clientId, $ticketId, 'El estado de su ticket ha sido actualizado', 0, NOW(), 1, $triggeredUserId, 'CAMBIO_ESTADO_TICKET')";
+                    ($clientId, $ticketId, 'El estado de su ticket ha sido actualizado', 0, NOW(), 1, $triggeredUserId, 'CAMBIO_ESTADO_TICKET', '$LastStateTicket', '$ActualStateTicket'); ";
 
     $vResultado = $this->enlace->executeSQL_DML($sqlClient); 
     return $vResultado;
 }
+
+
+//public function InsertNotificationTechToYourTickeCliente($triggeredUserId, $ticketId, $clientId) {
+//    $sqlClient = "INSERT INTO Notifications 
+  //                  (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) 
+    //              VALUES 
+      //              ($clientId, $ticketId, 'El estado de su ticket ha sido actualizado', 0, NOW(), 1, $triggeredUserId, 'CAMBIO_ESTADO_TICKET')";
+
+  //  $vResultado = $this->enlace->executeSQL_DML($sqlClient); 
+    //return $vResultado;
+//}
+
 
 
 public function InsertNotificationLogIn($userId) {
@@ -39,9 +63,9 @@ public function InsertNotificationLogIn($userId) {
 }
 
  public function GetCountNotificationsByIDUser($userId) {
-    $vSql = "SELECT COUNT(*) AS Total
+    $vSql = "SELECT COUNT(*) as Total
              FROM Notifications
-             WHERE UserId = $userId  AND Is_Read = 0";
+             WHERE UserId = $userId  AND Is_Read = 0;";
 
     $vResultado = $this->enlace->executeSQL($vSql);
     return $vResultado;
@@ -78,6 +102,7 @@ public function UpdateNotificacionAllIsRead($iduser) {
 
     return $this->enlace->executeSQL_DML($sql);
 }
+
 
 
 

@@ -12,38 +12,33 @@ const TailwinButton = "flex items-center gap-3 text-white hover:bg-blue-900 px-4
 
 export const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
 
   
 
 const { selectedUser } = useUser();
+useEffect(() => {
+  if (!selectedUser?.Id) return;
 
- useEffect(() => {
+  const fetchUnreadCount = async () => {
+    try {
+     const res = await NotificationService.GetCountNotificationsByIDUser(selectedUser.Id);
+    setUnreadCount(res.data.data[0].Total);
 
- if (!selectedUser.Id) return;
+
+    } catch (err) {
+      console.error("Error notis:", err);
+    }
+  };
+
+
+  fetchUnreadCount();
 
   
+  const interval = setInterval(fetchUnreadCount, 2000);
 
-const fetchData = async () => {
-
-try {
-
- const res = await NotificationService.GetCountNotificationsByIDUser(selectedUser.Id);
-
-setUnreadCount( res.data.data?.[0].Total);
-
- //  setunreadCount(res.data.Total)
-
-  } finally {
-
-setLoading(false);
-
- }
-};
- fetchData();
- }, [selectedUser.Id]);
+  return () => clearInterval(interval); 
+}, [selectedUser?.Id]);
 
   
 
@@ -109,23 +104,23 @@ setLoading(false);
               <span>My Tickets</span>
             </Link>
 
- <Link to="/notifications" className={`${TailwinButton} relative`}>
+            <Link to="/notifications" className={`${TailwinButton} relative`}>
 
-  <FontAwesomeIcon icon={faBell} />
+              <FontAwesomeIcon icon={faBell} />
 
-{unreadCount > 0 && (
+            {unreadCount > 0 && (
 
-  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
 
-{unreadCount}
+            {unreadCount}
 
- </span>
+            </span>
 
-)}
+            )}
 
-<span className="ml-2">Notifications</span>
+            <span className="ml-2">Notifications</span>
 
- </Link>
+            </Link>
 
 
 
