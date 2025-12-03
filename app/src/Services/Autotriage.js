@@ -26,9 +26,15 @@ const AutoTriageList = {
     AssignTicket: (data) => 
         axios.post(`${API_URL}/AssignTicket`, data),
 
-    // Asignar ticket a técnico específico
-    AssignTicketToTechnician: (data) => 
-        axios.post(`${API_URL}/AssignTicketToTechnician`, data),
+
+        UpdateTicket: (data) => 
+        axios.patch(`${API_URL}/UpdateTicket`, data),
+
+
+        InsertsTicket: (data) => 
+        axios.post(`${API_URL}/InsertsTicket`, data),
+
+
 };
 
 export default AutoTriageList;

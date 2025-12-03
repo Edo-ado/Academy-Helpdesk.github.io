@@ -126,47 +126,46 @@ class AutoTriageModel
         return $vResultado;
     }
 
-    // Asignar ticket
-    public function AssignTicket($ticketId, $technicianId, $remarks, $method)
+ 
+
+
+
+    public function UpdateTicket($ticketId, $technicianId)
     {
+              // Actualizar ticket
+$sql = "UPDATE tickets 
+        SET TechnicianId = $technicianId, 
+            State = 'Asignado' 
+        WHERE Id = $ticketId;";
+$this->enlace->executeSQL_DML($sql);
 
-        // Actualizar ticket
-        $sql = "UPDATE Tickets 
-                SET TechnicianId = $technicianId, 
-                    State = 'Asignado' 
-                WHERE Id = $ticketId;";
-        $this->enlace->executeSQL_DML($sql);
 
-        // Crear asignación
-        $sql = "INSERT INTO assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method, Active) 
-                VALUES ($ticketId, $technicianId, NOW(), $remarks '$method', 1)";
-        $this->enlace->executeSQL_DML($sql);
-
-        // Crear historial
-        $sql = "INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date, Active) 
-                VALUES ($ticketId, 'Pendiente', 'Asignado', '$remarks', $technicianId, NOW(), 1)";
-        $this->enlace->executeSQL_DML($sql);
-
-        return [
-            'success' => true,
-            'message' => 'Ticket asignado correctamente'
-        ];
+return [
+    'success' => true,
+    'message' => 'Ticket asignado correctamente'
+];
     }
 
-    public function AssignTicketToTechnician($ticketid, $technicianId, $remarks, $method)
-    {
-        $ticketid = intval($ticketid);
-        $technicianId = intval($technicianId);
-        $remarks = trim($remarks);
-        $method = trim($method);
+
+    public function Inserts($ticketId, $technicianId, $remarks, $method){
         
-        $sql = "INSERT INTO assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method) VALUES ( $ticketid, $technicianId, Now(),$remarks, $method)";
+       $sql = "INSERT INTO assignments (TicketId, UserId, Assigned_Date, Remarks, Assignment_Method, Active) 
+        VALUES ($ticketId, $technicianId, NOW(), '$remarks', '$method', 1)";
+$this->enlace->executeSQL_DML($sql);
 
-        $this->enlace->executeSQL_DML($sql);
 
-        return [
-            'success' => true,
-            'message' => 'Ticket assigned successfully'
-        ];
+$sql = "INSERT INTO TicketHistory (TicketId, Last_State, Actual_State, Observation, UserAtCharge, Update_Date, Active) 
+        VALUES ($ticketId, 'Pendiente', 'Asignado', '$remarks', $technicianId, NOW(), 1)";
+$this->enlace->executeSQL_DML($sql);
+
+
+return [
+    'success' => true,
+    'message' => 'Ticket asignado correctamente'
+];
+
     }
+
+
+   
 }

@@ -21,8 +21,9 @@ export default function AutotriagePage() {
   setLoading(true);
   try {
     // 1. Obtener TODOS los tickets pendientes
-    const res = await AutoTriageList.GetAllPendingTickets();
+    const res = await AutoTriageList.GetAllPendingTickets() ;
     
+
     // Extraer los tickets de la respuesta
     let todosPendientes = [];
     if (Array.isArray(res.data)) {
@@ -30,6 +31,7 @@ export default function AutotriagePage() {
     } else if (res.data && Array.isArray(res.data.data)) {
       todosPendientes = res.data.data;
     }
+    
 
     console.log(" Todos los tickets pendientes:", todosPendientes);
 
@@ -90,7 +92,7 @@ export default function AutotriagePage() {
 };
 
 
-  //DA ERROR
+  //Incompleto
 
   const cargarTicketsManual = async () => {
     setLoading(true);
@@ -141,7 +143,7 @@ export default function AutotriagePage() {
  
 
       // Obtener técnicos con la especialidad requerida
-      const tecnicosRes = await AutoTriageList.GetTechniciansBySpeciality(regla.SpecialityId);
+      const tecnicosRes = await AutoTriageList.GetTechniciansByCategory(regla.SpecialityId);
       
       let listaTecnicos = [];
       if (Array.isArray(tecnicosRes.data)) {
@@ -163,18 +165,29 @@ export default function AutotriagePage() {
         (prev.CurrentTicketCount < current.CurrentTicketCount) ? prev : current
       );
 
+      console.log("Técnico seleccionado para asignación automática:", tecnicoSeleccionado);
+
+    
 
 
-
-      if (assignRes?.data) {
-        alert(`Ticket asignado automáticamente a ${tecnicoSeleccionado.UserName}`);
-        await cargarTicketsAuto();
+      const actualizacion = await AutoTriageList.UpdateTicket({
+        TicketId: ticket.TicketId,
+        TechnicianId: tecnicoSeleccionado.TechnicianId,
         
-        // Recargar manual también por si acaso
-        if (tab === "manual") {
-          await cargarTicketsManual();
-        }
-      }
+      });
+
+
+      const insertar = await AutoTriageList.InsertsTicket({
+        TicketId: ticket.TicketId,
+        TechnicianId: tecnicoSeleccionado.TechnicianId,
+        Remarks: `Asignación automática por autotriage. Regla aplicada: R${regla.RuleOrder}, Especialidad: ${regla.SpecialityName}`,
+        Method: "AutoTriage"
+      });
+
+      console.log("Respuesta de asignación automática:", insertar);
+
+
+     
 
     } catch (error) {
       console.error("Error en asignación automática:", error);

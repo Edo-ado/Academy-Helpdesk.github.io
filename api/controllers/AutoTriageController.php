@@ -81,24 +81,44 @@ class AutoTriageController
     }
 
 
-    public function AssignTicketToTechnician()
-    {
-      
+    public function UpdateTicket()  {
         try {
             $request = new Request();
             $response = new Response();
             $inputJSON = $request->getJSON();
             
             $autoTriage = new AutoTriageModel();
-            $result = $autoTriage->AssignTicketToTechnician(
+            $result = $autoTriage->UpdateTicket(
                 $inputJSON->TicketId,
                 $inputJSON->TechnicianId,
-                $inputJSON->remarks,
-                $inputJSON->Method
+            
             );
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
         }
+        
     }
+
+    public function InsertsTicket() {
+        try {
+            $request = new Request();
+            $response = new Response();
+            $inputJSON = $request->getJSON();
+            $autoTriage = new AutoTriageModel();
+            $result = $autoTriage->Inserts(
+                $inputJSON->TicketId,
+                $inputJSON->TechnicianId,
+                $inputJSON->Remarks,
+                $inputJSON->Method
+                );
+                $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+
+
+        }
+    }
+
+
 }
