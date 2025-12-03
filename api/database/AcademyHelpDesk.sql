@@ -724,3 +724,5 @@ ALTER TABLE `dbacademyhelpdesk`.`notifications`
 ADD COLUMN `TriggeredByUserId` INT(11) NULL DEFAULT NULL AFTER `Active`,
 ADD COLUMN `EventType` VARCHAR(45) NULL DEFAULT NULL AFTER `TriggeredByUserId`;
 
+INSERT INTO Technician_Specialities (UserId, SpecialityId)
+VALUES (1, 1);

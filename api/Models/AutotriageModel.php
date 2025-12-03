@@ -1,6 +1,6 @@
 <?php
 class AutoTriageModel
-{
+    {
     public $enlace;
 
     public function __construct()

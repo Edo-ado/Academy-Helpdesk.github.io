@@ -16,12 +16,13 @@ export function Notifications() {
     const fetchData = async () => {
       try {
         const res = await NotificationService.GetNotificationsByIDUser(selectedUser.Id);
-        console.log("Response:", res.data);
-        
+    
         const data = res.data.data;
-        console.log("Data:", data);
-        
-        setNotifications(Array.isArray(data) ? data : []);
+  
+        setNotifications(data);
+        console.log(data);
+
+        //updatear
       } catch (error) {
         console.error("Error:", error);
         setNotifications([]);
@@ -32,6 +33,26 @@ export function Notifications() {
 
     fetchData();
   }, [selectedUser.Id]);
+
+async function marcarTodas() {
+  try {
+    await NotificationService.UpdateNotificacionAllIsRead(selectedUser.Id);
+    const res = await NotificationService.GetNotificationsByIDUser(selectedUser.Id);
+    setNotifications(res.data.data);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function marcarComoLeida(id) {
+  try {
+    await NotificationService.UpdateNotificacionIsRead(id);
+    const res = await NotificationService.GetNotificationsByIDUser(selectedUser.Id);
+    setNotifications(res.data.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
   return (
     <div className="min-h-screen w-full bg-[#dff1ff] flex justify-center">
@@ -58,9 +79,10 @@ export function Notifications() {
             {notifications.map((n) => (
               <li
                 key={n.Id}
-                className={`w-full flex items-center gap-4 px-6 py-4 border-b border-gray-100 ${
-                  n.Is_Read ? "bg-white" : "bg-gray-50"
-                }`}
+             className={`w-full flex items-center gap-4 px-6 py-4 border-b border-gray-100 ${
+                n.Is_Read == 0 ? "bg-gray-50" : "bg-white"
+              }`}
+
               >
                 {/* Icono */}
                 <div className="w-8 h-8 rounded-full bg-[#0a1e4a] text-white font-sansflex items-center justify-center">
@@ -72,16 +94,23 @@ export function Notifications() {
 
                   {n.TicketId && (
                     <p className="font-bold text-[#c2983d] mt-1">
-                      Ticket #{n.TicketId}
+                      Ticket #{n.TicketId} 
                     </p>
                   )}
 
                   <p className="font-sans text-gray-400 mt-1">
-                    {n.Created_At}
+                    {n.Created_At} 
                   </p>
-                    <button >
-                      Recibido
+                  {n.Is_Read == 0 && (
+                    <button
+                      className="mt-2 px-3 py-1 rounded-full text-xs border border-[#DFA200] text-[#DFA200]
+                                hover:bg-[#0a1e4a] hover:text-white transition"
+                      onClick={() => marcarComoLeida(n.Id)}
+                    >
+                      Marcar como leído
                     </button>
+                  )}
+
 
                 </div>
               </li>
