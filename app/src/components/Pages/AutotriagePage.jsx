@@ -294,32 +294,23 @@ export default function AutotriagePage() {
       console.log("techId recibido:", techId, "convertido a:", techIdNumber);
       console.log("Técnicos disponibles:", tecnicos);
       
-      const tecnicoSeleccionado = tecnicos.find(t => t.TechnicianId === techIdNumber);
+     
 
-      console.log("Técnico seleccionado para asignación manual:", tecnicoSeleccionado);
+     
 
-      if (!tecnicoSeleccionado) {
-        alert("Técnico no encontrado. Verificar que el ID coincida.");
-        setLoading(false);
-        return;
-      }
+   
 
       // Crear observación detallada
-      const remarks = `Asignación manual por administrador. ` +
-        `Categoría: ${ticket.CategoryName}, Prioridad: ${ticket.PriorityName}, ` +
-        `Técnico seleccionado: ${tecnicoSeleccionado.UserName}, ` +
-        `Especialidades: ${tecnicoSeleccionado.Specialities}, ` +
-        `Carga actual: ${tecnicoSeleccionado.CurrentTicketCount} tickets`;
-
+     
       // Asignar ticket manualmente
       const actualizacion = await AutoTriageList.UpdateTicket({
         TicketId: ticket.TicketId,
-        TechnicianId: tecnicoSeleccionado.TechnicianId,
+        TechnicianId: techIdNumber,
       });
 
       const insertar = await AutoTriageList.InsertsTicket({
         TicketId: ticket.TicketId,
-        TechnicianId: tecnicoSeleccionado.TechnicianId,
+        TechnicianId: techIdNumber,
         Remarks: `Asignación manual por el Administrador.`,
         Method: "AutoTriage"
       });
@@ -342,7 +333,7 @@ export default function AutotriagePage() {
       }
 
       if (success) {
-        alert(`Ticket asignado manualmente a ${tecnicoSeleccionado.UserName}`);
+        alert(`Ticket asignado manualmente a ${techIdNumber}`);
         
         // Limpiar selección
         setSelectedTech(prev => ({
