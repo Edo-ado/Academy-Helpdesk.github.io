@@ -222,9 +222,11 @@ const historyId = response.data.data.historyId;
         }
     }
     //notificaciones, enviar
-    await NotificationsService.InsertNotificationClienteFlowTicket(selectedUser.Id, id, ticket.IdCliente);
-    await NotificationsService.InsertNotificationTechnicianFlowTicket(selectedUser.Id, id);
 
+
+    await NotificationsService.InsertNotificationClienteFlowTicket(selectedUser.Id, id, ticket.IdCliente, ticket.state, nextState);
+    await NotificationsService.InsertNotificationTechnicianFlowTicket(selectedUser.Id, id, ticket.state, nextState);
+   
  
     toast.success("Estado del ticket actualizado");
 

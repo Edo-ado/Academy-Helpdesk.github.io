@@ -22,7 +22,7 @@ export function Notifications() {
         setNotifications(data);
         console.log(data);
 
-        //updatear
+
       } catch (error) {
         console.error("Error:", error);
         setNotifications([]);
@@ -85,18 +85,25 @@ async function marcarComoLeida(id) {
 
               >
                 {/* Icono */}
-                <div className="w-8 h-8 rounded-full bg-[#0a1e4a] text-white font-sansflex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#0a1e4a] text-white font-sans flex items-center justify-center">
                   {n.EventType === "CAMBIO_ESTADO_TICKET" ? "TK" : "OK"}
                 </div>
 
                 <div className="flex-1">
                   <p className="font-sans text-gray-800">{n.Message}</p>
 
-                  {n.TicketId && (
-                    <p className="font-bold text-[#c2983d] mt-1">
-                      Ticket #{n.TicketId} 
-                    </p>
-                  )}
+             {n.TicketId && (
+                <div className="mt-1">
+                  <p className="font-sans text-[#c2983d]">
+                    Ticket #{n.TicketId}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    <span className="font-medium">Estado Anterior: {n.LastStateTicket} • Estado Actual: {n.ActualStateTicket}</span> 
+                    
+                 
+                  </p>
+                </div>
+              )}
 
                   <p className="font-sans text-gray-400 mt-1">
                     {n.Created_At} 

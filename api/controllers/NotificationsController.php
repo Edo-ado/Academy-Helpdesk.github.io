@@ -17,12 +17,33 @@ class NotificationsController
     }
 
 
-    public function InsertNotificationTechnicianFlowTicket($triggeredUserId,$ticketId)
+
+ public function InsertNotificationTechnicianFlowTicket()
+{
+    try {
+        $response = new Response();
+        $NOTI = new NotificationsModel();
+        
+       
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        $result = $NOTI->InsertNotificationTechnicianFlowTicket(
+            $data['triggeredUserId'],
+            $data['ticketId'],
+            $data['LastStateTicket'],
+            $data['ActualStateTicket']
+        );
+        $response->toJSON($result);
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+        public function InsertNotificationAssignTicketTechnician($triggeredUserId,$ticketId)
     {
         try {
             $response = new Response();
             $NOTI = new NotificationsModel();
-            $result = $NOTI->InsertNotificationTechnicianFlowTicket($triggeredUserId, $ticketId );
+            $result = $NOTI->InsertNotificationAssignTicketTechnician($triggeredUserId, $ticketId);
             $response->toJSON($result);
         } catch (Exception $e) {
             handleException($e);
@@ -30,17 +51,28 @@ class NotificationsController
     }
 
 
-    public function InsertNotificationClienteFlowTicket($triggeredUserId, $ticketId, $clientId)
-    {
-        try {
-            $response = new Response();
-            $NOTI = new NotificationsModel();
-            $result = $NOTI->InsertNotificationClienteFlowTicket($triggeredUserId, $ticketId, $clientId);
-            $response->toJSON($result);
-        } catch (Exception $e) {
-            handleException($e);
-        }
+
+public function InsertNotificationClienteFlowTicket()
+{
+    try {
+        $response = new Response();
+        $NOTI = new NotificationsModel();
+        
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        $result = $NOTI->InsertNotificationClienteFlowTicket(
+            $data['triggeredUserId'],
+            $data['ticketId'],
+            $data['clientId'],
+            $data['LastStateTicket'],
+            $data['ActualStateTicket']
+        );
+        $response->toJSON($result);
+    } catch (Exception $e) {
+        handleException($e);
     }
+}
+
 
         public function InsertNotificationLogIn($UserId)
     {
@@ -101,5 +133,15 @@ class NotificationsController
         }
 }
 
+  public function GetNotificationWithTicketById($iduser){
+       try {
+            $response = new Response();
+            $NOTI = new NotificationsModel();
+            $result = $NOTI->GetNotificationWithTicketById($notificationId);
+            $response->toJSON($result);
+        } catch (Exception $e) {
+            handleException($e);
+        }
+}
 
 }
