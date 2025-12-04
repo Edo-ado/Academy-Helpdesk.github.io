@@ -28,6 +28,9 @@ import { UpdateTechnician } from "./components/Pages/UpdateTechnician"
 import { TrazabilidadTicket } from "./components/Pages/TrazabilidadTicket"
 import { Notifications } from "./components/Pages/Notifications"
 
+import './Translations/i18n';
+
+
 
 // Crear las rutas
 const rutas = createBrowserRouter([
@@ -44,7 +47,7 @@ const rutas = createBrowserRouter([
      { path: '/category/:id', element: <DetailCategory /> },
      { path: '/tickets', element: <Tickets /> },
      { path: '/ticket/:id', element: <DetailTicket /> },
-     { path: '/my-tickets', element: <MyTiñckets /> }, 
+     { path: '/my-tickets', element: <MyTickets /> }, 
      //trazabilidadticket
      { path: '/my-tickets/:id', element: <TrazabilidadTicket /> }, 
 
