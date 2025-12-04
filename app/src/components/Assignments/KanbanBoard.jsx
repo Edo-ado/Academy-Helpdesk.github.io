@@ -1,24 +1,42 @@
 // src/components/Assignments/KanbanBoard.jsx
 import React from 'react';
 import { KanbanColumn } from './KanbanColumn';
+import { useTranslation } from "react-i18next";
 
 export function KanbanBoard({ tickets, onTicketClick }) {
+  const { t } = useTranslation();
   
-  // Agrupar tickets por estado
+  const normalizeState = (state) => {
+    const stateMap = {
+      'Pendiente': 'pending',
+      'Pending': 'pending',
+      'Asignado': 'assigned',
+      'Assigned': 'assigned',
+      'En Proceso': 'inProgress',
+      'En Progreso': 'inProgress',
+      'In Progress': 'inProgress',
+      'Resuelto': 'resolved',
+      'Resolved': 'resolved',
+      'Cerrado': 'closed',
+      'Closed': 'closed'
+    };
+    return stateMap[state] || 'pending';
+  };
+
   const groupedTickets = {
-    'Pendiente': tickets.filter(t => t.State === 'Pendiente'),
-    'Asignado': tickets.filter(t => t.State === 'Asignado'),
-    'En Progreso': tickets.filter(t => t.State === 'En Proceso'),
-    'Resuelto': tickets.filter(t => t.State === 'Resuelto'),
-    'Cerrado': tickets.filter(t => t.State === 'Cerrado')
+    'pending': tickets.filter(t => normalizeState(t.State) === 'pending'),
+    'assigned': tickets.filter(t => normalizeState(t.State) === 'assigned'),
+    'inProgress': tickets.filter(t => normalizeState(t.State) === 'inProgress'),
+    'resolved': tickets.filter(t => normalizeState(t.State) === 'resolved'),
+    'closed': tickets.filter(t => normalizeState(t.State) === 'closed')
   };
 
   const columns = [
-    { key: 'Pendiente', label: 'Pendiente' },
-    { key: 'Asignado', label: 'Asignado' },
-    { key: 'En Progreso', label: 'En Proceso' },
-    { key: 'Resuelto', label: 'Resuelto' },
-    { key: 'Cerrado', label: 'Cerrado' }
+    { key: 'pending', label: t("kanban.columns.pending") },
+    { key: 'assigned', label: t("kanban.columns.assigned") },
+    { key: 'inProgress', label: t("kanban.columns.inProgress") },
+    { key: 'resolved', label: t("kanban.columns.resolved") },
+    { key: 'closed', label: t("kanban.columns.closed") }
   ];
 
   return (

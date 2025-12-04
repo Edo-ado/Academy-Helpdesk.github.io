@@ -11,9 +11,12 @@ import {
   faUsers,
   faWrench
 } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from "react-i18next"; 
 
 export function TicketCard({ ticket, onClick }) {
   
+  const { t } = useTranslation();
+
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 3: return 'border-red-500';
@@ -41,14 +44,25 @@ export function TicketCard({ ticket, onClick }) {
   };
 
   const getProgressByState = (state) => {
-    switch (state) {
-      case 'Pendiente': return { percent: 0, color: 'bg-red-400' };
-      case 'Asignado': return { percent: 25, color: 'bg-orange-400' };
-      case 'En Proceso': return { percent: 50, color: 'bg-yellow-400' };
-      case 'Resuelto': return { percent: 75, color: 'bg-green-400' };
-      case 'Cerrado': return { percent: 100, color: 'bg-green-500' };
-      default: return { percent: 0, color: 'bg-gray-400' };
-    }
+    const stateMap = {
+      'Pendiente': { key: 'pending', percent: 0, color: 'bg-red-400' },
+      'Pending': { key: 'pending', percent: 0, color: 'bg-red-400' },
+      'Asignado': { key: 'assigned', percent: 25, color: 'bg-orange-400' },
+      'Assigned': { key: 'assigned', percent: 25, color: 'bg-orange-400' },
+      'En Proceso': { key: 'inProgress', percent: 50, color: 'bg-yellow-400' },
+      'In Progress': { key: 'inProgress', percent: 50, color: 'bg-yellow-400' },
+      'Resuelto': { key: 'resolved', percent: 75, color: 'bg-green-400' },
+      'Resolved': { key: 'resolved', percent: 75, color: 'bg-green-400' },
+      'Cerrado': { key: 'closed', percent: 100, color: 'bg-green-500' },
+      'Closed': { key: 'closed', percent: 100, color: 'bg-green-500' }
+    };
+    
+    return stateMap[state] || { key: 'pending', percent: 0, color: 'bg-gray-400' };
+  };
+
+   const isCompleted = (state) => {
+    return state === 'Resuelto' || state === 'Resolved' || 
+           state === 'Cerrado' || state === 'Closed';
   };
 
 const priorityColor = getPriorityColor(Number(ticket.Priority));
@@ -64,12 +78,12 @@ const priorityColor = getPriorityColor(Number(ticket.Priority));
     >
       <div className="mb-2">
         <span className="text-sm font-bold text-gray-700">
-          ID  {ticket.TicketId}
+          {t("ticketCard.id")} {ticket.TicketId}
         </span>
       </div>
 
       <div className="mb-2">
-        <p className="text-xs text-gray-600 font-semibold mb-1">Categoría:</p>
+        <p className="text-xs text-gray-600 font-semibold mb-1"> {t("ticketCard.category")} </p>
         <div className="flex items-center gap-2">
           <FontAwesomeIcon icon={categoryIcon} className="text-blue-600 text-sm" />
           <span className="text-sm text-gray-800 font-medium">
@@ -80,17 +94,17 @@ const priorityColor = getPriorityColor(Number(ticket.Priority));
 
       <div className="mb-3">
         <p className="text-xs text-gray-600 font-semibold mb-1">
-          Tiempo Restante SLA:
+           {t("ticketCard.slaTimeRemaining")}
         </p>
         {ticket.State === 'Resuelto' || ticket.State === 'Cerrado' ? (
           <span className="text-sm text-green-600 font-semibold">
-            Completado
+             {t("ticketCard.completed")} 
           </span>
         ) : (
           <span className="text-sm text-gray-800 font-medium">
             {ticket.TimeRemaining > 0 
-              ? `${ticket.TimeRemaining} h` 
-              : 'Vencido'}
+              ?  `${ticket.TimeRemaining} ${t("ticketCard.hours")}` 
+              : t("ticketCard.overdue") }
           </span>
         )}
       </div>

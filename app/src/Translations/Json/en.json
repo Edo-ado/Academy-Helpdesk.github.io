@@ -96,13 +96,28 @@
       "medium": "Medium",
       "low": "Low"
     },
-    "categories": {
-      "title": "Categories",
-      "name": "Name",
-      "description": "Description",
-      "active": "Active",
-      "inactive": "Inactive"
-    },
+  "categories": {
+  "title": "Categories",
+  "listTitle": "Categories List",
+  "name": "Name",
+  "description": "Description",
+  "id": "ID",
+  "actions": "Actions",
+  "active": "Active",
+  "inactive": "Inactive",
+  "create": "Create Category",
+  "edit": "Edit",
+  "delete": "Delete",
+  "viewDetail": "View Details",
+  "notFound": "Category not found",
+  "confirmReactivate": "This category is inactive. Do you want to reactivate it?",
+  "confirmDelete": "Are you sure you want to deactivate this category?",
+  "alreadyDisabled": "Reactivate category",
+  "dataDisabled": "This data is disabled",
+  "errorTitle": "Error loading categories",
+  "noData": "No categories available"
+},
+
     "specialties": {
       "title": "Specialties",
       "name": "Name",
@@ -125,13 +140,15 @@
       "passwordMismatch": "Passwords do not match",
       "fillAllFields": "Please fill in all fields"
     },
-    "Tech": {
-      "technicianListTitle": "Technicians List",
-      "Username": "Username",
-      "Email": "E-Mail",
-      
-      "IdNumber": "Identification Number"
-    },
+   "Tech": {
+  "technicianListTitle": "Technicians List",
+  "Username": "Username",
+  "Email": "E-Mail",
+  "IdNumber": "Identification Number",
+  "loading": "Loading technicians...",
+  "error": "Error loading technicians",
+  "noData": "No technicians available"
+},
 
     "TechDetails" : {
       "BackToList" : "Back to the list",
@@ -152,9 +169,240 @@
       "Nocharge" : "No workcharge",
       "Speciality" : "Speciality",
       "NoSpeciality" :"This technicians doesnt have any Speciality assigned"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "markAllRead": "Mark all pending notifications as read",
+      "markAsRead": "Mark as read",
+      "noNotifications": "You don't have notifications",
+      "comingSoon": "They'll arrive soon :3",
+      "loading": "Loading...",
+      "ticket": "Ticket",
+      "previousState": "Previous State",
+      "currentState": "Current State",
+      "allRead": "All notifications are read",
+      "events": {
+        "statusChange": "TK",
+        "assignment": "ASG",
+        "login": "LG",
+        "default": "OK"
+      }
+    
+    },
+     
+  "myTickets": {
+      "title": "Assignments View",
+      "loading": "Loading assignments...",
+      "noUserSelected": "Please select a user in the header",
+      "viewByWeek": "View by Week",
+      "viewByDay": "View by Day",
+      "showingWeek": "Showing tickets for the week of",
+      "showingDay": "Showing tickets for",
+      "ticketsCount": "tickets",
+      "ticket": "ticket",
+      "noTicketsTitle": "No tickets assigned",
+      "noTicketsWeek": "No tickets for this week",
+      "noTicketsDay": "No tickets for this day",
+      "errorTitle": "Error loading tickets",
+      "retryButton": "Retry"
+    },
+  
+    "ticketCard": {
+      "id": "ID",
+      "category": "Category:",
+      "slaTimeRemaining": "SLA Time Remaining:",
+      "completed": "Completed",
+      "overdue": "Overdue",
+      "hours": "h",
+      "states": {
+        "pending": "Pending",
+        "assigned": "Assigned",
+        "inProgress": "In Progress",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      }
+    
+
+  },
+   "kanban": {
+      "noTickets": "No tickets",
+      "columns": {
+        "pending": "Pending",
+        "assigned": "Assigned",
+        "inProgress": "In Progress",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      }
+    },
+     "createTechnician": {
+      "title": "Create Technician",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Full name",
+      "email": "Email",
+      "emailPlaceholder": "technician@Helpdesk.com",
+      "password": "Password",
+      "passwordPlaceholder": "********",
+      "insurance": "Medical Insurance",
+      "workPosition": "Work Position",
+      "workPositionPlaceholder": "Accountant",
+      "specialties": "Specialties",
+      "addSpecialty": "Add specialty",
+      "backButton": "Back",
+      "saveButton": "Save",
+      "successMessage": "Technician {{name}} created successfully",
+      "errorMessage": "Error creating technician",
+      "duplicateSpecialties": "Cannot select duplicate specialties",
+      "validation": {
+        "nameRequired": "Full name is required",
+        "nameMin": "Must be at least 2 characters",
+        "insuranceRequired": "Insurance is required",
+        "insuranceInvalid": "Must select an insurance",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Invalid email format",
+        "workPositionRequired": "Work position is required",
+        "workPositionMin": "Must be at least 2 characters",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Minimum 6 characters",
+        "roleRequired": "Role is required",
+        "specialtyRequired": "Specialty is required",
+        "specialtyInvalid": "Must select a specialty",
+        "specialtiesMin": "Must select at least one specialty"
+      }
+    },
+     "categoryDetail": {
+      "loading": "Loading details...",
+      "backToList": "Back to list",
+      "notFound": "Category not found",
+      "error": "Error loading details",
+      "slaTitle": "Service Level Agreement (SLA)",
+      "maxResponseTime": "Maximum Response Time",
+      "maxResolutionTime": "Maximum Resolution Time",
+      "hours": "h",
+      "specialties": "Specialties",
+      "noSpecialties": "No specialties assigned",
+      "tags": "Tags",
+      "noTags": "No tags assigned"
+    },
+
+    "ticketDetail": {
+      "loading": "Loading ticket details...",
+      "backToList": "Back to list",
+      "back": "Back",
+      "ticketNotFound": "Ticket not found",
+      "error": "Error loading ticket details",
+      "ticket": "Ticket",
+      "priority": "Priority",
+      "state": "State",
+      "description": "Description",
+      "category": "Category",
+      "client": "Client",
+      "assignedTechnician": "Assigned Technician",
+      "priorityLevel": "Priority Level",
+      "unassigned": "Unassigned",
+      "timeline": "Timeline",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "totalDuration": "Total Duration",
+      "day": "day",
+      "days": "days",
+      "slaTitle": "Response and Resolution SLA",
+      "responseSLA": "Response SLA",
+      "resolutionSLA": "Resolution SLA",
+      "comments": "Comments",
+      "noComments": "No comments recorded.",
+      "ratings": "Ratings",
+      "noRatings": "No ratings available.",
+      "noAdditionalComment": "No additional comment.",
+      "by": "By",
+      "evidences": "Evidences",
+      "evidence": "Evidence",
+      "noEvidences": "No evidences recorded.",
+      "priorities": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "unknown": "Unknown"
+      },
+      "states": {
+        "pending": "Pending",
+        "assigned": "Assigned",
+        "inProgress": "In Progress",
+        "resolved": "Resolved",
+        "closed": "Closed",
+        "unknown": "Unknown"
+      }
+    },
+    "ticketsList": {
+  "title": "Tickets List",
+  "create": "Create ticket",
+  "id": "ID",
+  "titleColumn": "Title",
+  "category": "Category",
+  "actions": "Actions",
+  "viewDetail": "View details",
+  "errorTitle": "Error loading tickets",
+  "noData": "No tickets found.",
+  "back": "Back"
+},
+"technicians": {
+  "listTitle": "Technicians List",
+  "create": "Create Technician",
+  "code": "Code",
+  "username": "Username",
+  "email": "Email",
+  "actions": "Actions",
+  "update": "Update",
+  "viewDetail": "View Details",
+  "delete": "Delete",
+  "notFound": "Technician not found",
+  "confirmReactivate": "This user is already inactive. Do you want to activate it?",
+  "confirmDelete": "Are you sure you want to delete this technician?",
+  "errorTitle": "Error loading technicians",
+  "noData": "No technicians found.",
+  "back": "Back"
+},
+"ticketTraceability": {
+  "backToList": "Back to list",
+  "ticket": "Ticket",
+  "priority": "Priority",
+  "description": "Description",
+  "category": "Category",
+  "client": "Client",
+  "assignedTechnician": "Assigned Technician",
+  "unassigned": "Unassigned",
+  "priorityLevel": "Priority Level",
+  "comments": "Comments",
+  "noComments": "No comments recorded.",
+  "by": "By",
+  "noHistory": "No movement has been registered in this ticket yet.",
+  "updateState": "Update Ticket Status",
+  "currentState": "Current Status:",
+  "nextState": "Status to Update:",
+  "dateTime": "Date and time of record",
+  "responsible": "Responsible user",
+  "observation": "Observation",
+  "observationPlaceholder": "Write a description of the change...",
+  "evidence": "Evidence",
+  "imageHelp": "Click or drag an image here",
+  "imageFormat": "(jpg, png, maximum 5MB)",
+  "updateButton": "Update Status",
+  "loading": "Loading ticket details...",
+  "back": "Back"
+},
+"ticketHistory": {
+  "title": "Ticket History",
+  "initialState": "Initial state:",
+  "responsible": "Responsible:",
+  "evidence": "evidence",
+  "noHistory": "No history recorded for this ticket."
+}
 
 
 
-    }
+
+
+
+
+
   }
 }

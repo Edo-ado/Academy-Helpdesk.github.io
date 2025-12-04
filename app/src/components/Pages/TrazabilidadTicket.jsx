@@ -12,7 +12,7 @@ import { CustomInputField } from "../../components/ui/custom/custom-input-field"
 import { Plus, Save, ArrowLeft } from "lucide-react";
 import { useUser } from '../../context/UserContext';
 import ComponentCardCronology from "../ui/ComponentCardCronology";
-
+import { useTranslation } from "react-i18next";
 import { toast } from "react-hot-toast";
 
 import { faArrowLeft,
@@ -50,7 +50,7 @@ export function TrazabilidadTicket() {
   const [fechaHora, setFechaHora] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
+const { t } = useTranslation();
 
   
    /*** Esquema de validación Yup ***/
@@ -398,7 +398,7 @@ return (
         className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition font-semibold"
       >
         <span className="text-xl">←</span>
-        <span>Volver a la lista</span>
+        <span>{t("ticketTraceability.backToList")}</span>
       </button>
 
       {/* Tarjeta Principal del Ticket */}
@@ -413,7 +413,7 @@ return (
           <p className="text-gray-600 text-sm mb-3">Ticket #{ticket.ticketId}</p>
           <div className="flex justify-center gap-3 flex-wrap">
             <span className={`inline-block ${priorityConfig.color} text-white px-4 py-1 rounded-full text-sm font-semibold`}>
-              <FontAwesomeIcon icon={faFire} /> Prioridad: {priorityConfig.label}
+              <FontAwesomeIcon icon={faFire} /> {t("ticketTraceability.priority")}:{priorityConfig.label}
             </span>
             <span className={`inline-block ${stateConfig.color} px-4 py-1 rounded-full text-sm font-semibold`}>
               {stateConfig.icon} {stateConfig.label}
@@ -426,7 +426,7 @@ return (
         <div className="mb-6 bg-gray-50 p-6 rounded-lg">
           <h3 className="font-semibold text-gray-700 mb-3 text-lg"> 
             <FontAwesomeIcon icon={faClipboardList} className="text-gray-700 mr-3" />
-            Descripción</h3>
+            {t("ticketTraceability.description")}</h3>
           <p className="text-gray-900 leading-relaxed whitespace-pre-wrap">
             {ticket.description}
           </p>
@@ -437,7 +437,7 @@ return (
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-blue-600 text-xl"> <FontAwesomeIcon icon={faFolder} /></span>
-              <p className="font-semibold text-gray-700">Categoría</p>
+              <p className="font-semibold text-gray-700">{t("ticketTraceability.category")}</p>
             </div>
             <p className="text-gray-900 font-medium">{ticket.Category}</p>
           </div>
@@ -445,7 +445,7 @@ return (
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-blue-600 text-xl"> <FontAwesomeIcon icon={faUser} /></span>
-              <p className="font-semibold text-gray-700">Cliente</p>
+              <p className="font-semibold text-gray-700">{t("ticketTraceability.client")}</p>
             </div>
             <p className="text-gray-900 font-medium">{ticket.client}</p>
           </div>
@@ -453,7 +453,7 @@ return (
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-blue-600 text-xl"> <FontAwesomeIcon icon={faUserTie} /></span>
-              <p className="font-semibold text-gray-700">Técnico Asignado</p>
+              <p className="font-semibold text-gray-700">{t("ticketTraceability.assignedTechnician")}</p>
             </div>
             <p className="text-gray-900 font-medium">
               {ticket.technician === "Sin asignar" ? (
@@ -467,7 +467,7 @@ return (
           <div className={`${priorityConfig.bgLight} p-4 rounded-lg border-l-4 ${priorityConfig.borderColor}`}>
             <div className="flex items-center gap-2 mb-2">
               <span className={`${priorityConfig.textColor} text-xl`}> <FontAwesomeIcon icon={faTriangleExclamation} /></span>
-              <p className="font-semibold text-gray-700">Nivel de Prioridad</p>
+              <p className="font-semibold text-gray-700">{t("ticketTraceability.priorityLevel")}</p>
             </div>
             <p className={`${priorityConfig.textColor} font-bold text-lg`}>
               {priorityConfig.label}
@@ -481,7 +481,7 @@ return (
       <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600 mb-6">
         <div className="flex items-center gap-2 mb-6">
           <FontAwesomeIcon icon={faComments} className="text-blue-500 text-2xl" />
-          <h2 className="text-2xl font-bold text-gray-900">Comentarios</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t("ticketTraceability.comments")}</h2>
         </div>
 
         {ticket.comments?.length > 0 ? (
@@ -490,13 +490,13 @@ return (
               <div key={c.id} className="bg-gray-50 p-4 rounded-lg border-l-4 border-blue-400">
                 <p className="text-gray-900 font-medium">{c.text}</p>
                 <p className="text-sm text-gray-600 mt-1">
-                  Por {c.user} — {c.date}
+                  {t("ticketTraceability.by")} {c.user} — {c.date}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 italic">No hay comentarios registrados.</p>
+          <p className="text-gray-500 italic">{t("ticketTraceability.noHistory")}</p>
         )}
       </div>
 
@@ -530,18 +530,18 @@ return (
 
   <div className="flex items-center gap-3 mb-6">
     <FontAwesomeIcon icon={faTicket} className="text-blue-600 text-2xl" />
-    <h2 className="text-2xl font-bold text-gray-900">Actualizar Estado del Ticket</h2>
+    <h2 className="text-2xl font-bold text-gray-900">{t("ticketTraceability.updateState")}</h2>
   </div>
 
   {/* estado */}
   <div className="flex flex-wrap gap-2 mb-6">
     <span className={`inline-block ${stateConfig.color} px-4 py-2 rounded-full text-sm font-semibold  `}>
-      Estado Actual: {stateConfig.label}
+      {t("ticketTraceability.currentState")} {stateConfig.label}
     </span>
 
 
 <span className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
-  Estado a Actualizar: {nextState}
+  {t("ticketTraceability.nextState")} {nextState}
 </span>
 
   </div>
@@ -550,7 +550,7 @@ return (
   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
     <div className="grid sm:grid-cols-2 gap-6">
       <div>
-        <label className="block mb-1 text-sm font-medium">Fecha y hora del registro</label>
+        <label className="block mb-1 text-sm font-medium">{t("ticketTraceability.dateTime")}  </label>
         <input
           type="datetime-local"
           value={fechaHoraLocal}
@@ -563,7 +563,7 @@ return (
       <div>
         <label className="block mb-1 text-sm font-medium  items-center gap-2">
           <FontAwesomeIcon icon={faUser} className="text-blue-600" />
-          Usuario responsable
+          {t("ticketTraceability.responsible")}
         </label>
         <div className="p-2 px-4 rounded-xl border border-gray-300 bg-gray-50 text-gray-900">
           {ticket.client}
@@ -580,8 +580,8 @@ return (
         render={({ field }) => (
           <CustomInputField
             {...field}
-            label="Observación"
-            placeholder="Escriba una descripción del cambio..."
+           label={t("ticketTraceability.observation")}
+           placeholder={t("ticketTraceability.observationPlaceholder")}
             error={errors.observacion?.message}
           />
         )}
@@ -590,7 +590,7 @@ return (
 
     {/* IMAGEN */}
     <div className="flex flex-col items-start">
-      <label className="mb-2 text-sm font-medium">Evidencia</label>
+      <label className="mb-2 text-sm font-medium">{t("ticketTraceability.evidence")}</label>
 
       <div
         className="relative w-56 h-56 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center cursor-pointer overflow-hidden hover:border-blue-500 transition"
@@ -598,8 +598,8 @@ return (
       >
         {!fileURL && (
           <div className="text-center px-4 text-gray-500">
-            <p>Haz clic o arrastra una imagen aquí</p>
-            <p className="text-xs">(jpg, png, máximo 5MB)</p>
+            <p>{t("ticketTraceability.imageHelp")}</p>
+            <p className="text-xs">({t("ticketTraceability.imageFormat")})</p>
           </div>
         )}
 
@@ -631,7 +631,7 @@ return (
         className="px-6 py-3 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046] flex items-center gap-2"
       >
         <Save className="w-4 h-4" />
-        Actualizar Estado
+        {t("ticketTraceability.updateButton")}
       </Button>
     </div>
 

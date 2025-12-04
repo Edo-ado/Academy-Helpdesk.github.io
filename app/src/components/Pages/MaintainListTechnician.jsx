@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate, Link } from "react-router-dom";
-
+import { useTranslation } from "react-i18next"; 
 import {
   Table,
   TableHeader,
@@ -39,7 +39,7 @@ export default function MaintainListTechnician() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-
+const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export default function MaintainListTechnician() {
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-start gap-6 mb-6 ml-4 sm:ml-8 lg:ml-16">
         <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-          Listado de técnicos
+          {t("technicians.listTitle")}
         </h1>
 
         <TooltipProvider>
@@ -141,7 +141,7 @@ export default function MaintainListTechnician() {
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Crear técnico</TooltipContent>
+            <TooltipContent>{t("technicians.create")}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
@@ -149,10 +149,10 @@ export default function MaintainListTechnician() {
         <Table>
           <TableHeader className="bg-primary/50">
             <TableRow className="border-b border-[#DFA200]">
-              <TableHead className="font-semibold px-10">Código</TableHead>
-              <TableHead className="font-semibold px-10">Usuario</TableHead>
-              <TableHead className="font-semibold px-10">Correo</TableHead>
-              <TableHead className="font-semibold px-9">Acciones</TableHead>
+              <TableHead className="font-semibold px-10">{t("technicians.code")}</TableHead>
+              <TableHead className="font-semibold px-10">{t("technicians.username")}</TableHead>
+              <TableHead className="font-semibold px-10">{t("technicians.email")}</TableHead>
+              <TableHead className="font-semibold px-9">{t("technicians.actions")}</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -206,7 +206,7 @@ export default function MaintainListTechnician() {
                           <Edit className="h-4 w-4 text-primary" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Actualizar</TooltipContent>
+                      <TooltipContent>{t("technicians.update")}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
 
@@ -223,7 +223,7 @@ export default function MaintainListTechnician() {
                           <Eye className="h-4 w-4 text-blue-600" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Ver detalle</TooltipContent>
+                      <TooltipContent>{t("technicians.viewDetail")}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
 
@@ -240,7 +240,7 @@ export default function MaintainListTechnician() {
                           <Trash2 className="h-4 w-4 text-destructive text-red-600 " />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>Eliminar</TooltipContent>
+                      <TooltipContent>{t("technicians.delete")}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </TableCell>
@@ -255,7 +255,7 @@ export default function MaintainListTechnician() {
         className="flex items-center gap-2 bg-accent text-white hover:bg-accent/90 mt-6 ml-4 sm:ml-8 lg:ml-16"
       >
         <ArrowLeft className="w-4 h-4" />
-        Regresar
+        {t("technicians.back")}
       </Button>
     </div>
   );

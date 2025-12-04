@@ -30,24 +30,25 @@ export function DetailCategory() {
     const fetchCategoryDetail = async () => {
       try {
         const response = await CategoriesList.GetCategoryDetailsByID(id);
-
         const catData = response.data.data[0];
         setCategory(catData);
       } catch (err) {
         console.error("Error:", err);
-        setError(err.message || "Error al cargar el detalle");
+        setError(err.message || t("categoryDetail.error")); 
       } finally {
         setLoading(false);
       }
     };
 
     fetchCategoryDetail();
-  }, [id, navigate]);
+  }, [id, navigate, t]);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">Cargando detalles...</p>
+        <p className="text-gray-700 text-lg">
+          {t("categoryDetail.loading")}
+        </p>
       </div>
     );
   }
@@ -61,7 +62,7 @@ export function DetailCategory() {
             onClick={() => navigate(-1)}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
-            Volver a la lista
+            {t("categoryDetail.backToList")}
           </button>
         </div>
       </div>
@@ -71,12 +72,14 @@ export function DetailCategory() {
   if (!category) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">No se encontró la categoría</p>
+        <p className="text-gray-700 text-lg">
+          {t("categoryDetail.notFound")}
+        </p>
       </div>
     );
   }
 
-  //onvertir strings separados por comas en arrays
+  // Convertir strings separados por comas en arrays
   const specialities = category.Especialidades
     ? category.Especialidades.split(", ")
     : [];
@@ -91,7 +94,7 @@ export function DetailCategory() {
           className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition"
         >
           <FontAwesomeIcon icon={faArrowLeft} />
-          <span>Volver a la lista</span>
+          <span>{t("categoryDetail.backToList")}</span>
         </button>
 
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600">
@@ -116,24 +119,24 @@ export function DetailCategory() {
                 className="text-blue-600 text-xl"
               />
               <h2 className="text-xl font-bold text-gray-900">
-                Tiempos de Atención (SLA)
+                {t("categoryDetail.slaTitle")}
               </h2>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">
-                  Tiempo Máximo de Respuesta
+                  {t("categoryDetail.maxResponseTime")}
                 </p>
                 <p className="text-2xl font-bold text-blue-600">
-                  {category.TiempoMaximoRespuesta}h
+                  {category.TiempoMaximoRespuesta}{t("categoryDetail.hours")}
                 </p>
               </div>
               <div className="bg-white p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">
-                  Tiempo Máximo de Resolución
+                  {t("categoryDetail.maxResolutionTime")}
                 </p>
                 <p className="text-2xl font-bold text-orange-600">
-                  {category.TiempoMaximoResolucion}h
+                  {category.TiempoMaximoResolucion}{t("categoryDetail.hours")}
                 </p>
               </div>
             </div>
@@ -147,7 +150,7 @@ export function DetailCategory() {
                 className="text-yellow-500 text-xl"
               />
               <h2 className="text-2xl font-bold text-gray-900">
-                Especialidades
+                {t("categoryDetail.specialties")}
               </h2>
             </div>
 
@@ -164,7 +167,7 @@ export function DetailCategory() {
               </div>
             ) : (
               <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-lg">
-                No hay especialidades asignadas
+                {t("categoryDetail.noSpecialties")}
               </p>
             )}
           </div>
@@ -176,7 +179,9 @@ export function DetailCategory() {
                 icon={faTags}
                 className="text-purple-500 text-xl"
               />
-              <h2 className="text-2xl font-bold text-gray-900">Etiquetas</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {t("categoryDetail.tags")}
+              </h2>
             </div>
 
             {tags.length > 0 ? (
@@ -192,7 +197,7 @@ export function DetailCategory() {
               </div>
             ) : (
               <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-lg">
-                No hay etiquetas asignadas
+                {t("categoryDetail.noTags")}
               </p>
             )}
           </div>

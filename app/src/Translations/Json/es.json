@@ -95,13 +95,28 @@
       "medium": "Medio",
       "low": "Bajo"
     },
-    "categories": {
-      "title": "Categorías",
-      "name": "Nombre",
-      "description": "Descripción",
-      "active": "Activo",
-      "inactive": "Inactivo"
-    },
+  "categories": {
+  "title": "Categorías",
+  "listTitle": "Lista de Categorías",
+  "name": "Nombre",
+  "description": "Descripción",
+  "id": "ID",
+  "actions": "Acciones",
+  "active": "Activo",
+  "inactive": "Inactivo",
+  "create": "Crear Categoría",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "viewDetail": "Ver Detalles",
+  "notFound": "Categoría no encontrada",
+  "confirmReactivate": "Esta categoría está inactiva. ¿Desea reactivarla?",
+  "confirmDelete": "¿Está seguro que desea desactivar esta categoría?",
+  "alreadyDisabled": "Reactivar categoría",
+  "dataDisabled": "Este dato está deshabilitado",
+  "errorTitle": "Error al cargar categorías",
+  "noData": "No hay categorías disponibles"
+},
+
     "specialties": {
       "title": "Especialidades",
       "name": "Nombre",
@@ -125,14 +140,16 @@
       "fillAllFields": "Por favor complete todos los campos"
     },
 
-    "Tech": {
-      "technicianListTitle": "Lista de Técnicos",
-      "Username" : "Nombre de Usuario",
-      "Email" : "Correo Electrónico",
-        "Specialty" : "Especialidad",
-        "IdNumber" :"Número de Identificación"
-      
-    },
+   "Tech": {
+  "technicianListTitle": "Listado de técnicos",
+  "Username": "Usuario",
+  "Email": "Correo",
+  "IdNumber": "Número de Identificación",
+  "loading": "Cargando técnicos...",
+  "error": "Error al cargar los técnicos",
+  "noData": "No hay técnicos disponibles"
+}
+,
 
     "TechDetails" : {
       "BackToList" : "Volver a la Lista",
@@ -153,10 +170,232 @@
       "Nocharge" : "La carga de trabajo está en 0",
       "Speciality" : "Especialidad",
       "NoSpeciality" :"Este tecnico no tiene especialidades asociadas"
+    },
+    
+    "notifications": {
+      "title": "Notificaciones",
+      "markAllRead": "Marcar todas las notificaciones pendientes como leídas",
+      "markAsRead": "Marcar como leído",
+      "noNotifications": "No tienes notificaciones",
+      "comingSoon": "Pronto llegarán :3",
+      "loading": "Cargando...",
+      "ticket": "Ticket",
+      "previousState": "Estado Anterior",
+      "currentState": "Estado Actual",
+      "allRead": "Todas las notificaciones están leídas"
+    },
+    "myTickets": {
+      "title": "Vista de Asignaciones",
+      "loading": "Cargando asignaciones...",
+      "noUserSelected": "Por favor, selecciona un usuario en el header",
+      "viewByWeek": "Ver por Semana",
+      "viewByDay": "Ver por Día",
+      "showingWeek": "Mostrando tickets de la semana de",
+      "showingDay": "Mostrando tickets del",
+      "ticketsCount": "tickets",
+      "ticket": "ticket",
+      "noTicketsTitle": "Sin tickets asignados",
+      "noTicketsWeek": "No hay tickets para esta semana",
+      "noTicketsDay": "No hay tickets para este día",
+      "errorTitle": "Error al cargar los tickets",
+      "retryButton": "Reintentar"
+    },
+      "ticketCard": {
+      "id": "ID",
+      "category": "Categoría:",
+      "slaTimeRemaining": "Tiempo Restante SLA:",
+      "completed": "Completado",
+      "overdue": "Vencido",
+      "hours": "h",
+      "states": {
+        "pending": "Pendiente",
+        "assigned": "Asignado",
+        "inProgress": "En Proceso",
+        "resolved": "Resuelto",
+        "closed": "Cerrado"
+      }
+    },
+     "kanban": {
+      "noTickets": "Sin tickets",
+      "columns": {
+        "pending": "Pendiente",
+        "assigned": "Asignado",
+        "inProgress": "En Proceso",
+        "resolved": "Resuelto",
+        "closed": "Cerrado"
+      }
+    },
+     "createTechnician": {
+      "title": "Crear Técnico",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Su nombre completo",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "technician@Helpdesk.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "********",
+      "insurance": "Seguro médico",
+      "workPosition": "Cargo de trabajo",
+      "workPositionPlaceholder": "Accountant",
+      "specialties": "Especialidades",
+      "addSpecialty": "Agregar especialidad",
+      "backButton": "Regresar",
+      "saveButton": "Guardar",
+      "successMessage": "Técnico {{name}} creado exitosamente",
+      "errorMessage": "Error al crear técnico",
+      "duplicateSpecialties": "No se puede seleccionar especialidades repetidas",
+      "validation": {
+        "nameRequired": "El nombre completo es requerido",
+        "nameMin": "Debe tener al menos 2 caracteres",
+        "insuranceRequired": "El seguro es requerido",
+        "insuranceInvalid": "Debe seleccionar un seguro",
+        "emailRequired": "El email es requerido",
+        "emailInvalid": "Formato de email no válido",
+        "workPositionRequired": "El cargo de trabajo es requerido",
+        "workPositionMin": "Debe tener al menos 2 caracteres",
+        "passwordRequired": "La contraseña es requerida",
+        "passwordMin": "Mínimo 6 caracteres",
+        "roleRequired": "El rol es requerido",
+        "specialtyRequired": "La especialidad es requerida",
+        "specialtyInvalid": "Debe seleccionar una especialidad",
+        "specialtiesMin": "Debe seleccionar al menos una especialidad"
+      }
+    },
+    "categoryDetail": {
+      "loading": "Cargando detalles...",
+      "backToList": "Volver a la lista",
+      "notFound": "No se encontró la categoría",
+      "error": "Error al cargar el detalle",
+      "slaTitle": "Tiempos de Atención (SLA)",
+      "maxResponseTime": "Tiempo Máximo de Respuesta",
+      "maxResolutionTime": "Tiempo Máximo de Resolución",
+      "hours": "h",
+      "specialties": "Especialidades",
+      "noSpecialties": "No hay especialidades asignadas",
+      "tags": "Etiquetas",
+      "noTags": "No hay etiquetas asignadas"
+    },
+    
+    "ticketDetail": {
+      "loading": "Cargando detalles del ticket...",
+      "backToList": "Volver a la lista",
+      "back": "Volver",
+      "ticketNotFound": "No se encontró el ticket",
+      "error": "Error al cargar el detalle del ticket",
+      "ticket": "Ticket",
+      "priority": "Prioridad",
+      "state": "Estado",
+      "description": "Descripción",
+      "category": "Categoría",
+      "client": "Cliente",
+      "assignedTechnician": "Técnico Asignado",
+      "priorityLevel": "Nivel de Prioridad",
+      "unassigned": "Sin asignar",
+      "timeline": "Línea de Tiempo",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Finalización",
+      "totalDuration": "Duración Total",
+      "day": "día",
+      "days": "días",
+      "slaTitle": "Resolución y Respuesta SLA",
+      "responseSLA": "Respuesta SLA",
+      "resolutionSLA": "Resolución SLA",
+      "comments": "Comentarios",
+      "noComments": "No hay comentarios registrados.",
+      "ratings": "Valoraciones",
+      "noRatings": "No hay valoraciones disponibles.",
+      "noAdditionalComment": "Sin comentario adicional.",
+      "by": "Por",
+      "evidences": "Evidencias",
+      "evidence": "Evidencia",
+      "noEvidences": "No hay evidencias registradas.",
+      "priorities": {
+        "high": "Alta",
+        "medium": "Media",
+        "low": "Baja",
+        "unknown": "Desconocida"
+      },
+      "states": {
+        "pending": "Pendiente",
+        "assigned": "Asignado",
+        "inProgress": "En Proceso",
+        "resolved": "Resuelto",
+        "closed": "Cerrado",
+        "unknown": "Desconocido"
+      }
+    },
+    "ticketsList": {
+  "title": "Listado de Tickets",
+  "create": "Crear tickets",
+  "id": "ID",
+  "titleColumn": "Titulo",
+  "category": "Categoria",
+  "actions": "Acciones",
+  "viewDetail": "Ver detalle",
+  "errorTitle": "Error al cargar tickets",
+  "noData": "No se encontraron tickets.",
+  "back": "Regresar"
+},
+"technicians": {
+  "listTitle": "Listado de técnicos",
+  "create": "Crear técnico",
+  "code": "Código",
+  "username": "Usuario",
+  "email": "Correo",
+  "actions": "Acciones",
+  "update": "Actualizar",
+  "viewDetail": "Ver detalle",
+  "delete": "Eliminar",
+  "notFound": "No se encontró el técnico",
+  "confirmReactivate": "El objeto ya está inactivo, ¿desea activarlo?",
+  "confirmDelete": "¿Seguro que deseas eliminar este técnico?",
+  "errorTitle": "Error al cargar técnicos",
+  "noData": "No se encontraron técnicos.",
+  "back": "Regresar"
+},
+"ticketTraceability": {
+  "backToList": "Volver a la lista",
+  "ticket": "Ticket",
+  "priority": "Prioridad",
+  "description": "Descripción",
+  "category": "Categoría",
+  "client": "Cliente",
+  "assignedTechnician": "Técnico Asignado",
+  "unassigned": "Sin asignar",
+  "priorityLevel": "Nivel de Prioridad",
+  "comments": "Comentarios",
+  "noComments": "No hay comentarios registrados.",
+  "by": "Por",
+  "noHistory": "Aún no se ha registrado ningún movimiento en este ticket.",
+  "updateState": "Actualizar Estado del Ticket",
+  "currentState": "Estado Actual:",
+  "nextState": "Estado a Actualizar:",
+  "dateTime": "Fecha y hora del registro",
+  "responsible": "Usuario responsable",
+  "observation": "Observación",
+  "observationPlaceholder": "Escriba una descripción del cambio...",
+  "evidence": "Evidencia",
+  "imageHelp": "Haz clic o arrastra una imagen aquí",
+  "imageFormat": "(jpg, png, máximo 5MB)",
+  "updateButton": "Actualizar Estado",
+  "loading": "Cargando detalles del ticket...",
+  "back": "Volver"
+},
+"ticketHistory": {
+  "title": "Historial del Ticket",
+  "initialState": "Estado inicial:",
+  "responsible": "Responsable:",
+  "evidence": "evidencia",
+  "noHistory": "No hay historial registrado para este ticket."
+}
 
 
 
-    }
+
+
+    
+
+ 
+
     
   }
 }

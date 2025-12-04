@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TechniciansLists from "../../Services/TechniciansLists";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-
 import { useTranslation } from 'react-i18next';
 
 export function TechnicianList() {
@@ -33,19 +31,18 @@ export function TechnicianList() {
         setTechnicians(mappedData);
       } catch (err) {
         console.error("Error:", err);
-        setError(err.message || "Error al cargar los técnicos");
-      } finally {
+        setError(err.message || t('Tech.error')); 
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">Cargando técnicos...</p>
+        <p className="text-gray-700 text-lg">{t('Tech.loading')}</p> 
       </div>
     );
   }
@@ -61,7 +58,7 @@ export function TechnicianList() {
   if (technicians.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">No hay técnicos disponibles</p>
+        <p className="text-gray-700 text-lg">{t('Tech.noData')}</p> 
       </div>
     );
   }
@@ -69,12 +66,10 @@ export function TechnicianList() {
   return (
     <div className="bg-gradient-to-b from-blue-100 to-blue-50 min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Título principal */}
         <h1 className="text-4xl font-extrabold text-center text-[#101dcf] tracking-wide drop-shadow-lg mt-6 mb-8 border-b-4 border-[#DFA200] pb-4">
           {t('Tech.technicianListTitle')}
         </h1>
 
-        {/* Tarjetas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {technicians.map((tech) => (
             <div
@@ -84,12 +79,9 @@ export function TechnicianList() {
                          hover:-translate-y-2 hover:rotate-1 hover:shadow-xl cursor-pointer"
               onClick={() => navigate(`/technician/${tech.id}`)}
             >
-              {/* La vaina dorada de arriba */}
               <div className="absolute top-0 left-0 w-full h-2 bg-[#DFA200] rounded-t-2xl"></div>
 
-            
               <div className="mt-3 space-y-4">
-                {/* Nombre */}
                 <div>  
                   <p className="text-sm text-gray-500">{t('Tech.Username')}</p>
                   <h1 className="uppercase text-2xl font-semibold text-[#101dcf]">
@@ -97,7 +89,6 @@ export function TechnicianList() {
                   </h1>
                 </div>
 
-                {/* ID */}
                 <div>
                   <p className="text-sm text-gray-500">
                     {t('Tech.IdNumber')}
@@ -107,7 +98,6 @@ export function TechnicianList() {
                   </p>
                 </div>
 
-                {/* Email */}
                 <div>
                   <p className="text-sm text-gray-500">{t('Tech.Email')}</p>
                   <p className="text-gray-800 break-words flex items-center gap-2">

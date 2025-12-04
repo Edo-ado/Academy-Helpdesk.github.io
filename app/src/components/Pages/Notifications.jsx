@@ -5,9 +5,11 @@ import { faBell, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import NotificationService from "../../Services/NotificationServices";
 import { useUser } from "../../context/UserContext";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next"; 
 
 export function Notifications() {
   const { selectedUser } = useUser();
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +42,7 @@ async function marcarTodas() {
 
      const not = await NotificationService.GetCountNotificationsByIDUser(selectedUser.Id);
         if (not.data.data[0].Total == 0) {
-          toast.success("Todas las notificaciones están leídas");
+         toast.success(t("notifications.allRead")); 
         }
     await NotificationService.UpdateNotificacionAllIsRead(selectedUser.Id);
     const res = await NotificationService.GetNotificationsByIDUser(selectedUser.Id);
@@ -79,13 +81,13 @@ const getTipoEvento = (eventType) => {
       <div className="w-full bg-white min-h-screen">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4">
-          <h1 className="text-lg font-bold text-[#0a1e4a]">Notificaciones</h1>
+          <h1 className="text-lg font-bold text-[#0a1e4a]">{t("notifications.title")}</h1>
            <button
                       className="mt-2 px-3 py-1 rounded-full text-slate-900 border border-[#DFA200] text-[#DFA200]  font-semibold
                                 hover:bg-[#0a1e4a] hover:text-white transition"
                       onClick={() => marcarTodas()}
                     >
-                      Marcar todas las notificaciones pendientes como leídas
+                      {t("notifications.markAllRead")}
                     </button>
         </div>
 
@@ -97,9 +99,9 @@ const getTipoEvento = (eventType) => {
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <p className="text-gray-500 font-sans text-sm mb-1">
-              No tienes notificaciones
+                {t("notifications.noNotifications")}
             </p>
-            <p className="text-gray-300 text-xs">Pronto llegarán :3</p>
+            <p className="text-gray-300 text-xs"> {t("notifications.comingSoon")}</p>
           </div>
         ) : (
           <ul className="w-full">
@@ -122,10 +124,10 @@ const getTipoEvento = (eventType) => {
              {n.TicketId &&  n.EventType == "CAMBIO_ESTADO_TICKET" &&  (
                 <div className="mt-1">
                   <p className="font-sans text-[#c2983d]">
-                    Ticket #{n.TicketId}
+                    {t("notifications.ticket")} #{n.TicketId}
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
-                    <span className="font-medium">Estado Anterior: {n.LastStateTicket} • Estado Actual: {n.ActualStateTicket}</span> 
+                    <span className="font-medium">  {t("notifications.previousState")}: {n.LastStateTicket} • {t("notifications.currentState")}: {n.ActualStateTicket}</span> 
                     
                  
                   </p>
@@ -141,7 +143,7 @@ const getTipoEvento = (eventType) => {
                                 hover:bg-[#0a1e4a] hover:text-white transition"
                       onClick={() => marcarComoLeida(n.Id)}
                     >
-                      Marcar como leído
+                     {t("notifications.markAsRead")}
                     </button>
                   )}
 

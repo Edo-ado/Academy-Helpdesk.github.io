@@ -4,7 +4,7 @@ import { useUser } from '../../context/UserContext';
 import TicketsLists from '../../Services/TicketsLists';
 import { useNavigate } from "react-router-dom";
 import { KanbanBoard } from '../Assignments/KanbanBoard';
-
+import { useTranslation } from "react-i18next"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faCalendarXmark, faTicket } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,6 +16,7 @@ export function MyTickets() {
   const [error, setError] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false); 
   const [filterType, setFilterType] = useState('day');
+    const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export function MyTickets() {
         }
         
       } catch (err) {
-        console.error('Error completo:', err);
+           setError(err.message || t("myTickets.errorTitle"));
         
 
         if (err.response && err.response.status === 404) {
@@ -83,7 +84,7 @@ const handleTicketClick = (ticket) => {
   if (!selectedUser.Id) {
     return (
       <div className="flex justify-center items-center h-64 bg-[#e8f0f8]">
-        <p className="text-gray-700">Por favor, selecciona un usuario en el header</p>
+        <p className="text-gray-700">{t("myTickets.noUserSelected")}</p>
       </div>
     );
   }
@@ -95,7 +96,7 @@ const handleTicketClick = (ticket) => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Vista de Asignaciones
+               {t("myTickets.title")}
             </h1>
             <p className="text-sm text-gray-600 mt-1">
               {selectedUser.UserName} - {selectedUser.Rol}
@@ -112,7 +113,7 @@ const handleTicketClick = (ticket) => {
                   : 'bg-white text-blue-600 hover:bg-blue-50 border-2 border-blue-600'
               }`}
             >
-              Ver por Semana
+              {t("myTickets.viewByWeek")}
             </button>
             <button
               onClick={() => setFilterType('day')}
@@ -122,7 +123,7 @@ const handleTicketClick = (ticket) => {
                   : 'bg-white text-blue-600 hover:bg-blue-50 border-2 border-blue-600'
               }`}
             >
-              Ver por dia
+              {t("myTickets.viewByDay")}
             </button>
 
             {/* Selector de fecha */}
@@ -136,20 +137,20 @@ const handleTicketClick = (ticket) => {
         </div>
 
         {/* Información del filtro */}
-        <div className="bg-white rounded-lg p-4 mb-6 shadow">
-          <p className="text-sm text-gray-600">
-            {filterType === 'week' 
-              ? `Mostrando tickets de la semana de ${new Date(selectedDate).toLocaleDateString('es-ES')} (${tickets.length} tickets)`
-              : `Mostrando tickets del ${new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} (${tickets.length} tickets)`
-            }
-          </p>
-        </div>
+       <div className="bg-white rounded-lg p-4 mb-6 shadow">
+  <p className="text-sm text-gray-600">
+    {filterType === 'week' 
+      ? `${t("myTickets.showingWeek")} ${new Date(selectedDate).toLocaleDateString(t.language === 'es' ? 'es-ES' : 'en-US')} (${tickets.length} ${tickets.length === 1 ? t("myTickets.ticket") : t("myTickets.ticketsCount")})`
+      : `${t("myTickets.showingDay")} ${new Date(selectedDate).toLocaleDateString(t.language === 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} (${tickets.length} ${tickets.length === 1 ? t("myTickets.ticket") : t("myTickets.ticketsCount")})`
+    }
+  </p>
+</div>
 
         {/* Loading */}
         {loading && (
           <div className="flex justify-center items-center h-64">
             <FontAwesomeIcon icon={faSpinner} spin className="text-4xl text-blue-600" />
-            <p className="ml-4 text-gray-700">Cargando asignaciones...</p>
+            <p className="ml-4 text-gray-700">{t("myTickets.loading")}</p>
           </div>
         )}
 
@@ -162,7 +163,7 @@ const handleTicketClick = (ticket) => {
               onClick={() => window.location.reload()}
               className="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
             >
-              Reintentar
+             {t("myTickets.retryButton")}
             </button>
           </div>
         )}
@@ -172,12 +173,12 @@ const handleTicketClick = (ticket) => {
   <div className="bg-white rounded-xl shadow-lg p-12 text-center">
     <div className="text-6xl mb-4">📭</div>
     <h3 className="text-xl font-bold text-gray-800 mb-2">
-      Sin tickets asignados
+       {t("myTickets.noTicketsTitle")} 
     </h3>
     <p className="text-gray-600">
       {filterType === 'week' 
-        ? `No hay tickets para esta semana`
-        : `No hay tickets para este día`
+        ? t("myTickets.noTicketsWeek")
+        : t("myTickets.noTicketsDay") 
       }
     </p>
   </div>
