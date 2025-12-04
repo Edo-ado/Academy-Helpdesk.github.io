@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import NotificationService from "../../Services/NotificationServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "../../Translations/LanguageSwitcher";
 import {
   faChevronDown,
   faUserCircle,
@@ -14,6 +16,7 @@ import {
 
 export function Header() {
   const { selectedUser, setSelectedUser, users, error } = useUser();
+  const { t } = useTranslation();
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [openMantMenu, setOpenMantMenu] = useState(false);
     const [notifCount, setNotifCount] = useState(0); 
@@ -49,11 +52,11 @@ export function Header() {
 
 
   const mantItems = [
-    { href: "/mantenimiento/tecnicos", title: "Técnicos", icon: faUserGear },
-    { href: "/mantenimiento/tickets", title: "Tickets", icon: faTicket },
+    { href: "/mantenimiento/tecnicos", title: t('header.technicians'), icon: faUserGear },
+    { href: "/mantenimiento/tickets", title: t('header.tickets'), icon: faTicket },
     {
       href: "/mantenimiento/categorías",
-      title: "Categorías",
+      title: t('header.categories'),
       icon: faFolderOpen,
     },
   ];
@@ -62,12 +65,13 @@ export function Header() {
  <div className="max-w-7xl mx-auto flex justify-end items-center px-6 py-3">
 
         <div className="flex items-center gap-6 relative">
+          <LanguageSwitcher />
           <div className="relative">
             <button
               onClick={() => setOpenMantMenu(!openMantMenu)}
               className="flex items-center gap-2 text-sm font-medium hover:text-[#DFA200] transition"
             >
-              Mantenimientos
+              {t('header.maintenance')}
               <FontAwesomeIcon
                 icon={faChevronDown}
                 className={`text-xs transition-transform ${
@@ -138,7 +142,7 @@ export function Header() {
         </button>
       ))
     ) : (
-      <p className="px-4 py-2 text-sm text-gray-400">Sin usuarios</p>
+      <p className="px-4 py-2 text-sm text-gray-400">{t('header.noUsers')}</p>
     )}
   </div>
 )}

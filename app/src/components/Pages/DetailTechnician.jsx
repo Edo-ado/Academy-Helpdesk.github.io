@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TechniciansLists from "../../Services/TechniciansLists";
 import TicketLists from "../../Services/TicketsLists";
+import { useTranslation } from 'react-i18next';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
@@ -16,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export function DetailTechnician() {
+   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [technician, setTechnician] = useState(null);
@@ -97,7 +99,7 @@ useEffect(() => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">Cargando detalles...</p>
+        <p className="text-gray-700 text-lg">{t('messages.loadingData')}</p>
       </div>
     );
   }
@@ -111,7 +113,7 @@ useEffect(() => {
   onClick={() => navigate(-1)}
   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
 >
-            Volver a la lista
+            {t('TechDetails.BackToList')}
           </button>
         </div>
       </div>
@@ -121,7 +123,7 @@ useEffect(() => {
   if (!technician) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">No se encontró el técnico</p>
+        <p className="text-gray-700 text-lg">{t('TechDetails.TechNotFound')}</p>
       </div>
     );
   }
@@ -134,7 +136,7 @@ useEffect(() => {
           className="flex items-center gap-2 text-blue-600 hover:text-blue-800 mb-6 transition"
         >
           <FontAwesomeIcon icon={faArrowLeft} />
-          <span>Volver a la lista</span>
+          <span> {t('TechDetails.BackToList')}</span>
         </button>
 
         {/* Tarjeta de Perfil */}
@@ -155,7 +157,7 @@ useEffect(() => {
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <FontAwesomeIcon icon={faEnvelope} className="text-blue-600" />
-                <p className="font-semibold text-gray-700">Email</p>
+                <p className="font-semibold text-gray-700">{t('TechDetails.Email')}</p>
               </div>
               <p className="text-gray-900 break-words">{technician.Email}</p>
             </div>
@@ -163,7 +165,7 @@ useEffect(() => {
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <FontAwesomeIcon icon={faBriefcase} className="text-blue-600" />
-                <p className="font-semibold text-gray-700">Cargo</p>
+                <p className="font-semibold text-gray-700"> {t('TechDetails.Postion')} </p>
               </div>
               <p className="text-gray-900">{technician.Work_Charge || "No especificado"}</p>
             </div>
@@ -171,7 +173,7 @@ useEffect(() => {
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <FontAwesomeIcon icon={faShieldAlt} className="text-blue-600" />
-                <p className="font-semibold text-gray-700">Aseguradora</p>
+                <p className="font-semibold text-gray-700">{t('TechDetails.insurance')} </p>
               </div>
               <p className="text-gray-900">{technician.InsuranceId || "No asignada"}</p>
             </div>
@@ -179,7 +181,7 @@ useEffect(() => {
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <FontAwesomeIcon icon={faCalendar} className="text-blue-600" />
-                <p className="font-semibold text-gray-700">Último Login</p>
+                <p className="font-semibold text-gray-700"> {t('TechDetails.LastLogin')} </p>
               </div>
               <p className="text-gray-900">
                 {technician.Last_Login 
@@ -189,14 +191,14 @@ useEffect(() => {
             </div>
 
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="font-semibold text-gray-700 mb-2">ID de Usuario</p>
+              <p className="font-semibold text-gray-700 mb-2"> {t('TechDetails.UserId')} </p>
               <p className="text-gray-900 font-mono text-lg">{technician.Usercode}</p>
             </div>
           </div>
 
           {technician.Rol_Descripcion && (
             <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-              <p className="font-semibold text-gray-700 mb-2">Descripción del Rol</p>
+              <p className="font-semibold text-gray-700 mb-2"> {t('TechDetails.RolDescription')}  </p>
               <p className="text-gray-900">{technician.Rol_Descripcion}</p>
             </div>
           )}
@@ -206,38 +208,40 @@ useEffect(() => {
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-orange-600 mb-6">
           <div className="flex items-center gap-2 mb-6">
             <FontAwesomeIcon icon={faChartBar} className="text-orange-500 text-xl" />
-            <h2 className="text-2xl font-bold text-gray-900">Carga de Trabajo</h2>
+            <h2 className="text-2xl font-bold text-gray-900"> {t('TechDetails.WorkCharge')} </h2>
           </div>
           
           {tickets.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg text-center">
-                <p className="text-sm text-gray-600 mb-1">Total</p>
+                <p className="text-sm text-gray-600 mb-1"> {t('TechDetails.Total')} </p>
                 <p className="text-3xl font-bold text-gray-900">{workloadStats.total}</p>
               </div>
 
               <div className="bg-green-50 p-4 rounded-lg text-center">
-                <p className="text-sm text-gray-600 mb-1">Prioridad Baja</p>
+                <p className="text-sm text-gray-600 mb-1">{t('TechDetails.LowPrio')}</p>
                 <p className="text-3xl font-bold text-green-600">{workloadStats.low}</p>
               </div>
 
               <div className="bg-yellow-50 p-4 rounded-lg text-center">
-                <p className="text-sm text-gray-600 mb-1">Prioridad Media</p>
+                <p className="text-sm text-gray-600 mb-1">{t('TechDetails.MidPrio')}</p>
                 <p className="text-3xl font-bold text-yellow-600">{workloadStats.medium}</p>
               </div>
 
               <div className="bg-red-50 p-4 rounded-lg text-center">
-                <p className="text-sm text-gray-600 mb-1">Prioridad Alta</p>
+                <p className="text-sm text-gray-600 mb-1">{t('TechDetails.HighPrio')}</p>
                 <p className="text-3xl font-bold text-red-600">{workloadStats.high}</p>
               </div>
             </div>
           ) : (
             <div className="text-center py-8 bg-gray-50 rounded-lg">
               <p className="text-gray-500 text-lg">
-                Este técnico no tiene tickets asignados actualmente
+                {t('TechDetails.NoTickets')}
               </p>
               <p className="text-gray-400 text-sm mt-2">
-                La carga de trabajo está en 0
+               
+{t('TechDetails.Nocharge')}
+
               </p>
             </div>
           )}
@@ -247,7 +251,7 @@ useEffect(() => {
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600">
           <div className="flex items-center gap-2 mb-4">
             <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-xl" />
-            <h2 className="text-2xl font-bold text-gray-900">Especialidades</h2>
+            <h2 className="text-2xl font-bold text-gray-900"> {t('TechDetails.Speciality')} </h2>
           </div>
           
           {specialities.length > 0 ? (
@@ -274,7 +278,7 @@ useEffect(() => {
           ) : (
             <div className="text-center py-8 bg-gray-50 rounded-lg">
               <p className="text-gray-500">
-                Este técnico no tiene especialidades asignadas
+                {t('TechDetails.NoSpeciality')}
               </p>
             </div>
           )}

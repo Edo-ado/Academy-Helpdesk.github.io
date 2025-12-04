@@ -22,12 +22,14 @@ import {
 import { Edit, Plus, Trash2, ArrowLeft, Eye } from "lucide-react";
 import Categorieservices from "../../Services/CategoriesList";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { LoadingGrid } from "../../components/ui/custom/LoadingGrid";
 import { ErrorAlert } from "../../components/ui/custom/ErrorAlert";
 import { EmptyState } from "../../components/ui/custom/EmptyState";
 
 export default function MaintainListCategories() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ export default function MaintainListCategories() {
 
 
 
-const handleDelete = async (Id) => {
+  const handleDelete = async (Id) => {
   console.log("ID:", Id);
 
   const response = await Categorieservices.GetCategoryById(Id);
@@ -71,14 +73,14 @@ const handleDelete = async (Id) => {
   console.log("Categoría:", category.data);
 
   if (!category) {
-    alert("No se encontró la categoría");
+    alert(t("categories.notFound"));
     return;
   }
 
   // Si está inactiva → preguntar si activar
   if (category.data[0].Active == 0) {
     const confirmReactivate = window.confirm(
-      "El objeto ya está inactivo, ¿desea activarlo?"
+      t("categories.confirmReactivate")
     );
 
     if (confirmReactivate) {
@@ -91,7 +93,7 @@ const handleDelete = async (Id) => {
 
 
   const confirmDelete = window.confirm(
-    "¿Seguro que deseas eliminar esta categoría?"
+    t("categories.confirmDelete")
   );
 
   if (confirmDelete) {
@@ -107,16 +109,16 @@ const handleDelete = async (Id) => {
   if (loading) return <LoadingGrid type="table" count="1" />;
   if (error)
     return (
-      <ErrorAlert title="Error al cargar las categorias" message={error} />
+      <ErrorAlert title={t("categories.errorTitle")} message={error} />
     );
   if (!data || data.length === 0)
-    return <EmptyState message="No se encontraron categorias." />;
+    return <EmptyState message={t("categories.noData")} />;
 
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-start gap-6 mb-6 ml-4 sm:ml-8 lg:ml-16">
         <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-          Listado de Categorias
+          {t("categories.listTitle")}
         </h1>
 
         <TooltipProvider>
@@ -133,7 +135,7 @@ const handleDelete = async (Id) => {
                 </Link>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Crear categoría</TooltipContent>
+            <TooltipContent>{t("categories.create")}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
@@ -142,10 +144,10 @@ const handleDelete = async (Id) => {
         <Table>
           <TableHeader className="bg-primary/50">
             <TableRow className="border-b border-[#DFA200]">
-              <TableHead className="font-semibold px-8">id</TableHead>
-              <TableHead className="font-semibold px-8">Nombre</TableHead>
-              <TableHead className="font-semibold px-8">Descripcion</TableHead>
-              <TableHead className="font-semibold px-8">Acciones</TableHead>
+              <TableHead className="font-semibold px-8">{t("categories.id")}</TableHead>
+              <TableHead className="font-semibold px-8">{t("categories.name")}</TableHead>
+              <TableHead className="font-semibold px-8">{t("categories.description")}</TableHead>
+              <TableHead className="font-semibold px-8">{t("categories.actions")}</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -235,8 +237,8 @@ const handleDelete = async (Id) => {
                       </TooltipTrigger>
                       <TooltipContent>
                         {row.Active === 0
-                          ? "Datos desactivados"
-                          : "Ver detalle"}
+                          ? t("categories.dataDisabled")
+                          : t("categories.viewDetail")}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -252,7 +254,7 @@ const handleDelete = async (Id) => {
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        {row.Active === 0 ? "Ya está desactivado" : "Eliminar"}
+                        {row.Active === 0 ? t("categories.alreadyDisabled") : t("categories.delete")}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -269,7 +271,7 @@ const handleDelete = async (Id) => {
         className="flex items-center gap-2 bg-accent text-white hover:bg-accent/90 mt-6 ml-4 sm:ml-8 lg:ml-16"
       >
         <ArrowLeft className="w-4 h-4" />
-        Regresar
+        {t("common.back")}
       </Button>
     </div>
   );

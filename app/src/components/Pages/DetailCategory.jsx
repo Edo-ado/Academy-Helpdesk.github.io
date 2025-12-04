@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CategoriesList from "../../Services/CategoriesList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faArrowLeft, 
+import { useTranslation } from "react-i18next";
+
+import {
+  faArrowLeft,
   faFolder,
   faClock,
   faStar,
-  faTags
+  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 
 export function DetailCategory() {
@@ -16,6 +18,7 @@ export function DetailCategory() {
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!id) {
@@ -26,10 +29,8 @@ export function DetailCategory() {
 
     const fetchCategoryDetail = async () => {
       try {
-      
         const response = await CategoriesList.GetCategoryDetailsByID(id);
-      
-        
+
         const catData = response.data.data[0];
         setCategory(catData);
       } catch (err) {
@@ -57,7 +58,6 @@ export function DetailCategory() {
         <div className="text-center">
           <p className="text-red-500 text-lg mb-4">{error}</p>
           <button
-         
             onClick={() => navigate(-1)}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
@@ -77,9 +77,11 @@ export function DetailCategory() {
   }
 
   //onvertir strings separados por comas en arrays
-const specialities = category.Especialidades ? category.Especialidades.split(', ')  : [];
+  const specialities = category.Especialidades
+    ? category.Especialidades.split(", ")
+    : [];
 
-const tags = category.Tags  ? category.Tags.split(', ') : [];
+  const tags = category.Tags ? category.Tags.split(", ") : [];
 
   return (
     <div className="bg-[#dff1ff] min-h-screen p-8">
@@ -96,7 +98,10 @@ const tags = category.Tags  ? category.Tags.split(', ') : [];
           {/* Header */}
           <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
             <div className="w-24 h-24 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-              <FontAwesomeIcon icon={faFolder} className="text-white text-4xl" />
+              <FontAwesomeIcon
+                icon={faFolder}
+                className="text-white text-4xl"
+              />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {category.Categorie}
@@ -106,17 +111,30 @@ const tags = category.Tags  ? category.Tags.split(', ') : [];
           {/* SLA - Tiempos de Atención */}
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg mb-6 border-l-4 border-blue-600">
             <div className="flex items-center gap-2 mb-3">
-              <FontAwesomeIcon icon={faClock} className="text-blue-600 text-xl" />
-              <h2 className="text-xl font-bold text-gray-900">Tiempos de Atención (SLA)</h2>
+              <FontAwesomeIcon
+                icon={faClock}
+                className="text-blue-600 text-xl"
+              />
+              <h2 className="text-xl font-bold text-gray-900">
+                Tiempos de Atención (SLA)
+              </h2>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Tiempo Máximo de Respuesta</p>
-                <p className="text-2xl font-bold text-blue-600">{category.TiempoMaximoRespuesta}h</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Tiempo Máximo de Respuesta
+                </p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {category.TiempoMaximoRespuesta}h
+                </p>
               </div>
               <div className="bg-white p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Tiempo Máximo de Resolución</p>
-                <p className="text-2xl font-bold text-orange-600">{category.TiempoMaximoResolucion}h</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  Tiempo Máximo de Resolución
+                </p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {category.TiempoMaximoResolucion}h
+                </p>
               </div>
             </div>
           </div>
@@ -124,14 +142,19 @@ const tags = category.Tags  ? category.Tags.split(', ') : [];
           {/* Especialidades */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-4">
-              <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-xl" />
-              <h2 className="text-2xl font-bold text-gray-900">Especialidades</h2>
+              <FontAwesomeIcon
+                icon={faStar}
+                className="text-yellow-500 text-xl"
+              />
+              <h2 className="text-2xl font-bold text-gray-900">
+                Especialidades
+              </h2>
             </div>
-            
+
             {specialities.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {specialities.map((spec, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-lg border-l-4 border-blue-600"
                   >
@@ -149,14 +172,17 @@ const tags = category.Tags  ? category.Tags.split(', ') : [];
           {/* Tags */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <FontAwesomeIcon icon={faTags} className="text-purple-500 text-xl" />
+              <FontAwesomeIcon
+                icon={faTags}
+                className="text-purple-500 text-xl"
+              />
               <h2 className="text-2xl font-bold text-gray-900">Etiquetas</h2>
             </div>
-            
+
             {tags.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag, index) => (
-                  <span 
+                  <span
                     key={index}
                     className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold hover:bg-purple-200 transition"
                   >

@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 import NotificationService from "../../Services/NotificationServices";
 
 import { useUser } from "../../context/UserContext";
+import { useTranslation } from 'react-i18next';
 
 
 const TailwinButton = "flex items-center gap-3 text-white hover:bg-blue-900 px-4 py-3 rounded-full transition transform hover:translate-x-1";
 
 export const Sidebar = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -82,17 +84,17 @@ useEffect(() => {
 
             <Link to="/tickets/create" className={TailwinButton}>
               <FontAwesomeIcon icon={faPlus} />
-              <span>Crear un ticket</span>
+              <span>{t('sidebar.createTicket')}</span>
             </Link>
 
             <Link to="/technicians" className={TailwinButton}>
               <FontAwesomeIcon icon={faUserCog} />
-              <span>Tecnicos</span>
+              <span>{t('sidebar.technicians')}</span>
             </Link>
 
             <Link to="/categories" className={TailwinButton}>
               <FontAwesomeIcon icon={faList} />
-              <span>Categorias</span>
+              <span>{t('sidebar.categories')}</span>
             </Link>
           </section>
 
@@ -101,7 +103,7 @@ useEffect(() => {
           <section aria-labelledby="work-part" className="space-y-2">
             <Link to="/my-tickets" className={TailwinButton}>
               <FontAwesomeIcon icon={faTicketAlt} />
-              <span>Mis tickets</span>
+              <span>{t('sidebar.myTickets')}</span>
             </Link>
 
             <Link to="/notifications" className={`${TailwinButton} relative`}>
@@ -118,7 +120,7 @@ useEffect(() => {
 
             )}
 
-            <span className="">Notificaciones</span>
+            <span className="">{t('sidebar.notifications')}</span>
 
             </Link>
 
@@ -126,7 +128,7 @@ useEffect(() => {
 
             <Link to="/profile" className={TailwinButton}>
               <FontAwesomeIcon icon={faUser} />
-              <span>Perfil</span>
+              <span>{t('sidebar.profile')}</span>
             </Link>
           </section>
 
@@ -134,14 +136,14 @@ useEffect(() => {
 
           <Link to="/tickets" className={TailwinButton}>
             <FontAwesomeIcon icon={faTicket} />
-            <span> Todos los tickets</span>
+            <span> {t('sidebar.allTickets')}</span>
           </Link>
 
 
 
             <Link to="/AutotriagePage" className={TailwinButton}>
             <FontAwesomeIcon icon={faTicket} />
-            <span>Asignacion de tickets</span>
+            <span>{t('sidebar.autotriage')}</span>
           </Link>
           
         </nav>
@@ -154,7 +156,7 @@ useEffect(() => {
         <div className="p-6 border-t border-blue-800">
           <Link to="/settings" className="flex items-center gap-3 text-yellow-400 hover:bg-blue-900 px-4 py-3 rounded-full transition transform hover:translate-x-1">
             <FontAwesomeIcon icon={faCog} />
-            <span>Settings</span>
+            <span>{t('sidebar.settings')}</span>
           </Link>
         </div>
       </aside>

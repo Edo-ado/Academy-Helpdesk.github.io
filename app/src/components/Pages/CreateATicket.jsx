@@ -21,6 +21,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Plus, Save, ArrowLeft } from "lucide-react";
 import { Card } from "../../components/ui/card";
+import { useTranslation } from 'react-i18next';
 
 import { CustomInputField } from "../../components/ui/custom/custom-input-field";
 import { CustomSelect } from "../../components/ui/custom/custom-select";
@@ -33,6 +34,8 @@ export function CreateATicket() {
 
 const navigate = useNavigate();
 const location = useLocation();
+
+  const { t } = useTranslation();
 
 
     const { selectedUser } = useUser();
@@ -163,8 +166,8 @@ console.log("categoriaId:", dataForm.categoriaId)
 
 
      <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-    Crear Ticket
-</h1>
+    {t('tickets.createNew')}
+  </h1>
 
 
   <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
@@ -177,8 +180,8 @@ console.log("categoriaId:", dataForm.categoriaId)
         render={({ field }) => (
           <CustomInputField
             {...field}
-            label="Titulo"
-            placeholder="Titulo del Ticket"
+            label={t('tickets.title')}
+            placeholder={t('tickets.titlePlaceholder')}
             error={errors.title?.message}
           />
         )}
@@ -192,8 +195,8 @@ console.log("categoriaId:", dataForm.categoriaId)
   render={({ field }) => (
     <CustomInputField
       {...field}
-      label="Estado"
-      placeholder="Pendiente"
+      label={t('tickets.status')}
+      placeholder={t('tickets.pending')}
       disabled={true}
     />
   )}
@@ -212,8 +215,8 @@ console.log("categoriaId:", dataForm.categoriaId)
     <CustomInputField
       {...field}
       as="textarea"
-      label="Descripción"
-      placeholder="Describa su incidencia..."
+      label={t('tickets.description')}
+      placeholder={t('tickets.descriptionPlaceholder')}
       error={errors.descripcion?.message}
       className="min-h-[120px]"  
     />
@@ -233,7 +236,7 @@ console.log("categoriaId:", dataForm.categoriaId)
           <CustomSelect
             field={field}
             data={dataPriorities}
-            label="Prioridad"
+                    label={t('tickets.priority')}
             getOptionLabel={(item) => `${item.Name}`}
             getOptionValue={(item) => item.Id}
             error={errors.prioridad?.message}
@@ -252,7 +255,7 @@ console.log("categoriaId:", dataForm.categoriaId)
       <CustomInputField
         {...field}
         type="date"
-        label="Fecha de creación"
+        label={t('tickets.createdAt')}
         disabled={true}               
         error={errors.fecha_creacion?.message}
       />
@@ -267,17 +270,17 @@ console.log("categoriaId:", dataForm.categoriaId)
     <CustomSelect
       field={field}
       data={dataTags}
-      label="Etiqueta"
+        label={t('tickets.tags')}
       getOptionLabel={(item) => item.Tag}
       getOptionValue={(item) => item.Id}
-      placeholder="Seleccione una etiqueta"
+        placeholder={t('tickets.selectTag')}
       error={errors.tags?.message}
     />
   )}
 />
 
     <CustomInputField
-  label="Categoría asignada"
+  label={t('tickets.category')}
   value={dataCategory ? dataCategory.Name : ""}
   disabled={true}
 />
@@ -296,7 +299,7 @@ navigate(-1);
   className="flex items-center gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
 >
   <ArrowLeft className="w-4 h-4" />
-  Regresar
+  {t('common.back')}
 </Button>
 
 
@@ -305,7 +308,7 @@ navigate(-1);
   className="flex-1 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046]"
 >
   <Save className="w-4 h-4" />
-  Guardar
+  {t('buttons.save')}
 </Button>
 
 

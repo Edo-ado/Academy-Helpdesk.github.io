@@ -18,12 +18,14 @@ import { CustomInputField } from "../../components/ui/custom/custom-input-field"
 import { CustomSelect } from "../../components/ui/custom/custom-select";
 import { CustomMultiSelect } from "../../components/ui/custom/custom-multiple-select";
 import { Save, ArrowLeft } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export function CreateCategories() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const isEdit = !!id;
+  const { t } = useTranslation();
 
 
   const [showNewSLA, setShowNewSLA] = useState(false);
@@ -126,8 +128,8 @@ export function CreateCategories() {
 }, []);
 
 const categorySchema = yup.object({
-  name: yup.string().required("El nombre es requerido").min(2),
-  description: yup.string().required("La descripción es requerida").min(4),
+  name: yup.string().required(t('forms.required')).min(2),
+  description: yup.string().required(t('forms.required')).min(4),
 
   especialidades: yup
     .array()
@@ -257,7 +259,7 @@ if (selectedOption === "existing") {
   return (
     <Card className="p-6 max-w-3xl mx-auto mt-16 border-2 border-[#DFA200] rounded-xl shadow-md">
       <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-        {isEdit ? "Actualizar Categoría" : "Crear Categoría"}
+        {isEdit ? t('categories.update') : t('categories.create')}
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
@@ -266,10 +268,10 @@ if (selectedOption === "existing") {
           name="name"
           control={control}
           render={({ field }) => (
-            <CustomInputField
+              <CustomInputField
               {...field}
-              label="Nombre de la categoría"
-              placeholder="Ejemplo: Computadoras"
+              label={t('categories.name')}
+              placeholder={t('categories.namePlaceholder')}
               error={errors.name?.message}
             />
           )}
@@ -280,10 +282,10 @@ if (selectedOption === "existing") {
           name="description"
           control={control}
           render={({ field }) => (
-            <CustomInputField
+              <CustomInputField
               {...field}
-              label="Descripción"
-              placeholder="Breve descripción"
+              label={t('categories.description')}
+              placeholder={t('categories.descriptionPlaceholder')}
               error={errors.description?.message}
             />
           )}
@@ -295,12 +297,12 @@ if (selectedOption === "existing") {
             name="especialidades"
             control={control}
             render={({ field }) =>
-              <CustomMultiSelect field={field} data={dataSpecialities}
-                label="Especialidades"
+                  <CustomMultiSelect field={field} data={dataSpecialities}
+                  label={t('specialties.title')}
                 getOptionLabel={(item) => item.Speciality}
                 getOptionValue={(item) => item.Id}
 
-                placeholder="Seleccione especialidades" 
+                  placeholder={t('specialties.selectPlaceholder')}
                 error={errors.especialidades?.message}/>}
           />
        
@@ -313,11 +315,11 @@ if (selectedOption === "existing") {
             control={control}
             render={({ field }) =>
               <CustomMultiSelect field={field} data={dataTags}
-                label="Etiquetas"
+                label={t('categories.tags')}
                 getOptionLabel={(item) => item.Tag}
                getOptionValue={(item) => item.Id}
 
-                placeholder="Seleccione etiquetas" 
+                placeholder={t('categories.selectTags')}
                 error={errors.tags?.message}/>}
           />
        
@@ -338,7 +340,7 @@ if (selectedOption === "existing") {
             }}
             className="flex gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
           >
-            Crear nuevo SLA
+            {t('categories.createSLA')}
           </Button>
 
           
@@ -355,7 +357,7 @@ if (selectedOption === "existing") {
             }}
             className="flex gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
           >
-            Seleccionar SLA existente
+            {t('categories.selectExistingSLA')}
           </Button>
         </div>
 
@@ -369,22 +371,22 @@ if (selectedOption === "existing") {
                 <CustomInputField
                   {...field}
                   type="number"
-                  label="Hora maxima para respuesta"
-                  placeholder="Ej: 2"
+                  label={t('categories.slaResponseHours')}
+                  placeholder={t('categories.slaResponsePlaceholder')}
                   error={errors.slaHours?.message}
                 />
               )}
             />
 
-            <Controller
+                <Controller
               name="slaMinutes"
               control={control}
               render={({ field }) => (
                 <CustomInputField
                   {...field}
                   type="number"
-                  label="Hora maxima para resolución"
-                  placeholder="Ej: 30"
+                      label={t('categories.slaResolutionHours')}
+                      placeholder={t('categories.slaResolutionPlaceholder')}
                   error={errors.slaMinutes?.message}
                 />
               )}
@@ -398,10 +400,10 @@ if (selectedOption === "existing") {
             name="slaId"
             control={control}
             render={({ field }) => (
-              <CustomSelect
+                <CustomSelect
                 field={field}
                 data={slaList}
-                label="Selecciona un SLA"
+                label={t('categories.selectSLA')}
                 getOptionLabel={(item) =>
                   "MaxSLAResponse: " +
                   item.MaxTimeResponse +
@@ -420,7 +422,7 @@ if (selectedOption === "existing") {
 
         {/* BOTONES */}
         <div className="flex justify-between gap-4 mt-6">
-          <Button
+            <Button
             type="button"
             onClick={() => {
               if (location.key !== "default") navigate(-1);
@@ -429,7 +431,7 @@ if (selectedOption === "existing") {
             className="flex items-center gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
           >
             <ArrowLeft className="w-4 h-4" />
-            Regresar
+            {t('common.back')}
           </Button>
 
           <Button
@@ -437,7 +439,7 @@ if (selectedOption === "existing") {
             className="flex-1 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046]"
           >
             <Save className="w-4 h-4" />
-            Guardar
+            {t('buttons.save')}
           </Button>
         </div>
       </form>

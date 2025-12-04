@@ -1,0 +1,162 @@
+{
+  "translation": {
+    "header": {
+      "maintenance": "Mantenimientos",
+      "technicians": "Técnicos",
+      "tickets": "Tickets",
+      "categories": "Categorías",
+      "noUsers": "Sin usuarios"
+    },
+    "sidebar": {
+      "dashboard": "Panel de Control",
+      "tickets": "Tickets",
+      "myTickets": "Mis Tickets",
+      "createTicket": "Crear Ticket",
+      "technicians": "Técnicos",
+      "assignments": "Asignaciones",
+      "categories": "Categorías",
+      "profile": "Perfil",
+      "allTickets": "Todos los Tickets",
+      "specialties": "Especialidades",
+      "sla": "SLA",
+      "notifications": "Notificaciones",
+      "autotriage": "Auto-triage",
+      "maintenance": "Mantenimiento",
+      "settings": "Configuración",
+      "administration": "Administración"
+    },
+    "buttons": {
+      "create": "Crear",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "submit": "Enviar",
+      "update": "Actualizar",
+      "search": "Buscar",
+      "filter": "Filtrar",
+      "export": "Exportar",
+      "import": "Importar"
+    },
+    "common": {
+      "welcome": "Bienvenido",
+      "loading": "Cargando...",
+      "error": "Error",
+      "success": "Éxito",
+      "warning": "Advertencia",
+      "info": "Información",
+      "confirm": "Confirmar",
+      "close": "Cerrar",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "language": "Idioma",
+      "spanish": "Español",
+      "english": "English"
+    },
+    "messages": {
+      "loadingData": "Cargando datos...",
+      "noData": "Sin datos disponibles",
+      "errorLoading": "Error al cargar los datos",
+      "errorDeleting": "Error al eliminar",
+      "errorUpdating": "Error al actualizar",
+      "successCreate": "Creado exitosamente",
+      "successUpdate": "Actualizado exitosamente",
+      "successDelete": "Eliminado exitosamente",
+      "confirmDelete": "¿Está seguro de que desea eliminar esto?",
+      "confirmAction": "¿Está seguro de que desea continuar?"
+    },
+    "tickets": {
+      "ticketsTitle": "Tickets",
+      "titlePlaceholder": "Título del ticket",
+      "descriptionPlaceholder": "Describa su incidencia...",
+      "tags": "Etiqueta",
+      "selectTag": "Seleccione una etiqueta",
+      "pending": "Pendiente",
+      "myTickets": "Mis Tickets",
+      "allTickets": "Todos los Tickets",
+      "createNew": "Crear Nuevo Ticket",
+      "id": "ID",
+      "title": "Título",
+      "description": "Descripción",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "category": "Categoría",
+      "specialty": "Especialidad",
+      "assignedTo": "Asignado a",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado",
+      "dueDate": "Fecha de Vencimiento",
+      "open": "Abierto",
+      "inProgress": "En Progreso",
+      "resolved": "Resuelto",
+      "closed": "Cerrado",
+      "high": "Alto",
+      "medium": "Medio",
+      "low": "Bajo"
+    },
+    "categories": {
+      "title": "Categorías",
+      "name": "Nombre",
+      "description": "Descripción",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "specialties": {
+      "title": "Especialidades",
+      "name": "Nombre",
+      "description": "Descripción"
+    },
+    "users": {
+      "title": "Usuarios",
+      "username": "Nombre de Usuario",
+      "email": "Correo Electrónico",
+      "role": "Rol",
+      "admin": "Administrador",
+      "technician": "Técnico",
+      "user": "Usuario",
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "forms": {
+      "required": "Este campo es requerido",
+      "invalidEmail": "Correo electrónico inválido",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "fillAllFields": "Por favor complete todos los campos"
+    },
+
+    "Tech": {
+      "technicianListTitle": "Lista de Técnicos",
+      "Username" : "Nombre de Usuario",
+      "Email" : "Correo Electrónico",
+        "Specialty" : "Especialidad",
+        "IdNumber" :"Número de Identificación"
+      
+    },
+
+    "TechDetails" : {
+      "BackToList" : "Volver a la Lista",
+      "TechNotFound" : "No se encontró el técnico",
+      "Email" : " Correo electronico",
+      "Postion" : "Puesto",
+      "NotEsp" : "No especificado",
+      "insurance" : "Aseguradora",
+      "LastLogin" : "Ultimo inicio de de sesion",
+      "UserId" : "Id de usuario",
+      "RolDescription" :"Descripción de Rol",
+      "WorkCharge": "Carga de Trabajo",
+      "Total" : "Total",
+      "LowPrio" :"Prioridad Baja",
+      "MidPrio" :"Prioridad Media",
+      "HighPrio" : "Prioridad Alta",
+      "NoTickets" :"Este técnico no tiene tickets asignados actualmente",
+      "Nocharge" : "La carga de trabajo está en 0",
+      "Speciality" : "Especialidad",
+      "NoSpeciality" :"Este tecnico no tiene especialidades asociadas"
+
+
+
+    }
+    
+  }
+}

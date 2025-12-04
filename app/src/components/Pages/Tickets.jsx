@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import TicketsLists from "../../Services/TicketsLists";
 import { useUser } from "../../context/UserContext";
+import { useTranslation } from 'react-i18next';
 
 export function Tickets() {
+  const { t } = useTranslation();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -70,7 +72,7 @@ useEffect(() => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">Cargando tickets... :D/</p>
+        <p className="text-gray-700 text-lg">{t('messages.loadingData')}</p>
       </div>
     );
   }
@@ -86,7 +88,7 @@ useEffect(() => {
   if (tickets.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">No hay tickets disponibles</p>
+        <p className="text-gray-700 text-lg">{t('messages.noData')}</p>
       </div>
     );
   }
@@ -95,7 +97,7 @@ useEffect(() => {
     <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-extrabold text-center text-blue-600 tracking-wide drop-shadow-lg mt-6 mb-8">
-          Tickets
+          {t('tickets.ticketsTitle')}
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -117,19 +119,19 @@ useEffect(() => {
 
               <div className="space-y-3">
                 <div>
-                  <p className="text-gray-600 text-sm">ID:</p>
+                  <p className="text-gray-600 text-sm">{t('tickets.id')}:</p>
                   <p className="text-black font-bold text-lg">#{ticket.id}</p>
                 </div>
 
                 <div>
-                  <p className="text-gray-600 text-sm">Categoría:</p>
+                  <p className="text-gray-600 text-sm">{t('tickets.category')}:</p>
                   <p className="text-gray-800 font-semibold">
                     {ticket.Category}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-gray-600 text-sm">Prioridad:</p>
+                  <p className="text-gray-600 text-sm">{t('tickets.priority')}:</p>
                   <span
                     className={`inline-block px-3 py-1 rounded-full text-white text-sm font-semibold ${getPriorityColor(
                       ticket.priority

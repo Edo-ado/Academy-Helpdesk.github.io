@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import CategoriesList from "../../Services/CategoriesList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from 'react-i18next';
 
 export function Categories() {  
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,7 +43,7 @@ export function Categories() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">Cargando categorías... :D/</p>
+        <p className="text-gray-700 text-lg">{t('messages.loadingData')}</p>
       </div>
     );
   }
@@ -49,7 +51,7 @@ export function Categories() {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-red-500 text-lg">{error}</p>
+        <p className="text-red-500 text-lg">{t('messages.errorLoading')}</p>
       </div>
     );
   }
@@ -57,7 +59,7 @@ export function Categories() {
   if (categories.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
-        <p className="text-gray-700 text-lg">No hay categorías disponibles</p>
+        <p className="text-gray-700 text-lg">{t('messages.noData')}</p>
       </div>
     );
   }
@@ -66,7 +68,7 @@ export function Categories() {
     <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-extrabold text-center text-[#101dcf] tracking-wide drop-shadow-lg mt-6 mb-8 border-b-4 border-[#DFA200] pb-4">
-          Categorías
+          {t('categories.title')}
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -86,13 +88,13 @@ export function Categories() {
 
               <div className="space-y-3">
                 <div>
-                  <p className="text-gray-600 text-sm">ID:</p>
+                  <p className="text-gray-600 text-sm">{t('tickets.id')}:</p>
                   <p className="text-black font-bold text-lg">{category.id}</p>
                 </div>
 
                 <div>
-                  <p className="font-semibold text-gray-700 text-sm">Descripción:</p>
-                  <p className="text-gray-800">{category.description || "Sin descripción"}</p>
+                  <p className="font-semibold text-gray-700 text-sm">{t('categories.description')}:</p>
+                  <p className="text-gray-800">{category.description || t('categories.noDescription')}</p>
                 </div>
               </div>
             </div>

@@ -5,7 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
+import { useTranslation } from 'react-i18next';
+
 export function TechnicianList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [technicians, setTechnicians] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +71,7 @@ export function TechnicianList() {
       <div className="max-w-7xl mx-auto">
         {/* Título principal */}
         <h1 className="text-4xl font-extrabold text-center text-[#101dcf] tracking-wide drop-shadow-lg mt-6 mb-8 border-b-4 border-[#DFA200] pb-4">
-          Lista de Técnicos
+          {t('Tech.technicianListTitle')}
         </h1>
 
         {/* Tarjetas */}
@@ -88,7 +91,7 @@ export function TechnicianList() {
               <div className="mt-3 space-y-4">
                 {/* Nombre */}
                 <div>  
-                  <p className="text-sm text-gray-500">Nombre de Usuario:</p>
+                  <p className="text-sm text-gray-500">{t('Tech.Username')}</p>
                   <h1 className="uppercase text-2xl font-semibold text-[#101dcf]">
                     {tech.name}
                   </h1>
@@ -97,7 +100,7 @@ export function TechnicianList() {
                 {/* ID */}
                 <div>
                   <p className="text-sm text-gray-500">
-                    Número de Identificación:
+                    {t('Tech.IdNumber')}
                   </p>
                   <p className="text-lg font-bold text-gray-900">
                     {tech.UserCode}
@@ -106,7 +109,7 @@ export function TechnicianList() {
 
                 {/* Email */}
                 <div>
-                  <p className="text-sm text-gray-500">Email:</p>
+                  <p className="text-sm text-gray-500">{t('Tech.Email')}</p>
                   <p className="text-gray-800 break-words flex items-center gap-2">
                     <FontAwesomeIcon
                       icon={faEnvelope}

@@ -2,7 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { UserProvider } from './context/UserContext'  
+import { UserProvider } from './context/UserContext'
+import { LanguageProvider } from './context/LanguageContext'
 import { Layout } from './components/Layout/Layout'
 import { Home } from './components/Home/Home'
 import { PageNotFound } from './components/Home/PageNotFound'
@@ -75,18 +76,6 @@ const rutas = createBrowserRouter([
 //notis
    { path: '/notifications', element: <Notifications /> },
 
-  
-  
-  
-  
-
-
-
-
-
-
-
-      
 
      //Error page
       { path: '*', element: <PageNotFound /> },
@@ -96,9 +85,11 @@ const rutas = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <UserProvider> 
-      <RouterProvider router={rutas} />
-      <Toaster position="top-right" />
-    </UserProvider> 
+    <LanguageProvider>
+      <UserProvider> 
+        <RouterProvider router={rutas} />
+        <Toaster position="top-right" />
+      </UserProvider>
+    </LanguageProvider>
   </StrictMode>,
 )
