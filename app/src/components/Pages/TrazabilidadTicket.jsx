@@ -561,7 +561,7 @@ return (
 
       {/* responsalbe*/}
       <div>
-        <label className="block mb-1 text-sm font-medium flex items-center gap-2">
+        <label className="block mb-1 text-sm font-medium  items-center gap-2">
           <FontAwesomeIcon icon={faUser} className="text-blue-600" />
           Usuario responsable
         </label>
