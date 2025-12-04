@@ -112,7 +112,7 @@ const handleTicketClick = (ticket) => {
                   : 'bg-white text-blue-600 hover:bg-blue-50 border-2 border-blue-600'
               }`}
             >
-              View Week
+              Ver por Semana
             </button>
             <button
               onClick={() => setFilterType('day')}
@@ -122,7 +122,7 @@ const handleTicketClick = (ticket) => {
                   : 'bg-white text-blue-600 hover:bg-blue-50 border-2 border-blue-600'
               }`}
             >
-              View Day
+              Ver por dia
             </button>
 
             {/* Selector de fecha */}

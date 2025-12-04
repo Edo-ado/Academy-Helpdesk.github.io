@@ -82,17 +82,17 @@ useEffect(() => {
 
             <Link to="/tickets/create" className={TailwinButton}>
               <FontAwesomeIcon icon={faPlus} />
-              <span>Create a Ticket</span>
+              <span>Crear un ticket</span>
             </Link>
 
             <Link to="/technicians" className={TailwinButton}>
               <FontAwesomeIcon icon={faUserCog} />
-              <span>Technicians</span>
+              <span>Tecnicos</span>
             </Link>
 
             <Link to="/categories" className={TailwinButton}>
               <FontAwesomeIcon icon={faList} />
-              <span>Categories</span>
+              <span>Categorias</span>
             </Link>
           </section>
 
@@ -101,7 +101,7 @@ useEffect(() => {
           <section aria-labelledby="work-part" className="space-y-2">
             <Link to="/my-tickets" className={TailwinButton}>
               <FontAwesomeIcon icon={faTicketAlt} />
-              <span>My Tickets</span>
+              <span>Mis tickets</span>
             </Link>
 
             <Link to="/notifications" className={`${TailwinButton} relative`}>
@@ -110,7 +110,7 @@ useEffect(() => {
 
             {unreadCount > 0 && (
 
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center transform">
 
             {unreadCount}
 
@@ -118,7 +118,7 @@ useEffect(() => {
 
             )}
 
-            <span className="ml-2">Notifications</span>
+            <span className="">Notificaciones</span>
 
             </Link>
 
@@ -126,7 +126,7 @@ useEffect(() => {
 
             <Link to="/profile" className={TailwinButton}>
               <FontAwesomeIcon icon={faUser} />
-              <span>Profile</span>
+              <span>Perfil</span>
             </Link>
           </section>
 
@@ -134,7 +134,7 @@ useEffect(() => {
 
           <Link to="/tickets" className={TailwinButton}>
             <FontAwesomeIcon icon={faTicket} />
-            <span>All Tickets</span>
+            <span> Todos los tickets</span>
           </Link>
 
 

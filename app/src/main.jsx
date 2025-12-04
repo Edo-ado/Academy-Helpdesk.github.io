@@ -44,7 +44,7 @@ const rutas = createBrowserRouter([
      { path: '/category/:id', element: <DetailCategory /> },
      { path: '/tickets', element: <Tickets /> },
      { path: '/ticket/:id', element: <DetailTicket /> },
-     { path: '/my-tickets', element: <MyTickets /> }, 
+     { path: '/my-tickets', element: <MyTiñckets /> }, 
      //trazabilidadticket
      { path: '/my-tickets/:id', element: <TrazabilidadTicket /> }, 
 
