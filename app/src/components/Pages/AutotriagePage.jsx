@@ -271,7 +271,7 @@ export default function AutotriagePage() {
        await NotificationService.InsertNotificationTechToYourTickeCliente(tecnicoSeleccionado.TechnicianId, ticket.TicketId, 17);
 
 
-       toast.success(t("autotriage.assignedAutoSuccess") + tecnicoSeleccionado.tecnicoSeleccionado);
+       toast.success(t("autotriage.assignedAutoSuccess") + "   " + tecnicoSeleccionado.UserName);
        await cargarTicketsManual();
        await cargarTicketsAuto();
 
@@ -352,8 +352,10 @@ export default function AutotriagePage() {
       // Recargar ambas listas
         await cargarTicketsManual();
         await cargarTicketsAuto();
-      } else {
-        alert(message || "Error al asignar el ticket");
+      }
+       else {
+       
+
       }
 
     } catch (e) {
@@ -367,7 +369,7 @@ export default function AutotriagePage() {
 
   const asignarTodosAuto = async () => {
     if (ticketsAuto.length === 0) {
-      alert("No hay tickets para asignar");
+      
       return;
     }
 
@@ -386,12 +388,12 @@ export default function AutotriagePage() {
         await asignarAutoIndividual(ticket);
         exitosos++;
       } catch (error) {
-        console.error(`Error asignando ticket ${ticket.TicketId}:`, error);
+       
         fallidos++;
       }
     }
 
-    alert(`Asignación completada:\n✓ Exitosos: ${exitosos}\n✗ Fallidos: ${fallidos}`);
+   
     await cargarTicketsAuto();
     setLoading(false);
   };
