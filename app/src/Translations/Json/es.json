@@ -120,7 +120,8 @@
     "specialties": {
       "title": "Especialidades",
       "name": "Nombre",
-      "description": "Descripción"
+      "description": "Descripción",
+    "selectPlaceholder": "Seleccione especialidades"
     },
     "users": {
       "title": "Usuarios",
@@ -386,15 +387,113 @@
   "responsible": "Responsable:",
   "evidence": "evidencia",
   "noHistory": "No hay historial registrado para este ticket."
+},
+  "categories": {
+    "create": "Crear Categoría",
+    "update": "Actualizar Categoría",
+    "name": "Nombre",
+    "namePlaceholder": "Ingrese el nombre de la categoría",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Ingrese la descripción de la categoría",
+    "tags": "Etiquetas",
+    "selectTags": "Seleccione etiquetas",
+    "createSLA": "Crear Nuevo SLA",
+    "selectExistingSLA": "Seleccionar SLA Existente",
+    "selectSLA": "Seleccione SLA",
+    "slaResponseHours": "Tiempo de Respuesta (horas)",
+    "slaResponsePlaceholder": "ej., 2",
+    "slaResolutionHours": "Tiempo de Resolución (horas)",
+    "slaResolutionPlaceholder": "ej., 24",
+    "minSpecialties": "Debe seleccionar al menos una especialidad",
+    "minTags": "Debe seleccionar al menos una etiqueta",
+    "selectSLAOption": "Debes seleccionar si usarás un SLA nuevo o uno existente",
+    "responseGreaterZero": "Tiempo de respuesta (horas) debe ser mayor a 0",
+    "resolutionGreaterResponse": "Tiempo de resolución debe ser mayor que el tiempo de respuesta",
+    "selectExistingSLARequired": "Debes seleccionar un SLA existente",
+    "slaCreated": "SLA creado exitosamente",
+    "slaCreateError": "No se pudo crear el SLA",
+    "selectOrCreateSLA": "Debes seleccionar o crear un SLA",
+    "categoryUpdated": "Categoría \"{name}\" actualizada exitosamente",
+    "categoryUpdateError": "No se pudo actualizar la categoría",
+    "categoryCreated": "Categoría \"{name}\" creada exitosamente",
+    "categoryCreateError": "No se pudo crear la categoría"
+  },
+
+  "customMultiSelect": {
+  "selected": "seleccionado(s)",
+  "select": "Seleccionar",
+  "noResults": "No se encontraron resultados."
+},
+"updateTechnician": {
+  "title": "Actualizar Técnico",
+  "fullName": "Nombre completo",
+  "fullNamePlaceholder": "Su nombre completo",
+  "email": "Correo electrónico",
+  "emailPlaceholder": "technician@Helpdesk.com",
+  "password": "Contraseña",
+  "passwordPlaceholder": "********",
+  "insurance": "Seguro médico",
+  "workPosition": "Cargo de trabajo",
+  "workPositionPlaceholder": "Accountant",
+  "specialties": "Especialidades",
+  "addSpecialty": "Agregar especialidad",
+  "duplicateSpecialties": "No se puede seleccionar especialidades repetidas",
+  "technicianUpdated": "Técnico actualizado exitosamente",
+  "errorUpdating": "Error al actualizar técnico",
+  "validation": {
+    "nameRequired": "El nombre completo es requerido",
+    "nameMin": "Debe tener al menos 2 caracteres",
+    "insuranceRequired": "El seguro es requerido",
+    "insuranceInvalid": "Debe seleccionar un seguro",
+    "emailRequired": "El email es requerido",
+    "emailInvalid": "Formato de email no válido",
+    "workPositionRequired": "El cargo de trabajo es requerido",
+    "workPositionMin": "Debe tener al menos 2 caracteres",
+    "passwordRequired": "La contraseña es requerida",
+    "passwordMin": "Mínimo 6 caracteres",
+    "specialtyRequired": "La especialidad es requerida",
+    "specialtyInvalid": "Debe seleccionar una especialidad",
+    "specialtiesMin": "Debe seleccionar al menos una especialidad"
+  }
+},
+"autotriage": {
+  "title": "Sistema de Asignación de Tickets",
+  "autoTab": "Asignación Automática",
+  "manualTab": "Asignación Manual",
+  "loading": "Cargando tickets...",
+  "autoTitle": "Tickets disponibles para Autotriage",
+  "assignAll": "Asignar Todos",
+  "noAutoTickets": "No hay tickets pendientes para asignación automática",
+  "category": "Categoría:",
+  "priority": "Prioridad:",
+  "score": "Puntaje:",
+  "slaRemaining": "SLA restante:",
+  "assignAuto": "Asignar Automáticamente",
+  "manualTitle": "Tickets para Asignación Manual",
+  "noManualTickets": "No hay tickets que requieran asignación manual",
+  "noAutotriaRule": "No cumple criterios de autotriage",
+  "selectTech": "Seleccionar Técnico:",
+  "selectTechDefault": "-- Seleccione un técnico --",
+  "tickets": "tickets",
+  "assignManual": "Asignar Manualmente",
+  "selectTechAlert": "Por favor seleccione un técnico",
+  "noRuleAlert": "No se encontró regla de autotriage para este ticket",
+  "noTechAlert": "No hay técnicos disponibles con la especialidad requerida",
+  "assignedAutoSuccess": "Se ha asignado el ticket automáticamente con éxito",
+  "assignedManualSuccess": "Se ha asignado el ticket manualmente con éxito",
+  "errorAssignAuto": "Error al asignar el ticket automáticamente",
+  "errorAssignManual": "Error al asignar el ticket",
+  "confirmAssignAll": "¿Desea asignar automáticamente {count} ticket(s)?",
+  "noTicketsToAssign": "No hay técnico para asignar",
+  "successful": "exitosos",
+  "failed": "fallidos",
+  "noPendingTickets": "No hay tickets pendientes."
 }
 
 
 
 
 
-    
-
- 
 
     
   }

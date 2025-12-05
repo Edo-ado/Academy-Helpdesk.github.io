@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Check, ChevronsUpDown, X, AlertCircle } from "lucide-react";
 import { Button } from "../button";
 import { cn } from "../../../lib/utils";
+import { useTranslation } from "react-i18next";
 
 export function CustomMultiSelect({
   field,
@@ -12,10 +13,10 @@ export function CustomMultiSelect({
   getOptionValue,
   error,
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  // Siempre trabajamos con strings
   const selectedValues = (field?.value ?? []).map(String);
 
   const toggleValue = (value) => {
@@ -48,7 +49,6 @@ export function CustomMultiSelect({
     <div className="w-full relative">
       <label className="block mb-1 text-sm font-medium">{label}</label>
 
-      {/* Botón principal */}
       <Button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -59,18 +59,16 @@ export function CustomMultiSelect({
         )}
       >
         {selectedItems.length > 0
-          ? `${selectedItems.length} seleccionado(s)`
-          : `Seleccionar ${label}`}
+          ? `${selectedItems.length} ${t('customMultiSelect.selected')}`
+          : `${t('customMultiSelect.select')} ${label}`}
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
 
-      {/* Dropdown */}
       {open && (
         <div className="absolute z-[9999] mt-1 w-full max-h-60 overflow-auto rounded-xl border bg-white shadow-lg p-2">
-       
           {filteredOptions.length === 0 && (
             <p className="text-sm text-gray-500 px-1">
-              No se encontraron resultados.
+              {t('customMultiSelect.noResults')}
             </p>
           )}
 
@@ -105,7 +103,6 @@ export function CustomMultiSelect({
         </div>
       )}
 
-      {/* Chips debajo */}
       <div className="mt-2 flex flex-wrap gap-2">
         {selectedItems.map((item) => {
           const value = String(getOptionValue(item));
@@ -124,7 +121,6 @@ export function CustomMultiSelect({
         })}
       </div>
 
-      {/* Error */}
       {error && (
         <p className="flex items-center gap-1 mt-1 text-sm text-red-500">
           <AlertCircle className="h-4 w-4" />

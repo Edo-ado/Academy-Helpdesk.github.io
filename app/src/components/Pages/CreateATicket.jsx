@@ -38,7 +38,7 @@ const location = useLocation();
   const { t } = useTranslation();
 
 
-    const { selectedUser } = useUser();
+  const { selectedUser } = useUser();
   const [dataPriorities, setDataPriorities] = useState([]);
   const [dataTags, setDataTags] = useState([]);
   const [dataCategory, setDataCategory] = useState(null);
@@ -134,7 +134,7 @@ const body = {
   Description: dataForm.descripcion,
   PriorityId: dataForm.prioridad,
   CategoryId: dataForm.categoriaId,
-  UserId: selectedUser.Id
+  UserId: 17  //javiermilei
 };
 
 

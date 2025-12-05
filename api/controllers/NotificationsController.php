@@ -50,6 +50,26 @@ class NotificationsController
         }
     }
 
+ public function InsertNotificationTechToYourTickeCliente()
+{
+    try {
+        $response = new Response();
+        $body = json_decode(file_get_contents("php://input"), true);
+        $triggeredUserId = $body["techassign"];
+        $ticketId = $body["ticketId"];
+        $clientId = $body["clientId"];
+        $NOTI = new NotificationsModel();
+        $result = $NOTI->InsertNotificationTechToYourTickeCliente($triggeredUserId, $ticketId, $clientId);
+
+        $response->toJSON($result);
+
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
+
+
 
 
 public function InsertNotificationClienteFlowTicket()

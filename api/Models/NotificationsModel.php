@@ -46,7 +46,7 @@ public function InsertNotificationTechToYourTickeCliente($techassign, $ticketId,
     $sqlClient = "INSERT INTO Notifications 
                   (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) 
                  VALUES 
-                   ($clientId, $ticketId, 'El estado de su ticket ha sido actualizado', 0, NOW(), 1, $techassign, 'CAMBIO_ESTADO_TICKET')";
+                   ($clientId, $ticketId, 'Su ticket $ticketId ya ha sido asignado a un técnico' , 0, NOW(), 1, $techassign, 'ASIGNACION_TICKET')";
 
    $vResultado = $this->enlace->executeSQL_DML($sqlClient); 
     return $vResultado;

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AutoTriageList from "../../Services/Autotriage";
-
+import NotificationService from "../../Services/NotificationServices";
+import toast from "react-hot-toast";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import * as yup from "yup";
+import { useTranslation } from "react-i18next";
+import { yupResolver } from "@hookform/resolvers/yup";
 export default function AutotriagePage() {
   const [ticketsAuto, setTicketsAuto] = useState([]);
   const [ticketsManual, setTicketsManual] = useState([]);
@@ -8,14 +13,15 @@ export default function AutotriagePage() {
   const [tab, setTab] = useState("auto");
   const [loading, setLoading] = useState(true);
   const [selectedTech, setSelectedTech] = useState({});
-
+  
+  const { t } = useTranslation();
 
   useEffect(() => {
     cargarTicketsAuto();
   }, []);
 
 
-  
+
 
  const cargarTicketsAuto = async () => {
   setLoading(true);
@@ -32,8 +38,6 @@ export default function AutotriagePage() {
       todosPendientes = res.data.data;
     }
     
-
-    console.log(" Todos los tickets pendientes:", todosPendientes);
 
     // 2. Filtrar solo los que tienen regla de autotriage
     const ticketsAptos = [];
@@ -144,7 +148,7 @@ export default function AutotriagePage() {
             const tecnicosRes = await AutoTriageList.GetTechniciansByCategory(ticket.CategoryId);
             let listaTecnicos = [];
             if (Array.isArray(tecnicosRes.data)) {
-              listaTecnicos = tecnicosRes.data;
+              listaTecnicos = tecnicosRes.data; 
             } else if (tecnicosRes.data && Array.isArray(tecnicosRes.data.data)) {
               listaTecnicos = tecnicosRes.data.data;
             }
@@ -209,7 +213,7 @@ export default function AutotriagePage() {
         regla = reglaRes.data.data[0];
       } 
       if (!regla) {
-        alert("No se encontró regla de autotriage para este ticket");
+      toast.error(t("autotriage.noRuleAlert"));
         setLoading(false);
         return;
       }
@@ -231,7 +235,7 @@ export default function AutotriagePage() {
         console.log("Técnicos obtenidos para autotriage:", listaTecnicos);
 
       if (listaTecnicos.length === 0) {
-        alert("No hay técnicos disponibles con la especialidad requerida");
+        toast.error(t("autotriage.noTechAlert"));
         setLoading(false);
         return;
       }
@@ -249,7 +253,6 @@ export default function AutotriagePage() {
       const actualizacion = await AutoTriageList.UpdateTicket({
         TicketId: ticket.TicketId,
         TechnicianId: tecnicoSeleccionado.TechnicianId,
-        
       });
 
 
@@ -262,9 +265,15 @@ export default function AutotriagePage() {
 
       console.log("Respuesta de asignación automática:", insertar);
 
+       //notificacion
 
-             await cargarTicketsManual();
-        await cargarTicketsAuto();
+       await NotificationService.InsertNotificationAssignTicketTechnician(tecnicoSeleccionado.TechnicianId, ticket.TicketId);
+       await NotificationService.InsertNotificationTechToYourTickeCliente(tecnicoSeleccionado.TechnicianId, ticket.TicketId, 17);
+
+
+       toast.success(t("autotriage.assignedAutoSuccess") + tecnicoSeleccionado.tecnicoSeleccionado);
+       await cargarTicketsManual();
+       await cargarTicketsAuto();
 
 
      
@@ -280,7 +289,7 @@ export default function AutotriagePage() {
 
   const asignarManualIndividual = async (ticketId, techId, ticket) => {
     if (!techId || techId === "default") {
-      alert("Por favor seleccione un técnico");
+     toast.error(t("autotriage.selectTechAlert"));
       return;
     }
 
@@ -334,14 +343,18 @@ export default function AutotriagePage() {
 
       if (success) {
         alert(`Ticket asignado manualmente a ${techIdNumber}`);
-        
+      toast.success(t("autotriage.assignedManualSuccess"));
         // Limpiar selección
         setSelectedTech(prev => ({
           ...prev,
           [ticketId]: "default"
         }));
         
-        // Recargar ambas listas
+       //notis
+       await NotificationService.InsertNotificationAssignTicketTechnician(techIdNumber, ticket.TicketId);
+       await NotificationService.InsertNotificationTechToYourTickeCliente(techIdNumber, ticket.TicketId, 17);
+
+      // Recargar ambas listas
         await cargarTicketsManual();
         await cargarTicketsAuto();
       } else {
@@ -350,7 +363,7 @@ export default function AutotriagePage() {
 
     } catch (e) {
       console.error("Error en asignación manual:", e);
-      alert("Error al asignar el ticket manualmente: " + (e.response?.data?.message || e.message));
+     toast.error(t("autotriage.noTicketsToAssign"));
     } finally {
       setLoading(false);
     }
@@ -564,7 +577,7 @@ export default function AutotriagePage() {
                         }}
                         className="w-full border-2 border-red-400 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                       >
-                        <option value="default">-- Seleccione un técnico --</option>
+                        <option value="technician">-- Seleccione un técnico --</option>
 
                         {(tecnicosDisponibles[t.TicketId] || []).map((tec) => (
                           <option key={tec.TechnicianId} value={tec.TechnicianId}>

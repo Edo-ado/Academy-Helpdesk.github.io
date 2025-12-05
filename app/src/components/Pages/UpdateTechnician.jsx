@@ -17,7 +17,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Plus, Save, ArrowLeft } from "lucide-react";
 import { Card } from "../../components/ui/card";
-
+import { useTranslation } from 'react-i18next';
 import { CustomInputField } from "../../components/ui/custom/custom-input-field";
 import { CustomSelect } from "../../components/ui/custom/custom-select";
 import { CustomMultiSelect } from "../../components/ui/custom/custom-multiple-select";
@@ -27,6 +27,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../
 
 
 export function UpdateTechnician() {
+const { t } = useTranslation();
 
 const { id } = useParams();
 const navigate = useNavigate();
@@ -39,24 +40,16 @@ const location = useLocation();
 
  /*** Esquema de validación Yup ***/
 const technicianSchema = yup.object({
-  name: yup.string().required("El nombre completo es requerido").min(2, "Debe tener al menos 2 caracteres"),
-  seguro: yup.number()
-    .typeError("Debe seleccionar un seguro").required("El seguro es requerido").positive("Valor inválido"),
-  email: yup.string().required("El email es requerido") .email("Formato de email no válido"),
-  trabajocargo: yup.string().required("El cargo de trabajo es requerido").min(2, "Debe tener al menos 2 caracteres"),
- password: yup.string().required("La contraseña es requerida").min(6, "Mínimo 6 caracteres"),
-especialidades: yup
-    .array()
-    .of(
-      yup.object({
-        Id: yup
-          .number()
-          .typeError("Debe seleccionar una especialidad")
-          .required("La especialidad es requerida"),
-      })
-    )
-    .min(1, "Debe seleccionar al menos una especialidad"),
-    
+  name: yup.string().required(t('updateTechnician.validation.nameRequired')).min(2, t('updateTechnician.validation.nameMin')),
+  seguro: yup.number().typeError(t('updateTechnician.validation.insuranceInvalid')).required(t('updateTechnician.validation.insuranceRequired')).positive(t('updateTechnician.validation.insuranceInvalid')),
+  email: yup.string().required(t('updateTechnician.validation.emailRequired')).email(t('updateTechnician.validation.emailInvalid')),
+  trabajocargo: yup.string().required(t('updateTechnician.validation.workPositionRequired')).min(2, t('updateTechnician.validation.workPositionMin')),
+  password: yup.string().required(t('updateTechnician.validation.passwordRequired')).min(6, t('updateTechnician.validation.passwordMin')),
+  especialidades: yup.array().of(
+    yup.object({
+      Id: yup.number().typeError(t('updateTechnician.validation.specialtyInvalid')).required(t('updateTechnician.validation.specialtyRequired')),
+    })
+  ).min(1, t('updateTechnician.validation.specialtiesMin')),
 });
 
 
@@ -164,7 +157,7 @@ const onSubmit = async (dataForm) => {
   const hayRepetidos = new Set(ids).size !== ids.length;
 
   if (hayRepetidos) {
-    toast.error("No se puede seleccionar especialidades repetidas");
+toast.error(t('updateTechnician.duplicateSpecialties'));
     return;
   }
 
@@ -178,7 +171,7 @@ const onSubmit = async (dataForm) => {
       const formData = new FormData();
       formData.append("Id", response.data.data.id);
       
-      toast.success(`Técnico ${dataForm.name} actualizado exitosamente`);
+    toast.success(t('updateTechnician.technicianUpdated'));
       navigate(-1);
       return;
     }
@@ -196,7 +189,7 @@ const onSubmit = async (dataForm) => {
 
 
      <h1 className="text-2xl font-semibold tracking-tight text-[#071f5f] font-sans">
-    Actualizar Técnico
+  {t('updateTechnician.title')}
 </h1>
 
 
@@ -210,8 +203,8 @@ const onSubmit = async (dataForm) => {
         render={({ field }) => (
           <CustomInputField
             {...field}
-            label="Nombre completo"
-            placeholder="Su nombre completo"
+            label={t('updateTechnician.fullName')}
+             placeholder={t('updateTechnician.fullNamePlaceholder')}
             error={errors.name?.message}
           />
         )}
@@ -223,8 +216,8 @@ const onSubmit = async (dataForm) => {
         render={({ field }) => (
           <CustomInputField
             {...field}
-            label="Correo electrónico"
-            placeholder="technician@Helpdesk.com"
+           label={t('updateTechnician.email')}
+            placeholder={t('updateTechnician.emailPlaceholder')}
             error={errors.email?.message}
           />
         )}
@@ -240,8 +233,8 @@ const onSubmit = async (dataForm) => {
           <CustomInputField
             {...field}
         
-            label="Contraseña"
-            placeholder="********"
+          label={t('updateTechnician.password')}
+        placeholder={t('updateTechnician.passwordPlaceholder')}
             error={errors.password?.message}
           />
         )}
@@ -253,8 +246,8 @@ const onSubmit = async (dataForm) => {
         render={({ field }) => (
           <CustomSelect
             field={field}
-            data={dataSeguros}
-            label="Seguro médico"
+            data={dataSeguros}      
+label={t('updateTechnician.insurance')}
             getOptionLabel={(item) => `${item.Name}`}
             getOptionValue={(item) => item.Id}
             error={errors.seguro?.message}
@@ -273,8 +266,8 @@ const onSubmit = async (dataForm) => {
         render={({ field }) => (
           <CustomInputField
             {...field}
-            label="Cargo de trabajo"
-            placeholder="Accountant"
+           label={t('updateTechnician.workPosition')}
+          placeholder={t('updateTechnician.workPositionPlaceholder')}
             error={errors.trabajocargo?.message}
           />
         )}
@@ -287,7 +280,7 @@ const onSubmit = async (dataForm) => {
     {/* Especialidades (useFieldArray) */}
     <div>
       <div className="flex items-center justify-between">
-        <Label className="block mb-1 text-sm font-medium">Especialidades</Label> {errors.especialidades && ( <p className="text-red-500 text-xs mt-1">
+        <Label className="block mb-1 text-sm font-medium">{t('updateTechnician.specialties')}</Label> {errors.especialidades && ( <p className="text-red-500 text-xs mt-1">
         {errors.especialidades.message}
       </p>
     )}
@@ -302,7 +295,7 @@ const onSubmit = async (dataForm) => {
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Agregar especialidad</TooltipContent>
+            <TooltipContent>{t('updateTechnician.addSpecialty')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
@@ -332,7 +325,7 @@ navigate(-1);
   className="flex items-center gap-2 bg-[#DFA200] text-white rounded-xl shadow-md hover:bg-[#c48c00]"
 >
   <ArrowLeft className="w-4 h-4" />
-  Regresar
+{t('common.back')}
 </Button>
 
 
@@ -341,7 +334,7 @@ navigate(-1);
   className="flex-1 bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046]"
 >
   <Save className="w-4 h-4" />
-  Guardar
+ {t('buttons.save')}
 </Button>
 
 

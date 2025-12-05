@@ -32,6 +32,7 @@ export function TechnicianList() {
       } catch (err) {
         console.error("Error:", err);
         setError(err.message || t('Tech.error')); 
+      } finally {
         setLoading(false);
       }
     };

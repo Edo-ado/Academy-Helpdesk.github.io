@@ -55,23 +55,23 @@ ORDER BY t.Ticket_Start_Date DESC;
     public function TicketAssignedToTEC($id)
     {
         $msg = "SELECT 
-    t.Id AS TicketId,
-    t.Title,
-    t.Description,
-    t.Priority,
-    t.State,
-    t.Ticket_Start_Date,
-    t.Ticket_End_Date,
-    c.Name AS Category,
-    tech.UserName AS Tecnico,
-    u.UserName AS Cliente
-FROM Tickets t
-INNER JOIN UserTickets ut ON t.Id = ut.TicketId
-INNER JOIN Users u ON ut.UserId = u.Id
-INNER JOIN Users tech ON t.TechnicianId = tech.Id
-INNER JOIN Categories c ON t.CategoryId = c.Id
-WHERE t.TechnicianId = $id
-AND t.State <> 'Cerrado';";
+            t.Id AS TicketId,
+            t.Title,
+            t.Description,
+            t.Priority,
+            t.State,
+            t.Ticket_Start_Date,
+            t.Ticket_End_Date,
+            c.Name AS Category,
+            tech.UserName AS Tecnico,
+            u.UserName AS Cliente
+        FROM Tickets t
+        INNER JOIN UserTickets ut ON t.Id = ut.TicketId
+        INNER JOIN Users u ON ut.UserId = u.Id
+        INNER JOIN Users tech ON t.TechnicianId = tech.Id
+        INNER JOIN Categories c ON t.CategoryId = c.Id
+        WHERE t.TechnicianId = $id;
+       ";
 
         $vResultado = $this->enlace->ExecuteSQL($msg);
         return $vResultado;
