@@ -52,7 +52,11 @@
       "previous": "Anterior",
       "language": "Idioma",
       "spanish": "Español",
-      "english": "English"
+      "english": "English",
+      "Haitiano" : "Haitiano",
+      "Simlish": "Simslish",
+       "Hindu": "Hindi",
+       "Andaluz": "Andaluz"
     },
     "messages": {
       "loadingData": "Cargando datos...",

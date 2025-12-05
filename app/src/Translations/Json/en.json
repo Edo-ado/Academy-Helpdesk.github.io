@@ -5,7 +5,6 @@
       "technicians": "Technicians",
       "tickets": "Tickets",
       "categories": "Categories",
-
       "noUsers": "No users"
     },
     "sidebar": {
@@ -53,7 +52,11 @@
       "previous": "Previous",
       "language": "Language",
       "spanish": "Español",
-      "english": "English"
+      "english": "English",
+      "Haitiano" : "Haitiano",
+      "Simlish": "Simslish",
+       "Hindu": "Hindi",
+       "Andaluz": "Andaluz"
     },
     "messages": {
       "loadingData": "Loading data...",
@@ -476,16 +479,9 @@
   "successful": "successful",
   "failed": "failed",
   "noPendingTickets": "No pending tickets."
+
+  
 }
-
-
-
-
-
-
-
-
-
 
 
   }

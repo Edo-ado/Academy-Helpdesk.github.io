@@ -12,6 +12,10 @@ export function LanguageSwitcher() {
   const languages = [
     { code: 'es', name: t('common.spanish'), flag: '🇪🇸' },
     { code: 'en', name: t('common.english'), flag: '🇺🇸' },
+     { code: 'ht', name: t('common.Haitiano'), flag: 'ht' },
+     { code: 'sm', name: t('common.Simlish'), flag: 'sm' },
+      { code: 'hi', name: t('common.Hindu'), flag: 'hi' },
+    { code: 'ad', name: t('common.Andaluz'), flag: 'ad' },
   ];
 
   const handleLanguageChange = (code) => {

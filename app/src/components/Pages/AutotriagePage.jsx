@@ -303,12 +303,7 @@ export default function AutotriagePage() {
       console.log("techId recibido:", techId, "convertido a:", techIdNumber);
       console.log("Técnicos disponibles:", tecnicos);
       
-     
-
-     
-
    
-
       // Crear observación detallada
      
       // Asignar ticket manualmente
@@ -406,7 +401,7 @@ export default function AutotriagePage() {
     <div className="min-h-screen bg-gradient-to-b from-blue-200 to-white py-10 px-6">
 
       <h1 className="text-4xl font-extrabold text-center text-[#101dcf] tracking-wide drop-shadow-lg mb-10">
-        Sistema de Asignación de Tickets
+       {t("autotriage.title")}
       </h1>
 
       {/* Tabs */}
@@ -422,7 +417,7 @@ export default function AutotriagePage() {
               : "bg-white border-2 border-blue-600 text-blue-700 hover:bg-blue-100"}
           `}
         >
-          Asignación Automática
+          {t("autotriage.autoTab")}
         </button>
 
         <button
@@ -436,7 +431,7 @@ export default function AutotriagePage() {
               : "bg-white border-blue-600 text-blue-700 hover:bg-blue-100"}
           `}
         >
-          Asignación Manual
+         {t("autotriage.manualTab")}
         </button>
       </div>
 
@@ -452,7 +447,7 @@ export default function AutotriagePage() {
           <>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold text-blue-900">
-                Tickets disponibles para Autotriage
+               {t(AutotriagePage.autoTitle)}
               </h2>
               
               {ticketsAuto.length > 0 && (
@@ -460,62 +455,62 @@ export default function AutotriagePage() {
                   onClick={asignarTodosAuto}
                   className="px-6 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition"
                 >
-                  Asignar Todos ({ticketsAuto.length})
+               {t("autotriage.assignAll")} ({ticketsAuto.length})
                 </button>
               )}
             </div>
 
             {ticketsAuto.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-xl text-gray-600">✓ No hay tickets pendientes para asignación automática</p>
+                <p className="text-xl text-gray-600"> {t("autotriage.noAutoTickets")} </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ticketsAuto.map((t) => (
+                {ticketsAuto.map((f) => (
                   <div 
-                    key={t.TicketId} 
+                    key={f.TicketId} 
                     className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="font-bold text-xl text-blue-900 flex-1">
-                        {t.Title}
+                        {f.Title}
                       </h3>
                       <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        #{t.TicketId}
+                        #{f.TicketId}
                       </span>
                     </div>
 
                     <div className="space-y-2 mb-4">
                       <p className="text-gray-800">
-                        <span className="font-semibold">Categoría:</span> {t.CategoryName}
+                        <span className="font-semibold"> {t("autotriage.category")}  </span> {f.CategoryName}
                       </p>
                       <p className="text-gray-800">
-                        <span className="font-semibold">Prioridad:</span> {t.PriorityName}
+                        <span className="font-semibold">{t("autotriage.priority")}</span> {f.PriorityName}
                       </p>
                       <p className="text-gray-800">
-                        <span className="font-semibold">Puntaje:</span> 
+                        <span className="font-semibold">{t("autotriage.score")}</span> 
                         <span className="text-blue-700 font-bold ml-2">
-                          {t.Puntaje?.toFixed(2)}
+                          {f.Puntaje?.toFixed(2)}
                         </span>
                       </p>
                       <p className="text-gray-800">
-                        <span className="font-semibold">SLA restante:</span> 
+                        <span className="font-semibold">{t("autotriage.slaRemaining")}</span> 
                         <span className={`ml-2 font-bold ${
-                          t.HorasRestantes < 2 ? 'text-red-600' : 
-                          t.HorasRestantes < 8 ? 'text-orange-600' : 
+                          f.HorasRestantes < 2 ? 'text-red-600' : 
+                          f.HorasRestantes < 8 ? 'text-orange-600' : 
                           'text-green-600'
                         }`}>
-                          {t.HorasRestantes?.toFixed(1)}h
+                          {f.HorasRestantes?.toFixed(1)}h
                         </span>
                       </p>
                     </div>
 
                     <button
-                      onClick={() => asignarAutoIndividual(t)}
+                      onClick={() => asignarAutoIndividual(f)}
                       disabled={loading}
                       className="w-full py-3 bg-gradient-to-r from-[#DFA200] to-yellow-600 text-white font-bold rounded-xl shadow-lg hover:from-yellow-600 hover:to-[#DFA200] transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Asignar Automáticamente
+                     {t("autotriage.assignAuto")}
                     </button>
                   </div>
                 ))}
@@ -525,61 +520,61 @@ export default function AutotriagePage() {
         ) : (
           <>
             <h2 className="text-3xl font-bold text-red-700 text-center mb-6">
-              Tickets para Asignación Manual
+             {t("autotriage.manualTitle")}
             </h2>
 
             {ticketsManual.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-xl text-gray-600">
-                  ✓ No hay tickets que requieran asignación manual
+                   {t("autotriage.noManualTickets")}
                 </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {ticketsManual.map((t) => (
+                {ticketsManual.map((f) => (
                   <div 
-                    key={t.TicketId} 
+                    key={f.TicketId} 
                     className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="font-bold text-xl text-red-800 flex-1">
-                        {t.Title}
+                        {f.Title}
                       </h3>
                       <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        #{t.TicketId}
+                        #{f.TicketId}
                       </span>
                     </div>
 
                     <div className="space-y-2 mb-4">
                       <p className="text-gray-800">
-                        <span className="font-semibold">Categoría:</span> {t.CategoryName}
+                        <span className="font-semibold"> {t("autotriage.category")} </span> {f.CategoryName}
                       </p>
                       <p className="text-gray-800">
-                        <span className="font-semibold">Prioridad:</span> {t.PriorityName}
+                        <span className="font-semibold">{t("autotriage.priority")}</span> {f.PriorityName}
                       </p>
                       <p className="text-sm text-gray-600 italic">
-                        No cumple criterios de autotriage
+                         {t("autotriage.noManualTickets")}
                       </p>
                     </div>
 
                     <div className="space-y-3">
                       <label className="block text-sm font-semibold text-gray-700">
-                        Seleccionar Técnico:
+                      {t("autotriage.selectTech")}
                       </label>
                       
                       <select
-                        value={selectedTech[t.TicketId] || "default"}
+                        value={selectedTech[f.TicketId] || "default"}
                         onChange={(e) => {
                           setSelectedTech(prev => ({
                             ...prev,
-                            [t.TicketId]: e.target.value
+                            [f.TicketId]: e.target.value
                           }));
                         }}
                         className="w-full border-2 border-red-400 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                       >
-                        <option value="technician">-- Seleccione un técnico --</option>
+                        <option value="technician"> {t("autotriage.selectTechDefault")} </option>
 
-                        {(tecnicosDisponibles[t.TicketId] || []).map((tec) => (
+                        {(tecnicosDisponibles[f.TicketId] || []).map((tec) => (
                           <option key={tec.TechnicianId} value={tec.TechnicianId}>
                             {tec.UserName} ({tec.CurrentTicketCount} tickets) - {tec.Specialities}
                           </option>
@@ -588,18 +583,18 @@ export default function AutotriagePage() {
 
                       <button
                         onClick={() => asignarManualIndividual(
-                          t.TicketId, 
-                          selectedTech[t.TicketId],
-                          t
+                          f.TicketId, 
+                          selectedTech[f.TicketId],
+                          f
                         )}
-                        disabled={!selectedTech[t.TicketId] || selectedTech[t.TicketId] === "default" || loading}
+                        disabled={!selectedTech[f.TicketId] || selectedTech[f.TicketId] === "default" || loading}
                         className={`w-full py-3 font-bold rounded-xl shadow-lg transition-all duration-300 transform
-                          ${selectedTech[t.TicketId] && selectedTech[t.TicketId] !== "default" && !loading
+                          ${selectedTech[f.TicketId] && selectedTech[f.TicketId] !== "default" && !loading
                             ? "bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 hover:scale-105 cursor-pointer"
                             : "bg-gray-300 text-gray-500 cursor-not-allowed"
                           }`}
                       >
-                        Asignar Manualmente
+                     {t("autotriage.assignManual")}
                       </button>
                     </div>
                   </div>
