@@ -110,7 +110,6 @@ export default function AutotriagePage() {
 };
 
 
-  //Incompleto
 
   const cargarTicketsManual = async () => {
     setLoading(true);
@@ -259,7 +258,7 @@ export default function AutotriagePage() {
       const insertar = await AutoTriageList.InsertsTicket({
         TicketId: ticket.TicketId,
         TechnicianId: tecnicoSeleccionado.TechnicianId,
-        Remarks: `Asignación automática por autotriage. Regla aplicada: R${regla.RuleOrder}, Especialidad: ${regla.SpecialityName}`,
+        Remarks: `Asignación automática por autotriage. Regla aplicada: R${regla.RuleOrder}, Especialidad: ${regla.SpecialityName}, puntaje: ${ticket.Puntaje.toFixed(2)}.`,
         Method: "AutoTriage"
       });
 

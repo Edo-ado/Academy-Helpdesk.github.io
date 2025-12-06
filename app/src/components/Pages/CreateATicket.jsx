@@ -134,7 +134,7 @@ const body = {
   Description: dataForm.descripcion,
   PriorityId: dataForm.prioridad,
   CategoryId: dataForm.categoriaId,
-  UserId: 17  //javiermilei
+  UserId: selectedUser.Id  //javiermilei
 };
 
 
