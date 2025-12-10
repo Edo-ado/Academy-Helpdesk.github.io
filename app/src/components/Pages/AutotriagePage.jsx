@@ -267,7 +267,7 @@ export default function AutotriagePage() {
        //notificacion
 
        await NotificationService.InsertNotificationAssignTicketTechnician(tecnicoSeleccionado.TechnicianId, ticket.TicketId);
-       await NotificationService.InsertNotificationTechToYourTickeCliente(tecnicoSeleccionado.TechnicianId, ticket.TicketId, 17);
+       await NotificationService.InsertNotificationTechToYourTickeCliente(tecnicoSeleccionado.TechnicianId, ticket.TicketId, 17); //17 es donde yo pongo el id del usuario a enviar, edu ocupo q me consigas de alguna forma el id user del ticket
 
 
        toast.success(t("autotriage.assignedAutoSuccess") + "   " + tecnicoSeleccionado.UserName);

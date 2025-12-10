@@ -16,6 +16,10 @@ const TicketsLists = {
   TicketsByRolAndIDUser: (id) => axios.get(`${API_URL}/TicketsByRolAndIDUser/${id}`),
   GetHoraFecha:  () => axios.get(`${API_URL}/GetHoraFecha`),
   ChangeState: (payload) => axios.post(`${API_URL}/ChangeState`, payload),
+  CreateRating: (payload) => axios.post(`${API_URL}/CreateRating`, payload),
+  SetEndDate: (payload) => axios.post(`${API_URL}/SetEndDate`, payload),
+
+
   //del otro lao
   getAllPriorities: () => axios.get(`${API_URL_TICKETMAINTAIN}/getAllPriorities`),
   getCategoriesByTags: (id) =>  axios.get(`${API_URL_TICKETMAINTAIN}/getCategoriesByTags/${id}`),

@@ -9,6 +9,24 @@ class UserModel
         $this->enlace = new MySqlConnect();
     }
 
+public function getRolUser($userId)
+{
+
+    $vSql = "SELECT r.Id, r.Name, r.Description 
+             FROM Roles r
+             INNER JOIN Users u ON u.RoleId = r.Id
+             WHERE u.Id = $userId AND u.Active = TRUE";
+
+    $vResultado = $this->enlace->ExecuteSQL($vSql);
+    
+
+    if ($vResultado && count($vResultado) > 0) {
+        return $vResultado[0];
+    }
+    
+    return null;
+}
+
     public function GetAllTechnicians()
     {
         $Role = "Technician";

@@ -259,15 +259,41 @@ ORDER BY t.Id DESC;";
         ];
     }
 
+public function SetEndDate($ticketId) 
+{
+    $sqlUpdate = "UPDATE Tickets 
+                  SET Ticket_End_Date = NOW() 
+                  WHERE Id = {$ticketId}";
+    
+    $this->enlace->executeSQL_DML($sqlUpdate);
 
-    public function GetHoraFecha()
+    return [
+        "success" => true,
+        "TicketId" => $ticketId
+    ];
+}
 
-    {
 
-        $msg = "SELECT NOW() AS FechaHoraActual;";
 
-        $vResultado = $this->enlace->ExecuteSQL($msg);
+public function GetHoraFecha()
+{
+    $msg = "SELECT NOW() AS FechaHoraActual";
+    $vResultado = $this->enlace->executeSQL($msg);
+    
+    return $vResultado;
+}
 
-        return $vResultado;
-    }
+
+public function CreateRating($obj){
+   $sqlHistory = "INSERT INTO ratings (TicketId, UserId, Rating, Comment, Rating_Date, Active) 
+                  VALUES ({$obj->TicketId}, {$obj->UserId}, {$obj->Rating}, '{$obj->Comment}', NOW(), 1)";
+
+   $this->enlace->executeSQL_DML($sqlHistory);
+
+   return [
+       "success" => true
+   ];
+}
+
+
 }

@@ -728,3 +728,5 @@ ADD COLUMN `ActualStateTicket` VARCHAR(45) NULL DEFAULT NULL AFTER `LastStateTic
 
 INSERT INTO Technician_Specialities (UserId, SpecialityId)
 VALUES (1, 1);
+
+

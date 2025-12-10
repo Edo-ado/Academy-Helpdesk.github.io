@@ -481,7 +481,27 @@
   "noPendingTickets": "No pending tickets."
 
   
-}
+},
+
+  "login": {
+    "title": "Sign in",
+     "login": "Log in",
+    "emailLabel": "Email",
+    "emailPlaceholder": "example@mail.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "********",
+    "button": "Sign in",
+    "buttonLoading": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Register",
+    "success": "Welcome {{name}}!",
+    "invalidToken": "Invalid or expired token",
+    "invalidCredentials": "Invalid credentials",
+    "error": "Error while signing in",
+    "logout": "Log Out"
+  }
+
+
 
 
   }

@@ -98,9 +98,10 @@ const handleTicketClick = (ticket) => {
             <h1 className="text-3xl font-bold text-gray-900">
                {t("myTickets.title")}
             </h1>
-            <p className="text-sm text-gray-600 mt-1">
-              {selectedUser.UserName} - {selectedUser.Rol}
-            </p>
+           <p className="text-sm text-gray-600 mt-1">
+  {selectedUser.UserName} - {selectedUser.Rol?.Name || 'Sin rol'}
+</p>
+
           </div>
 
           {/* Botones de filtro */}

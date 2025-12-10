@@ -186,6 +186,9 @@ const clientId = ticketDetail.IdCliente;
 const fechaHoraLocal = fechaHora ? fechaHora.replace(" ", "T").slice(0, 16) : "";
 
 const onSubmit = async (dataForm) => {
+ const nextState = getNextState(ticket.state);
+
+  
 
 const payload = {
     TicketId: id,
@@ -195,6 +198,8 @@ const payload = {
 
   };
 
+ 
+  
   if (ticket.state == "Cerrado") {
      toast.error(`El flujo del ticket ya está cerrado`);
     return null;
@@ -206,6 +211,11 @@ setIsSubmitting(true);
 
 if (response.data?.success) {
 const historyId = response.data.data.historyId;
+
+
+if (nextState === "Cerrado") {
+  await TicketLists.SetEndDate({ TicketId: id });
+}
 
 
     if (file) {
@@ -224,6 +234,7 @@ const historyId = response.data.data.historyId;
     //notificaciones, enviar
 
 
+
     await NotificationsService.InsertNotificationClienteFlowTicket(selectedUser.Id, id, ticket.IdCliente, ticket.state, nextState);
     await NotificationsService.InsertNotificationTechnicianFlowTicket(selectedUser.Id, id, ticket.state, nextState);
    
@@ -232,9 +243,6 @@ const historyId = response.data.data.historyId;
 
 
 
-setTimeout(() => {
-      window.location.reload();
-    }, 1000);
   } else {
     setIsSubmitting(false); 
   }
@@ -379,13 +387,11 @@ const getNextState = (currentState) => {
 };
 
 
-const nextState = getNextState(ticket.state);
+
  const priorityConfig = getPriorityConfig(ticket.priority);
+ const nextState = getNextState(ticket.state);
 
-
-if (ticket.state === "Cerrado") {
-
-}
+  
 
 
 
@@ -504,6 +510,7 @@ return (
 
  {/* CRONOLOGIA FLUJO ESTADO DEL TICKET */}  
 <ComponentCardCronology history={history} />
+
 
 {history.length === 0 && (
   <div className="text-center py-10">

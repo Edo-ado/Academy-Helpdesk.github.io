@@ -139,6 +139,34 @@ public function GetHoraFecha()
     }
 }
 
+public function SetEndDate()
+{
+    try {
+        $response = new Response();
+        $obj = json_decode(file_get_contents('php://input'));
+        $Tickets = new TicketsModel();
+        $result = $Tickets->SetEndDate($obj->TicketId);
+        
+        $response->toJSON($result);
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
+
+
+public function CreateRating()
+{
+    try {
+        $response = new Response();
+        $Tickets = new TicketsModel();
+        $data = json_decode(file_get_contents("php://input"));
+        $result = $Tickets->CreateRating($data);
+        $response->toJSON($result);
+
+    } catch (Exception $e) {
+        handleException($e);
+    }
+}
 
 
 

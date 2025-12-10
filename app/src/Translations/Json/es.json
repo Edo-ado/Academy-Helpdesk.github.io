@@ -492,10 +492,27 @@
   "successful": "exitosos",
   "failed": "fallidos",
   "noPendingTickets": "No hay tickets pendientes."
-}
+},
 
 
-
+"login": {
+    "title": "Iniciar sesión",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "ejemplo@correo.com",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "********",
+    "button": "Ingresar",
+    "buttonLoading": "Ingresando...",
+    "noAccount": "¿No tienes cuenta?",
+    "registerLink": "Regístrate",
+    "success": "¡Bienvenida {{name}}!",
+    "invalidToken": "Token inválido o expirado",
+    "invalidCredentials": "Credenciales inválidas",
+    "error": "Error al iniciar sesión",
+     "Cerrar": "Cerrrar Sesión"
+  }
 
 
 

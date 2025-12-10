@@ -21,6 +21,9 @@ import  AutotriagePage  from "./components/Pages/AutotriagePage"
 import { Toaster } from "react-hot-toast";
 
 
+import Login from './components/Pages/User/Login';
+import  Register from "./components/Pages/User/Register";
+
 import {  CreateATicket  } from "./components/Pages/CreateATicket"
 import MaintainListTechnician from './components/Pages/MaintainListTechnician'
 import  MaintainListCategories from './components/Pages/MaintainListCategories'
@@ -40,7 +43,6 @@ const rutas = createBrowserRouter([
     children: [
       //Pagina Principal
       { index: true, element: <Home /> },
-
      //Rutas de pagina
      { path: '/technicians', element: <TechnicianList /> },
      { path: '/technician/:id', element: <DetailTechnician /> }, 
@@ -55,7 +57,11 @@ const rutas = createBrowserRouter([
       //Autotriage
       {path: '/AutotriagePage', element: <AutotriagePage />},
    
-
+      //login, register
+ {path: '/login', element: <Login />},
+   
+ {path: '/register', element: <Register />},
+   
 
       //Rutas de mantenimiento
 

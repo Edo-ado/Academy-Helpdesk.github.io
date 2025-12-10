@@ -55,8 +55,9 @@ public function InsertNotificationTechToYourTickeCliente($techassign, $ticketId,
 
 
 public function InsertNotificationLogIn($userId) {
-    $vSql = "INSERT INTO Notifications (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) VALUES 
-             (userId, NULL, 'Nuevo inicio de sesión en el sistema', 0, NOW(), 1, ?, 'LOGIN_USER')";
+   
+    $vSql = "INSERT INTO Notifications (UserId, TicketId, Message, Is_Read, Created_At, Active, TriggeredByUserId, EventType) 
+             VALUES ($userId, NULL, 'Nuevo inicio de sesión en el sistema', 0, NOW(), 1, $userId, 'LOGIN_USER')";
 
     $vResultado = $this->enlace->executeSQL_DML($vSql);
     return $vResultado;
