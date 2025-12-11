@@ -31,6 +31,7 @@ import  MaintainListTickets from './components/Pages/MaintainListTickets'
 import { UpdateTechnician } from "./components/Pages/UpdateTechnician"
 import { TrazabilidadTicket } from "./components/Pages/TrazabilidadTicket"
 import { Notifications } from "./components/Pages/Notifications"
+import { Dashboards } from "./components/Pages/DashboardTickets"
 
 import './Translations/i18n';
 
@@ -51,6 +52,7 @@ const rutas = createBrowserRouter([
      { path: '/tickets', element: <Tickets /> },
      { path: '/ticket/:id', element: <DetailTicket /> },
      { path: '/my-tickets', element: <MyTickets /> }, 
+     {path: '/DashboardTickets', element: <Dashboards />},
      //trazabilidadticket
      { path: '/my-tickets/:id', element: <TrazabilidadTicket /> }, 
 
@@ -81,6 +83,9 @@ const rutas = createBrowserRouter([
 { path: "/technicians/update/:id", element: <UpdateTechnician/> },
 //notis
    { path: '/notifications', element: <Notifications /> },
+
+
+
 
 
      //Error page

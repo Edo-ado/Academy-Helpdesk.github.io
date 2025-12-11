@@ -99,8 +99,17 @@ export const Sidebar = () => {
           label: t('sidebar.autotriage'),
           show: authorize([3]), //solo admins
         },
+        {
+          to: "/DashboardTickets",
+          icon: faTicketAlt,
+          label: "Dashboard",
+          show: authorize([3]), //solo admins
+        },
       ]
     }
+
+
+    
   ];
 
   return (

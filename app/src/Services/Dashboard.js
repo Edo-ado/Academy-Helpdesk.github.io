@@ -10,5 +10,4 @@ const Dashboard = {
    RankingTechByCump: () => axios.get(`${API_URL}/RankingTechByCump`),
 };
 
-
-export default CategoriesList;
+export default Dashboard;
