@@ -48,7 +48,7 @@ export const Sidebar = () => {
           to: "/technicians",
           icon: faUserCog,
           label: t('sidebar.technicians'),
-          show: authorize([1, 3]), 
+          show: isAuthenticated, 
         },
         {
           to: "/categories",

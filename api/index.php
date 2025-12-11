@@ -31,7 +31,7 @@ require_once "Models/ImageModel.php";
 require_once "Models/NotificationsModel.php";
 require_once "Models/UserModelRegister.php";
 require_once "Models/dashboardModel.php";
-
+require_once "Models/RentalModel.php";
 
 /***--- Agregar todos los controladores*/
 require_once "controllers/UserController.php";
@@ -45,6 +45,7 @@ require_once "controllers/AutoTriageController.php";
 require_once "controllers/NotificationsController.php";
 require_once "controllers/UserRegisterController.php";
 require_once "controllers/DashboardController.php";
+require_once "controllers/RentalController.php";
 
 //Enrutador
 require_once "routes/RoutesController.php";
