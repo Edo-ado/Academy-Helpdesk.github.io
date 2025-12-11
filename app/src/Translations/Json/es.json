@@ -400,6 +400,7 @@
     "description": "Descripción",
     "descriptionPlaceholder": "Ingrese la descripción de la categoría",
     "tags": "Etiquetas",
+    "title" : "Categorias",
     "selectTags": "Seleccione etiquetas",
     "createSLA": "Crear Nuevo SLA",
     "selectExistingSLA": "Seleccionar SLA Existente",

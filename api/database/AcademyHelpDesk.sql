@@ -730,3 +730,8 @@ INSERT INTO Technician_Specialities (UserId, SpecialityId)
 VALUES (1, 1);
 
 
+
+--123LOL
+UPDATE Users 
+SET Password = '$2a$12$ZXKWkA.3Fm11Dx5VkeB1muDF8GQMQ7WXGqgP.xy5vumG/DXakREum'
+WHERE Email = 'fabian.secr@helpdesk.com';
