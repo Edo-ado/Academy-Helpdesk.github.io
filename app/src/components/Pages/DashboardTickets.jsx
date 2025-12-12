@@ -23,13 +23,12 @@ export function Dashboards() {
   const [ticketsMonth, setTicketsMonth] = useState([]);
   const [ticketsState, setTicketsState] = useState([]);
   const [valoraciones, setValoraciones] = useState([]);
-  const [categoriasIncum, setCategoriasIncum] = useState([]);
+ 
   const [rankingTech, setRankingTech] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
-  const getColor = () =>
-    `hsl(${Math.random() * 360}, 70%, 55%)`;
+  const getColor = () => `hsl(${Math.random() * 360}, 70%, 55%)`;
 
   useEffect(() => {
     const loadData = async () => {
@@ -37,15 +36,16 @@ export function Dashboards() {
         const r1 = await Dashboard.TicketsPerMonth();
         const r2 = await Dashboard.CantTicketsPerState();
         const r3 = await Dashboard.PromedioValoraciones();
-        const r4 = await Dashboard.CategoriasConInco();
+     
         const r5 = await Dashboard.RankingTechByCump();
 
         setTicketsMonth(r1?.data?.data || []);
         setTicketsState(r2?.data?.data || []);
         setValoraciones(r3?.data?.data || []);
-        setCategoriasIncum(r4?.data?.data || []);
+      
         setRankingTech(r5?.data?.data || []);
       } catch (err) {
+        console.error("Error:", err);
         toast.error("Error cargando datos del Dashboard");
       } finally {
         setLoading(false);
@@ -64,7 +64,6 @@ export function Dashboards() {
 
   return (
     <div className="min-h-screen p-6 space-y-10 bg-black text-gray-100">
-
       {/* ---------------------------------------------------------------- */}
       {/* 1. TICKETS POR MES */}
       {/* ---------------------------------------------------------------- */}
@@ -77,22 +76,22 @@ export function Dashboards() {
             <ResponsiveContainer>
               <LineChart data={ticketsMonth}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                <XAxis dataKey="mes" stroke="#ccc" />
+                <XAxis dataKey="Mes" stroke="#ccc" />
                 <YAxis stroke="#ccc" />
                 <Tooltip />
                 <Legend />
                 <Line
                   type="monotone"
-                  dataKey="total"
+                  dataKey="Total_Tickets"
                   stroke="#00bcd4"
                   strokeWidth={3}
+                  name="Total Tickets"
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>
-
 
       {/* ---------------------------------------------------------------- */}
       {/* 2. TICKETS POR ESTADO */}
@@ -106,14 +105,15 @@ export function Dashboards() {
             <ResponsiveContainer>
               <BarChart data={ticketsState}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                <XAxis dataKey="estado" stroke="#ccc" />
+                <XAxis dataKey="Estado" stroke="#ccc" />
                 <YAxis stroke="#ccc" />
                 <Tooltip />
                 <Legend />
                 <Bar
-                  dataKey="cantidad"
+                  dataKey="Total_Tickets"
                   fill="#8884d8"
                   radius={[5, 5, 0, 0]}
+                  name="Total Tickets"
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -134,13 +134,14 @@ export function Dashboards() {
               <BarChart data={valoraciones}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis dataKey="categoria" stroke="#ccc" />
-                <YAxis stroke="#ccc" />
+                <YAxis stroke="#ccc" domain={[0, 5]} />
                 <Tooltip />
                 <Legend />
                 <Bar
-                  dataKey="promedio"
+                  dataKey="PromedioValoracion"
                   fill="#00c49f"
                   radius={[5, 5, 0, 0]}
+                  name="Promedio"
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -148,64 +149,58 @@ export function Dashboards() {
         </CardContent>
       </Card>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* 4. CATEGORÍAS CON MAYOR INCUMPLIMIENTO */}
-      {/* ---------------------------------------------------------------- */}
-      <Card className="bg-neutral-900 border border-gray-700 shadow-md">
-        <CardHeader>
-          <CardTitle className="text-xl">Categorías con Incumplimientos</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px]">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={categoriasIncum}
-                  dataKey="incumplimientos"
-                  nameKey="categoria"
-                  outerRadius={120}
-                  fill="#8884d8"
-                  label
-                >
-                  {categoriasIncum.map((_, i) => (
-                    <Cell key={i} fill={getColor()} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+     
 
-      {/* ---------------------------------------------------------------- */}
-      {/* 5. RANKING TÉCNICOS POR CUMPLIMIENTO */}
-      {/* ---------------------------------------------------------------- */}
-      <Card className="bg-neutral-900 border border-gray-700 shadow-md">
+           <Card className="bg-neutral-900 border border-gray-700 shadow-md">
         <CardHeader>
-          <CardTitle className="text-xl">Ranking Técnicos por Cumplimiento SLA</CardTitle>
+          <CardTitle className="text-xl">
+            Ranking Técnicos por Cumplimiento SLA
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[400px]">
             <ResponsiveContainer>
-              <BarChart data={rankingTech}>
+              <BarChart 
+                data={[...rankingTech].sort((a, b) => 
+                  b.PorcentajeCumplimientoResolucion - a.PorcentajeCumplimientoResolucion
+                )}
+                layout="vertical"
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                <XAxis dataKey="tecnico" stroke="#ccc" />
-                <YAxis stroke="#ccc" />
-                <Tooltip />
+                <XAxis 
+                  type="number" 
+                  domain={[0, 100]} 
+                  stroke="#ccc"
+                />
+                <YAxis 
+                  type="category" 
+                  dataKey="Tecnico" 
+                  stroke="#ccc"
+                  width={120}
+                />
+                <Tooltip contentStyle={{ backgroundColor: '#1f1f1f', border: '1px solid #444' }} />
                 <Legend />
                 <Bar
-                  dataKey="cumplimiento"
-                  fill="#ff7300"
-                  radius={[5, 5, 0, 0]}
-                />
+                  dataKey="PorcentajeCumplimientoResolucion"
+                  radius={[0, 5, 5, 0]}
+                  name="% Cumplimiento Resolución"
+                >
+                  {rankingTech.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={
+                        entry.PorcentajeCumplimientoResolucion >= 90 ? '#00c49f' :
+                        entry.PorcentajeCumplimientoResolucion >= 80 ? '#ffbb28' :
+                        '#ff7300'
+                      }
+                    />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>
-
     </div>
   );
 }
