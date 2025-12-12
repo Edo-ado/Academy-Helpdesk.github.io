@@ -77,10 +77,6 @@ defaultValues: {
 
 const tagsSelected = watch("tags");
 
-
-
-
-
   /***Listados de carga en el formulario ***/
   useEffect(()=>{
     const fechData=async()=>{

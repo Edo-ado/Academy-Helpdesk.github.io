@@ -106,51 +106,57 @@ ORDER BY t.Id DESC;";
 
 
     //Necesita cambio a nueva estructura en el estado
-    public function GetTicketById($id)
-    {
-        $sql = "SELECT 
-                t.Id AS TicketId,
-                t.Title,
-                t.Description,
-                t.Priority,
-                t.State,
-                t.Ticket_Start_Date,
-                t.Ticket_End_Date,
-                t.Ticket_Response_SLA,
-                t.Ticket_Resolution_SLA,
-                c.Name AS Category,
-                u.UserName AS Cliente,
-                u.Id as IdCliente,
-                tech.UserName AS Tecnico,
-                tc.Id AS CommentId,
-                tc.CommentText,
-                tc.CommentDate,
-                arc.Id AS EvidenceId,
-                arc.Image AS EvidencePath,
-                arc.UploadDate AS EvidenceDate
-            FROM Tickets t
-            LEFT JOIN UserTickets ut ON ut.TicketId = t.Id
-            LEFT JOIN Users u ON ut.UserId = u.Id
-            LEFT JOIN Users tech ON t.TechnicianId = tech.Id
-            LEFT JOIN Categories c ON t.CategoryId = c.Id
-            LEFT JOIN TicketComments tc ON tc.TicketId = t.Id
-            LEFT JOIN Archivador arc ON arc.TicketId = t.Id
-            WHERE t.Id = $id";
+public function GetTicketById($id) 
+{
+    $sql = "SELECT 
+            t.Id AS TicketId,
+            t.Title,
+            t.Description,
+            t.Priority,
+            t.State,
+            t.Ticket_Start_Date,
+            t.Ticket_End_Date,
+            t.Ticket_Response_SLA,
+            t.Ticket_Resolution_SLA,
+            c.Name AS Category,
+            u.UserName AS Cliente,
+            u.Id as IdCliente,
+            tech.UserName AS Tecnico,
+            tc.Id AS CommentId,
+            tc.CommentText,
+            tc.CommentDate,
+            arc.Id AS EvidenceId,
+            arc.Image AS EvidencePath,
+            arc.UploadDate AS EvidenceDate,
+            r.Id AS RatingId,
+            r.Rating,
+            r.Comment AS RatingComment,
+            r.Rating_Date,
+            ru.UserName AS RatingUser
+        FROM Tickets t
+        LEFT JOIN UserTickets ut ON ut.TicketId = t.Id
+        LEFT JOIN Users u ON ut.UserId = u.Id
+        LEFT JOIN Users tech ON t.TechnicianId = tech.Id
+        LEFT JOIN Categories c ON t.CategoryId = c.Id
+        LEFT JOIN TicketComments tc ON tc.TicketId = t.Id
+        LEFT JOIN Archivador arc ON arc.TicketId = t.Id
+        LEFT JOIN ratings r ON r.TicketId = t.Id AND r.Active = 1
+        LEFT JOIN Users ru ON r.UserId = ru.Id
+        WHERE t.Id = $id";
 
-        $result = $this->enlace->ExecuteSQL($sql);
+    $result = $this->enlace->ExecuteSQL($sql);
 
+    $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
 
-        $baseUrl = "http://localhost/Academy-Helpdesk.github.io/api/uploads/";
-
-
-        foreach ($result as $row) {
-            if (!empty($row->EvidencePath)) {
-                $row->EvidencePath = $baseUrl . $row->EvidencePath;
-            }
+    foreach ($result as $row) {
+        if (!empty($row->EvidencePath)) {
+            $row->EvidencePath = $baseUrl . $row->EvidencePath;
         }
-
-        return $result;
     }
+
+    return $result;
+}
+
 
 
     //un getHistoryByTicket, parqa obtener el historial del ticket y sus evidencias vinculadas desde archivo...

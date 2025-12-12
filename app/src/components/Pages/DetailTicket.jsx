@@ -3,6 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import TicketLists from "../../Services/TicketsLists";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTranslation } from "react-i18next";
+import { Card } from "../../components/ui/card";
+import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
+import { Save } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { useUser } from '../../context/UserContext';
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 
 import {
   faArrowLeft, faTicket, faClipboardList, faFolder, faUser,
@@ -11,6 +20,7 @@ import {
   faQuestion, faMagnifyingGlass, faClock, faAlarmClock, faStopwatch
 } from "@fortawesome/free-solid-svg-icons";
 
+
 export function DetailTicket() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -18,80 +28,149 @@ export function DetailTicket() {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { selectedUser } = useUser();
+  const [refreshKey, setRefreshKey] = useState(0); 
+  //rating 
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [ratingError, setRatingError] = useState("");
 
-  useEffect(() => {
-    const fetchTicketDetail = async () => {
-      try {
-        const response = await TicketLists.GetTicketById(id);
-        console.log("Detalle del ticket:", response.data);
 
-        if (!response.data || !response.data.data || response.data.data.length === 0) {
-          throw new Error(t("ticketDetail.ticketNotFound")); 
-        }
 
-        const rows = response.data.data;
-        const t_data = rows[0];
+  /*** Esquema de validación Yup ***/
+  const ticketSchema = yup.object({
+    title: yup.string().required("El título es requerido"),
+    descripcion: yup.string().required("La descripción es requerida"),
+    prioridad: yup.number().typeError("Debe seleccionar una prioridad").required("La prioridad es requerida"),
+    fecha_creacion: yup.string().required(),
+  });
 
-        const comments = rows
-          .filter(r => r.CommentId && r.CommentText)
-          .map(r => ({
-            id: r.CommentId,
-            user: r.CommentUser ,
-            text: r.CommentText,
-            date: r.CommentDate
-          }));
 
-        const ratings = rows
-          .filter(r => r.RatingId && r.Rating)
-          .map(r => ({
-            id: r.RatingId,
-            user: r.RatingUser ,
-            rating: r.Rating,
-            comment: r.RatingComment,
-            date: r.Rating_Date
-          }));
+useEffect(() => {
+  const fetchTicketDetail = async () => {
+    try {
+      const response = await TicketLists.GetTicketById(id);
+      console.log("Detalle del ticket:", response.data);
 
-        const evidences = rows
-          .filter(r => r.EvidencePath)
-          .map(r => ({
-            id: r.EvidenceId || Math.random(),
-            path: r.EvidencePath
-          }));
-
-        const mappedTicket = {
-          ticketId: t_data.TicketId || "N/A",
-          title: t_data.Title || t("ticketDetail.noTitle"),
-          description: t_data.Description || t("ticketDetail.noDescription"),
-          priority: t_data.Priority || 1,
-          state: t_data.State || "Pendiente",
-          startDate: t_data.Ticket_Start_Date || null,
-          endDate: t_data.Ticket_End_Date || null,
-          Category: t_data.Category || t("ticketDetail.noCategory"),
-          technician: t_data.Tecnico || t("ticketDetail.unassigned"),
-          client: t_data.Cliente || t("ticketDetail.unknown"),
-          Ticket_Response_SLA: t_data.Ticket_Response_SLA || null,
-          Ticket_Resolution_SLA: t_data.Ticket_Resolution_SLA || null,
-          comments,
-          ratings,
-          evidences
-        };
-
-        setTicket(mappedTicket);
-      } catch (err) {
-        console.error("Error:", err);
-        setError(err.message || t("ticketDetail.error")); 
-      } finally {
-        setLoading(false);
+      if (!response.data || !response.data.data || response.data.data.length === 0) {
+        throw new Error(t("ticketDetail.ticketNotFound")); 
       }
-    };
 
-    if (id) {
-      fetchTicketDetail();
-    } else {
-      setError(t("ticketDetail.error"));
+      const rows = response.data.data;
+      const t_data = rows[0];
+
+      // 🔍 DEBUGGING - VER QUÉ RATINGS VIENEN DEL BACKEND
+      console.log("🔍 TODAS LAS FILAS:", rows);
+      console.log("🔍 RATINGS CRUDOS:", rows.map(r => ({
+        RatingId: r.RatingId,
+        Rating: r.Rating,
+        RatingUser: r.RatingUser,
+        RatingComment: r.RatingComment,
+        Rating_Date: r.Rating_Date
+      })));
+
+      const comments = rows
+        .filter(r => r.CommentId && r.CommentText)
+        .map(r => ({
+          id: r.CommentId,
+          user: r.CommentUser ,
+          text: r.CommentText,
+          date: r.CommentDate
+        }));
+
+      const ratings = rows
+        .filter(r => r.RatingId && r.Rating)
+        .map(r => ({
+          id: r.RatingId,
+          user: r.RatingUser ,
+          rating: r.Rating,
+          comment: r.RatingComment,
+          date: r.Rating_Date
+        }));
+
+      // 🔍 VER RATINGS DESPUÉS DEL FILTRO
+      console.log("🔍 RATINGS DESPUÉS DEL FILTRO:", ratings);
+
+      const evidences = rows
+        .filter(r => r.EvidencePath)
+        .map(r => ({
+          id: r.EvidenceId || Math.random(),
+          path: r.EvidencePath
+        }));
+
+      const mappedTicket = {
+        ticketId: t_data.TicketId || "N/A",
+        title: t_data.Title || t("ticketDetail.noTitle"),
+        description: t_data.Description || t("ticketDetail.noDescription"),
+        priority: t_data.Priority || 1,
+        state: t_data.State || "Pendiente",
+        startDate: t_data.Ticket_Start_Date || null,
+        endDate: t_data.Ticket_End_Date || null,
+        Category: t_data.Category || t("ticketDetail.noCategory"),
+        technician: t_data.Tecnico || t("ticketDetail.unassigned"),
+        client: t_data.Cliente || t("ticketDetail.unknown"),
+        Ticket_Response_SLA: t_data.Ticket_Response_SLA || null,
+        Ticket_Resolution_SLA: t_data.Ticket_Resolution_SLA || null,
+        comments,
+        ratings,
+        evidences
+      };
+
+      setTicket(mappedTicket);
+    } catch (err) {
+      console.error("Error:", err);
+      setError(err.message || t("ticketDetail.error")); 
+    } finally {
       setLoading(false);
     }
-  }, [id, t]);
+  };
+
+  if (id) {
+    fetchTicketDetail();
+  } else {
+    setError(t("ticketDetail.error"));
+    setLoading(false);
+  }
+}, [id, t, refreshKey]);
+
+
+
+  const handleSubmitRating = async (e) => {
+    e.preventDefault();
+    
+    if (rating === 0) {
+      setRatingError(t("ticketDetails.ratingRequired"));
+      return;
+    }
+
+
+    try {
+      const response = await TicketLists.CreateRating({
+        TicketId: ticket.ticketId,
+        UserId: selectedUser.Id, 
+        Rating: rating,
+        Comment: comment
+      });
+
+
+      if (response.data?.success) {
+        toast.success(t("ticketDetails.ratingSuccess"));
+        
+        // Resetear el formulario
+        setRating(0);
+        setComment("");
+        setRatingError("");
+        
+        // Recargar los datos
+        setRefreshKey(prev => prev + 1);
+      }
+    } catch (err) {
+      toast.error(t("ticketDetails.ratingError"));
+    }
+  };
+
+
 
 
   const getPriorityConfig = (priority) => {
@@ -131,6 +210,7 @@ export function DetailTicket() {
         };
     }
   };
+
 
   
   const getStateConfig = (state) => {
@@ -179,24 +259,13 @@ export function DetailTicket() {
     };
   };
 
-  const calculateDuration = (startDate, endDate) => {
-    if (!startDate || !endDate) return null;
-    
-    try {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      
-      if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
-      
-      const diffTime = Math.abs(end - start);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      return diffDays;
-    } catch (error) {
-      console.error("Error calculando duración:", error);
-      return null;
-    }
-  };
+
+  
+     
+
+
+
+
 
   if (loading) {
     return (
@@ -208,6 +277,7 @@ export function DetailTicket() {
       </div>
     );
   }
+
 
   if (error) {
     return (
@@ -228,6 +298,7 @@ export function DetailTicket() {
     );
   }
 
+
   if (!ticket) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#dff1ff]">
@@ -245,9 +316,13 @@ export function DetailTicket() {
     );
   }
 
+
   const priorityConfig = getPriorityConfig(ticket.priority);
   const stateConfig = getStateConfig(ticket.state);
-  const duration = calculateDuration(ticket.startDate, ticket.endDate);
+
+  // VERIFICAR EL ESTADO REAL DEL TICKET
+  console.log("Estado del ticket:", ticket.state);
+  console.log("Tipo:", typeof ticket.state);
 
   return (
     <div className="bg-gradient-to-b from-blue-100 to-white min-h-screen p-8">
@@ -259,6 +334,7 @@ export function DetailTicket() {
           <span className="text-xl">←</span>
           <span>{t("ticketDetail.backToList")}</span>
         </button>
+
 
         {/* Tarjeta Principal del Ticket */}
         <div className={`bg-white rounded-2xl shadow-xl p-8 border-2 ${priorityConfig.borderColor} mb-6`}>
@@ -284,6 +360,7 @@ export function DetailTicket() {
             </div>
           </div>
 
+
           {/* Descripción */}
           <div className="mb-6 bg-gray-50 p-6 rounded-lg">
             <h3 className="font-semibold text-gray-700 mb-3 text-lg">
@@ -294,6 +371,7 @@ export function DetailTicket() {
               {ticket.description}
             </p>
           </div>
+
 
           {/* Información del Ticket */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -307,6 +385,7 @@ export function DetailTicket() {
               <p className="text-gray-900 font-medium">{ticket.Category}</p>
             </div>
 
+
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-blue-600 text-xl">
@@ -316,6 +395,7 @@ export function DetailTicket() {
               </div>
               <p className="text-gray-900 font-medium">{ticket.client}</p>
             </div>
+
 
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
@@ -333,6 +413,7 @@ export function DetailTicket() {
               </p>
             </div>
 
+
             <div className={`${priorityConfig.bgLight} p-4 rounded-lg border-l-4 ${priorityConfig.borderColor}`}>
               <div className="flex items-center gap-2 mb-2">
                 <span className={`${priorityConfig.textColor} text-xl`}>
@@ -346,6 +427,7 @@ export function DetailTicket() {
             </div>
           </div>
         </div>
+
 
         {/* Tarjeta de Fechas */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-600 mb-6">
@@ -366,6 +448,7 @@ export function DetailTicket() {
               </p>
             </div>
 
+
             <div className={`${ticket.endDate ? 'bg-purple-50 border-purple-600' : 'bg-gray-50 border-gray-300'} p-6 rounded-lg border-l-4`}>
               <p className="font-semibold text-gray-700 mb-2">
                 <FontAwesomeIcon icon={faAlarmClock} /> {t("ticketDetail.endDate")}
@@ -375,18 +458,8 @@ export function DetailTicket() {
               </p>
             </div>
           </div>
-
-          {duration !== null && (
-            <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg text-center border-2 border-blue-200">
-              <p className="text-gray-600 text-sm mb-1">
-                <FontAwesomeIcon icon={faStopwatch} /> {t("ticketDetail.totalDuration")}
-              </p>
-              <p className="text-gray-900 font-bold text-lg">
-                {duration} {duration === 1 ? t("ticketDetail.day") : t("ticketDetail.days")}
-              </p>
-            </div>
-          )}
         </div>
+
 
         {/* SLA RESPUESTA Y SLA RESOLUCIÓN */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-purple-600 mb-6">
@@ -397,6 +470,7 @@ export function DetailTicket() {
             <h2 className="text-2xl font-bold text-gray-900">{t("ticketDetail.slaTitle")}</h2>
           </div>
 
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-green-600">
               <p className="font-semibold text-gray-700 mb-2">
@@ -406,6 +480,7 @@ export function DetailTicket() {
                 {ticket.Ticket_Response_SLA}
               </p>
             </div>
+
 
             <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-green-600">
               <p className="font-semibold text-gray-700 mb-2">
@@ -418,12 +493,14 @@ export function DetailTicket() {
           </div>
         </div>
 
+
         {/* COMENTARIOS */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-600 mb-6">
           <div className="flex items-center gap-2 mb-6">
             <FontAwesomeIcon icon={faComments} className="text-blue-500 text-2xl" />
             <h2 className="text-2xl font-bold text-gray-900">{t("ticketDetail.comments")}</h2>
           </div>
+
 
           {ticket.comments?.length > 0 ? (
             <div className="space-y-4">
@@ -441,12 +518,15 @@ export function DetailTicket() {
           )}
         </div>
 
+
+      
         {/* VALORACIONES */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-yellow-500 mb-6">
           <div className="flex items-center gap-2 mb-6">
             <FontAwesomeIcon icon={faStar} className="text-yellow-500 text-2xl" />
             <h2 className="text-2xl font-bold text-gray-900">{t("ticketDetail.ratings")}</h2>
           </div>
+
 
           {ticket.ratings?.length > 0 ? (
             <div className="space-y-4">
@@ -467,7 +547,77 @@ export function DetailTicket() {
           ) : (
             <p className="text-gray-500 italic">{t("ticketDetail.noRatings")}</p>
           )}
+
+
+          {/* form rating - CONDICIÓN MEJORADA */}
+          {(String(ticket.state).toLowerCase() === "cerrado" || 
+            String(ticket.state).toLowerCase() === "closed" || 
+            ticket.state === "5" || 
+            ticket.state === 5) && (
+            <Card className="p-6 border-2 border-[#DFA200] rounded-xl shadow-md mt-6">
+              <h3 className="text-lg font-semibold text-[#071f5f] mb-4">
+                {t("ticketDetails.rateService")}
+              </h3>
+              
+              <form onSubmit={handleSubmitRating} className="space-y-4">
+                <div>
+                  <Label className="block mb-2 text-sm font-medium">
+                    {t("ticketDetails.rating")}
+                  </Label>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="text-4xl transition-colors focus:outline-none"
+                      >
+                        <span className={
+                          star <= (hoverRating || rating) 
+                            ? "text-[#DFA200]" 
+                            : "text-gray-300"
+                        }>
+                          ★
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  {ratingError && (
+                    <p className="text-red-500 text-xs mt-1">{ratingError}</p>
+                  )}
+                </div>
+
+
+                <div>
+                  <Label htmlFor="comment" className="block mb-1 text-sm font-medium">
+                    {t("ticketDetails.comment")}
+                  </Label>
+                  <textarea
+                    id="comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder={t("ticketDetails.commentPlaceholder")}
+                    rows={4}
+                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#DFA200] focus:border-transparent resize-none"
+                  />
+                </div>
+
+
+                <Button
+                  type="submit"
+                  className="w-full bg-[#071f5f] text-white rounded-xl shadow-md hover:bg-[#052046] flex items-center justify-center gap-2"
+                >
+                  <Save className="w-4 h-4" />
+                  {t("ticketDetails.submitRating")}
+                </Button>
+              </form>
+            </Card>
+          )}
         </div>
+
+
 
         {/* EVIDENCIAS */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-green-500 mb-6">
@@ -475,6 +625,7 @@ export function DetailTicket() {
             <FontAwesomeIcon icon={faCamera} className="text-green-500 text-2xl" />
             <h2 className="text-2xl font-bold text-gray-900">{t("ticketDetail.evidences")}</h2>
           </div>
+
 
           {ticket.evidences?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
