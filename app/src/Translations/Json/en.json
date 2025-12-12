@@ -334,7 +334,11 @@
         "high": "High",
         "medium": "Medium",
         "low": "Low",
-        "unknown": "Unknown"
+        "unknown": "Unknown",
+           "ratings": "Ratings",
+    "noRatings": "No ratings available",
+    "noAdditionalComment": "No additional comment",
+    "by": "By"
       },
       "states": {
         "pending": "Pending",
@@ -499,7 +503,20 @@
     "invalidCredentials": "Invalid credentials",
     "error": "Error while signing in",
     "logout": "Log Out"
+  },
+
+  "ticketDetails": {
+    "rateService": "Rate the service",
+    "rating": "Rating",
+    "ratingRequired": "You must select a rating",
+    "comment": "Comment",
+    "commentPlaceholder": "Write your comment here (optional)...",
+    "submitRating": "Submit rating",
+    "ratingSuccess": "Rating submitted successfully",
+    "ratingError": "Error submitting rating"
   }
+
+
 
 
 

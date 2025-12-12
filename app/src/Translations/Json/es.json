@@ -283,6 +283,10 @@
     "ticketDetail": {
       "loading": "Cargando detalles del ticket...",
       "backToList": "Volver a la lista",
+        "ratings": "Valoraciones",
+    "noRatings": "No hay valoraciones disponibles",
+    "noAdditionalComment": "Sin comentario adicional",
+    "by": "Por",
       "back": "Volver",
       "ticketNotFound": "No se encontró el ticket",
       "error": "Error al cargar el detalle del ticket",
@@ -313,6 +317,7 @@
       "evidences": "Evidencias",
       "evidence": "Evidencia",
       "noEvidences": "No hay evidencias registradas.",
+      
       "priorities": {
         "high": "Alta",
         "medium": "Media",
@@ -513,6 +518,16 @@
     "invalidCredentials": "Credenciales inválidas",
     "error": "Error al iniciar sesión",
      "Cerrar": "Cerrrar Sesión"
+  },
+  "ticketDetails": {
+    "rateService": "Calificar el servicio",
+    "rating": "Calificación",
+    "ratingRequired": "Debes seleccionar una calificación",
+    "comment": "Comentario",
+    "commentPlaceholder": "Escribe tu comentario aquí (opcional)...",
+    "submitRating": "Enviar valoración",
+    "ratingSuccess": "Valoración enviada exitosamente",
+    "ratingError": "Error al enviar la valoración"
   }
 
 
